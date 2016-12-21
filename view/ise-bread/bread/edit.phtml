@@ -1,0 +1,14 @@
+<?php
+// Prepare form
+$form->setAttribute('action', $this->url(null, array(), null, true));
+$form->setAttribute('class', 'form-horizontal');
+
+?>
+<h1 class="page-header">
+    Editing <?php echo ucfirst($entityType) ?>: <em><?php echo $entity ?></em>
+</h1>
+<?php
+// Display form
+$cancel = $form->get('buttons')->get('cancel');
+$cancel->setAttribute('href', $this->url($indexRoute));
+echo $this->form($form);

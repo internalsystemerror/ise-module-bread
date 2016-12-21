@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<skipper-configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <orm-configuration name="Doctrine2">
+        <data-types>
+            <data-type name="dateperiod" unified-name="@DATEPERIOD" />
+            <data-type name="dateinterval" unified-name="@DATEINTERVAL" />
+        </data-types>
+    </orm-configuration>
+</skipper-configuration>

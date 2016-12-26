@@ -61,5 +61,4 @@ abstract class AbstractSetType extends AbstractEnumType
         
         return explode(',', $value);
     }
-    
 }

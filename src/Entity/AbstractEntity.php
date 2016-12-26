@@ -51,10 +51,10 @@ abstract class AbstractEntity
     
     /**
      * Cast object to a string
-     * 
+     *
      * @return string
      */
-    abstract function __toString();
+    abstract public function __toString();
 
     /**
      * Get id

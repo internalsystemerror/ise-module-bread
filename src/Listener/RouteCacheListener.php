@@ -26,10 +26,14 @@ class RouteCacheListener implements ListenerAggregateInterface
     public function attach(EventManagerInterface $eventManager)
     {
         $this->listeners[] = $eventManager->attach(
-            MvcEvent::EVENT_ROUTE, [$this, 'routeLoad'], 1000
+            MvcEvent::EVENT_ROUTE,
+            [$this, 'routeLoad'],
+            1000
         );
         $this->listeners[] = $eventManager->attach(
-            MvcEvent::EVENT_ROUTE, [$this, 'routeSave'], -1000
+            MvcEvent::EVENT_ROUTE,
+            [$this, 'routeSave'],
+            -1000
         );
     }
 
@@ -47,13 +51,14 @@ class RouteCacheListener implements ListenerAggregateInterface
 
     /**
      * Load the route from cache if available
-     * 
+     *
      * @param MvcEvent $event
+     * @SuppressWarnings(PHPMD.StaticAccess)
      */
     public function routeLoad(MvcEvent $event)
     {
         $request = $event->getRequest();
-        if ($request->getMethod() !== Request::METHOD_GET || $request->getQuery()->count() > 0) {
+        if (!$request instanceof Request || $request->getMethod() !== Request::METHOD_GET || $request->getQuery()->count() > 0) {
             return;
         }
 
@@ -76,7 +81,7 @@ class RouteCacheListener implements ListenerAggregateInterface
 
     /**
      * Save the route into cache
-     * 
+     *
      * @param MvcEvent $event
      */
     public function routeSave(MvcEvent $event)
@@ -100,7 +105,7 @@ class RouteCacheListener implements ListenerAggregateInterface
 
     /**
      * Create ZF2 compatible cache key
-     * 
+     *
      * @param string $path
      * @return string
      */

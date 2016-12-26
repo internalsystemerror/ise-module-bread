@@ -195,7 +195,7 @@ abstract class AbstractActionController extends ZendAbstractActionController imp
 
     /**
      * Get entity
-     * 
+     *
      * @param string $actionType
      * @return AbstractEntity|boolean|null
      */

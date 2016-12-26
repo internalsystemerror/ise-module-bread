@@ -98,7 +98,7 @@ abstract class AbstractEnumType extends Type
     
     /**
      * Map value to string
-     * 
+     *
      * @param string $value
      * @return string
      */

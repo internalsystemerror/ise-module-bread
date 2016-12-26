@@ -32,7 +32,7 @@ class DatePeriod
 
     /**
      * Get period start date
-     * 
+     *
      * @return DateTime
      */
     public function getStart()
@@ -42,7 +42,7 @@ class DatePeriod
 
     /**
      * Set period start date
-     * 
+     *
      * @param DateTime $start
      * @return DatePeriod
      */
@@ -54,7 +54,7 @@ class DatePeriod
 
     /**
      * Get period interval
-     * 
+     *
      * @return DateInterval
      */
     public function getInterval()
@@ -64,7 +64,7 @@ class DatePeriod
 
     /**
      * Set period interval
-     * 
+     *
      * @param DateInterval $interval
      * @return DatePeriod
      */
@@ -76,7 +76,7 @@ class DatePeriod
 
     /**
      * Get period end date
-     * 
+     *
      * @return DateTime
      */
     public function getEnd()
@@ -86,7 +86,7 @@ class DatePeriod
 
     /**
      * Set period end date
-     * 
+     *
      * @param DateTime $end
      * @return DatePeriod
      */

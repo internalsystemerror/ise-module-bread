@@ -59,6 +59,7 @@ abstract class AbstractService implements ServiceInterface
 
     /**
      * {@inheritDoc}
+     * @SuppressWarnings(PHPMD.ShortVariable)
      */
     public function read($id)
     {

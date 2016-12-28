@@ -2,6 +2,7 @@
 
 namespace Ise\Bread\Listener;
 
+use Zend\Cache\Storage\Adapter\AbstractAdapter;
 use Zend\EventManager\EventManagerInterface;
 use Zend\EventManager\ListenerAggregateInterface;
 use Zend\Http\Request;
@@ -11,7 +12,7 @@ use Zend\Mvc\Router\Http\Literal;
 class RouteCacheListener implements ListenerAggregateInterface
 {
 
-    const CACHE_SERVICE   = 'route-cache';
+    const CACHE_SERVICE   = 'Ise\Cache\Route';
     const ROUTE_CACHEABLE = 'route-cacheable';
     const ROUTE_CACHED    = 'route-cached';
 
@@ -19,6 +20,21 @@ class RouteCacheListener implements ListenerAggregateInterface
      * @var array
      */
     protected $listeners = [];
+    
+    /**
+     * @var AbstractAdapter
+     */
+    protected $cacheService;
+    
+    /**
+     * Constructor
+     *
+     * @param AbstractAdapter $cacheService
+     */
+    public function __construct(AbstractAdapter $cacheService)
+    {
+        $this->cacheService = $cacheService;
+    }
 
     /**
      * {@inheritDoc}
@@ -66,9 +82,8 @@ class RouteCacheListener implements ListenerAggregateInterface
 
         // Check if data is in cache
         $path       = $request->getUri()->getPath();
-        $cache      = $event->getApplication()->getServiceManager()->get(self::CACHE_SERVICE);
         $cacheKey   = $this->getCacheKey($path);
-        $cachedData = $cache->getItem($cacheKey);
+        $cachedData = $this->cacheService->getItem($cacheKey);
 
         if (!empty($cachedData)) {
             $event->setParam(self::ROUTE_CACHED, true);
@@ -93,14 +108,13 @@ class RouteCacheListener implements ListenerAggregateInterface
 
         // Save data in cache
         $path     = $event->getRequest()->getUri()->getPath();
-        $cache    = $event->getApplication()->getServiceManager()->get(self::CACHE_SERVICE);
         $cacheKey = $this->getCacheKey($path);
         $data     = [
             'name'     => $event->getRouteMatch()->getMatchedRouteName(),
             'route'    => $path,
             'defaults' => $event->getRouteMatch()->getParams(),
         ];
-        $cache->setItem($cacheKey, $data);
+        $this->cacheService->setItem($cacheKey, $data);
     }
 
     /**

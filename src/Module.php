@@ -21,7 +21,10 @@ class Module implements
     public function onBootstrap(EventInterface $event)
     {
         // Attach listeners
-        $event->getTarget()->getEventManager()->attachAggregate(new Listener\RouteCacheListener);
+        $application = $event->getTarget();
+        $application->getEventManager()->attachAggregate(
+            $application->get(Listener\RouteCacheListener::class)
+        );
     }
 
 

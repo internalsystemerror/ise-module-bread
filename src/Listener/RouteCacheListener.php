@@ -1,6 +1,6 @@
 <?php
 
-namespace IseBread\Listener;
+namespace Ise\Bread\Listener;
 
 use Zend\EventManager\EventManagerInterface;
 use Zend\EventManager\ListenerAggregateInterface;

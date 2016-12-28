@@ -23,12 +23,12 @@
     },
     "autoload": {
         "psr-4": {
-            "IseBread\\": "src"
+            "Ise\\Bread\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "IseBreadTest\\": "tests"
+            "IseTest\\Test\\": "tests"
         }
     },
     "extra": {
@@ -37,16 +37,12 @@
         }
     },
     "scripts": {
-        "test": [
-            "@phpunit",
-            "@phpcs",
-            "@phpmd",
-            "@phpcpd"
-        ],
-        "phpunit": "phpunit -c ./phpunit.xml.dist",
-        "phpcs": "phpcs",
-        "phpcbf": "phpcbf",
-        "phpmd": "phpmd . html --reportfile ./build/logs/phpmd.html --suffixes php,phtml --exclude vendor,build ./phpmd.xml.dist",
-        "phpcpd": "phpcpd . --exclude=vendor --exclude=data"
+        "test": "phpunit -c ./phpunit.xml.dist",
+        "cs-fix": "phpcbf",
+        "cs-check": [
+            "phpcs",
+            "phpmd ./config,./src,./tests,./view html --reportfile ./build/logs/phpmd.html --suffixes php,phtml ./phpmd.xml.dist",
+            "phpcpd . --exclude=build --exclude=vendor"
+        ]
     }
 }

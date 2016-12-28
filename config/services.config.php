@@ -1,9 +1,9 @@
 <?php
 
-namespace IseBread;
+namespace Ise\Bread;
 
-use IseBread\Factory\FormAbstractFactory;
-use IseBread\Factory\ServiceAbstractFactory;
+use Ise\Bread\Factory\FormAbstractFactory;
+use Ise\Bread\Factory\ServiceAbstractFactory;
 use Zend\Cache\Service\StorageCacheAbstractServiceFactory;
 
 // Return config

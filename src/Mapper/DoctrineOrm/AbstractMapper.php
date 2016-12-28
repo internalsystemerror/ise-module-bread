@@ -1,9 +1,9 @@
 <?php
 
-namespace IseBread\Mapper\DoctrineOrm;
+namespace Ise\Bread\Mapper\DoctrineOrm;
 
 use Doctrine\ORM\EntityManager;
-use IseBread\Mapper\AbstractMapper as IseAbstractMapper;
+use Ise\Bread\Mapper\AbstractMapper as IseAbstractMapper;
 
 /**
  * @SuppressWarnings(PHPMD.ShortVariableName)

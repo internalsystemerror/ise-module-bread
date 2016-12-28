@@ -1,6 +1,6 @@
 <?php
 
-namespace IseBread\Mapper;
+namespace Ise\Bread\Mapper;
 
 /**
  * @SuppressWarnings(PHPMD.ShortVariableName)

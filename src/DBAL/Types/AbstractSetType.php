@@ -1,6 +1,6 @@
 <?php
 
-namespace IseBread\DBAL\Types;
+namespace Ise\Bread\DBAL\Types;
 
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Platforms\MySqlPlatform;

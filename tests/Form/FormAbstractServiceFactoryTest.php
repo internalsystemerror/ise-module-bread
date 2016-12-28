@@ -1,8 +1,8 @@
 <?php
 
-namespace IseBreadTest\Form;
+namespace Ise\BreadTest\Form;
 
-use IseBread\Factory\FormAbstractFactory;
+use Ise\Bread\Factory\FormAbstractFactory;
 
 class FormAbstractFactoryTest extends \PHPUnit_Framework_TestCase
 {
@@ -21,7 +21,7 @@ class FormAbstractFactoryTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers IseBread\Factory\FormAbstractFactory::canCreateServiceWithName
+     * @covers Ise\Bread\Factory\FormAbstractFactory::canCreateServiceWithName
      * @todo   Implement testCanCreateServiceWithName().
      */
     public function testCanCreateServiceWithName()
@@ -33,7 +33,7 @@ class FormAbstractFactoryTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers IseBread\Factory\FormAbstractFactory::createServiceWithName
+     * @covers Ise\Bread\Factory\FormAbstractFactory::createServiceWithName
      * @todo   Implement testCreateServiceWithName().
      */
     public function testCreateServiceWithName()

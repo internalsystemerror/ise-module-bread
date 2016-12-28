@@ -1,6 +1,6 @@
 <?php
 
-namespace IseBread\Factory;
+namespace Ise\Bread\Factory;
 
 use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\FactoryInterface;

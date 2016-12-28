@@ -1,8 +1,8 @@
 <?php
 
-namespace IseBreadTest\Mvc\Router\Http;
+namespace Ise\BreadTest\Mvc\Router\Http;
 
-use IseBread\Mvc\Router\Http\BreadRouteStack;
+use Ise\Bread\Mvc\Router\Http\BreadRouteStack;
 
 class BreadRouteStackTest extends \PHPUnit_Framework_TestCase
 {
@@ -21,7 +21,7 @@ class BreadRouteStackTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers IseBread\Mvc\Router\Http\BreadRouteStack::factory
+     * @covers Ise\Bread\Mvc\Router\Http\BreadRouteStack::factory
      * @todo   Implement testFactory().
      */
     public function testFactory()

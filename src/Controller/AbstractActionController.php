@@ -1,9 +1,9 @@
 <?php
 
-namespace IseBread\Controller;
+namespace Ise\Bread\Controller;
 
-use IseBread\Entity\AbstractEntity;
-use IseBread\Service\ServiceInterface;
+use Ise\Bread\Entity\AbstractEntity;
+use Ise\Bread\Service\ServiceInterface;
 use Zend\Mvc\Controller\AbstractActionController as ZendAbstractActionController;
 use Zend\Stdlib\ResponseInterface;
 use Zend\View\Model\ViewModel;

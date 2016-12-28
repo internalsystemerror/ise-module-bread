@@ -1,6 +1,6 @@
 <?php
 
-namespace IseBread\Controller;
+namespace Ise\Bread\Controller;
 
 use Zend\View\Model\ViewModel;
 

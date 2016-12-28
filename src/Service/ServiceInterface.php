@@ -1,6 +1,6 @@
 <?php
 
-namespace IseBread\Service;
+namespace Ise\Bread\Service;
 
 /**
  * @SuppressWarnings(PHPMD.ShortVariableName)

@@ -1,8 +1,8 @@
 <?php
 
-namespace IseBread\Service;
+namespace Ise\Bread\Service;
 
-use IseBread\Service\AbstractService;
+use Ise\Bread\Service\AbstractService;
 
 /**
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
@@ -20,11 +20,11 @@ class AbstractServiceTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-        $this->object = $this->getMockForAbstractClass('IseBread\Service\AbstractService');
+        $this->object = $this->getMockForAbstractClass('Ise\Bread\Service\AbstractService');
     }
 
     /**
-     * @covers IseBread\Service\AbstractService::browse
+     * @covers Ise\Bread\Service\AbstractService::browse
      * @todo   Implement testBrowse().
      */
     public function testBrowse()
@@ -36,7 +36,7 @@ class AbstractServiceTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers IseBread\Service\AbstractService::read
+     * @covers Ise\Bread\Service\AbstractService::read
      * @todo   Implement testRead().
      */
     public function testRead()
@@ -48,7 +48,7 @@ class AbstractServiceTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers IseBread\Service\AbstractService::add
+     * @covers Ise\Bread\Service\AbstractService::add
      * @todo   Implement testAdd().
      */
     public function testAdd()
@@ -60,7 +60,7 @@ class AbstractServiceTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers IseBread\Service\AbstractService::edit
+     * @covers Ise\Bread\Service\AbstractService::edit
      * @todo   Implement testEdit().
      */
     public function testEdit()
@@ -72,7 +72,7 @@ class AbstractServiceTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers IseBread\Service\AbstractService::delete
+     * @covers Ise\Bread\Service\AbstractService::delete
      * @todo   Implement testDelete().
      */
     public function testDelete()
@@ -84,7 +84,7 @@ class AbstractServiceTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers IseBread\Service\AbstractService::disable
+     * @covers Ise\Bread\Service\AbstractService::disable
      * @todo   Implement testDisable().
      */
     public function testDisable()
@@ -96,7 +96,7 @@ class AbstractServiceTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers IseBread\Service\AbstractService::enable
+     * @covers Ise\Bread\Service\AbstractService::enable
      * @todo   Implement testEnable().
      */
     public function testEnable()
@@ -108,7 +108,7 @@ class AbstractServiceTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers IseBread\Service\AbstractService::setEventManager
+     * @covers Ise\Bread\Service\AbstractService::setEventManager
      * @todo   Implement testSetEventManager().
      */
     public function testSetEventManager()
@@ -120,7 +120,7 @@ class AbstractServiceTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers IseBread\Service\AbstractService::getEventManager
+     * @covers Ise\Bread\Service\AbstractService::getEventManager
      * @todo   Implement testGetEventManager().
      */
     public function testGetEventManager()
@@ -132,7 +132,7 @@ class AbstractServiceTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers IseBread\Service\AbstractService::getForm
+     * @covers Ise\Bread\Service\AbstractService::getForm
      * @todo   Implement testGetForm().
      */
     public function testGetForm()
@@ -144,7 +144,7 @@ class AbstractServiceTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers IseBread\Service\AbstractService::setForm
+     * @covers Ise\Bread\Service\AbstractService::setForm
      * @todo   Implement testSetForm().
      */
     public function testSetForm()
@@ -156,7 +156,7 @@ class AbstractServiceTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers IseBread\Service\AbstractService::setServiceLocator
+     * @covers Ise\Bread\Service\AbstractService::setServiceLocator
      * @todo   Implement testSetServiceLocator().
      */
     public function testSetServiceLocator()
@@ -168,7 +168,7 @@ class AbstractServiceTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers IseBread\Service\AbstractService::getServiceLocator
+     * @covers Ise\Bread\Service\AbstractService::getServiceLocator
      * @todo   Implement testGetServiceLocator().
      */
     public function testGetServiceLocator()
@@ -180,7 +180,7 @@ class AbstractServiceTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers IseBread\Service\AbstractService::getMapper
+     * @covers Ise\Bread\Service\AbstractService::getMapper
      * @todo   Implement testGetMapper().
      */
     public function testGetMapper()
@@ -192,7 +192,7 @@ class AbstractServiceTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers IseBread\Service\AbstractService::setMapper
+     * @covers Ise\Bread\Service\AbstractService::setMapper
      * @todo   Implement testSetMapper().
      */
     public function testSetMapper()
@@ -204,7 +204,7 @@ class AbstractServiceTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers IseBread\Service\AbstractService::getFormElementManager
+     * @covers Ise\Bread\Service\AbstractService::getFormElementManager
      * @todo   Implement testGetFormElementManager().
      */
     public function testGetFormElementManager()
@@ -216,7 +216,7 @@ class AbstractServiceTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers IseBread\Service\AbstractService::setFormElementManager
+     * @covers Ise\Bread\Service\AbstractService::setFormElementManager
      * @todo   Implement testSetFormElementManager().
      */
     public function testSetFormElementManager()

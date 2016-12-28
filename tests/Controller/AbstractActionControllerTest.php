@@ -1,8 +1,8 @@
 <?php
 
-namespace IseBreadTest\Controller;
+namespace Ise\BreadTest\Controller;
 
-use IseBread\Controller\AbstractActionController;
+use Ise\Bread\Controller\AbstractActionController;
 
 class AbstractActionControllerTest extends \PHPUnit_Framework_TestCase
 {
@@ -17,11 +17,11 @@ class AbstractActionControllerTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-        $this->object = $this->getMockForAbstractClass('IseBread\Controller\AbstractActionController');
+        $this->object = $this->getMockForAbstractClass('Ise\Bread\Controller\AbstractActionController');
     }
 
     /**
-     * @covers IseBread\Controller\AbstractActionController::getForm
+     * @covers Ise\Bread\Controller\AbstractActionController::getForm
      * @todo   Implement testGetForm().
      */
     public function testGetForm()
@@ -33,7 +33,7 @@ class AbstractActionControllerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers IseBread\Controller\AbstractActionController::setForm
+     * @covers Ise\Bread\Controller\AbstractActionController::setForm
      * @todo   Implement testSetForm().
      */
     public function testSetForm()
@@ -45,7 +45,7 @@ class AbstractActionControllerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers IseBread\Controller\AbstractActionController::getService
+     * @covers Ise\Bread\Controller\AbstractActionController::getService
      * @todo   Implement testGetService().
      */
     public function testGetService()
@@ -57,7 +57,7 @@ class AbstractActionControllerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers IseBread\Controller\AbstractActionController::setService
+     * @covers Ise\Bread\Controller\AbstractActionController::setService
      * @todo   Implement testSetService().
      */
     public function testSetService()
@@ -69,7 +69,7 @@ class AbstractActionControllerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers IseBread\Controller\AbstractActionController::getFormElementManager
+     * @covers Ise\Bread\Controller\AbstractActionController::getFormElementManager
      * @todo   Implement testGetFormElementManager().
      */
     public function testGetFormElementManager()
@@ -81,7 +81,7 @@ class AbstractActionControllerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers IseBread\Controller\AbstractActionController::setFormElementManager
+     * @covers Ise\Bread\Controller\AbstractActionController::setFormElementManager
      * @todo   Implement testSetFormElementManager().
      */
     public function testSetFormElementManager()

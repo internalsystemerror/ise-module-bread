@@ -1,8 +1,8 @@
 <?php
 
-namespace IseBreadTest\Entity;
+namespace Ise\BreadTest\Entity;
 
-use IseBread\Entity\AbstractEntity;
+use Ise\Bread\Entity\AbstractEntity;
 
 class AbstractEntityTest extends \PHPUnit_Framework_TestCase
 {
@@ -17,11 +17,11 @@ class AbstractEntityTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-        $this->object = $this->getMockForAbstractClass('IseBread\Entity\AbstractEntity');
+        $this->object = $this->getMockForAbstractClass('Ise\Bread\Entity\AbstractEntity');
     }
 
     /**
-     * @covers IseBread\Entity\AbstractEntity::getId
+     * @covers Ise\Bread\Entity\AbstractEntity::getId
      * @todo   Implement testGetId().
      */
     public function testGetId()
@@ -33,7 +33,7 @@ class AbstractEntityTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers IseBread\Entity\AbstractEntity::isDisabled
+     * @covers Ise\Bread\Entity\AbstractEntity::isDisabled
      * @todo   Implement testIsDisabled().
      */
     public function testIsDisabled()
@@ -45,7 +45,7 @@ class AbstractEntityTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers IseBread\Entity\AbstractEntity::setDisabled
+     * @covers Ise\Bread\Entity\AbstractEntity::setDisabled
      * @todo   Implement testSetDisabled().
      */
     public function testSetDisabled()
@@ -57,7 +57,7 @@ class AbstractEntityTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers IseBread\Entity\AbstractEntity::getLastModified
+     * @covers Ise\Bread\Entity\AbstractEntity::getLastModified
      * @todo   Implement testGetLastModified().
      */
     public function testGetLastModified()
@@ -69,7 +69,7 @@ class AbstractEntityTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers IseBread\Entity\AbstractEntity::setLastModified
+     * @covers Ise\Bread\Entity\AbstractEntity::setLastModified
      * @todo   Implement testSetLastModified().
      */
     public function testSetLastModified()
@@ -81,7 +81,7 @@ class AbstractEntityTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers IseBread\Entity\AbstractEntity::getCreated
+     * @covers Ise\Bread\Entity\AbstractEntity::getCreated
      * @todo   Implement testGetCreated().
      */
     public function testGetCreated()
@@ -93,7 +93,7 @@ class AbstractEntityTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers IseBread\Entity\AbstractEntity::setCreated
+     * @covers Ise\Bread\Entity\AbstractEntity::setCreated
      * @todo   Implement testSetCreated().
      */
     public function testSetCreated()

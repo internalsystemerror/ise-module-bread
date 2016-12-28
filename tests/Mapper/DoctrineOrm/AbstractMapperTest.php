@@ -1,8 +1,8 @@
 <?php
 
-namespace IseBreadTest\Mapper\DoctrineOrm;
+namespace Ise\BreadTest\Mapper\DoctrineOrm;
 
-use IseBread\Mapper\DoctrineOrm\AbstractMapper;
+use Ise\Bread\Mapper\DoctrineOrm\AbstractMapper;
 
 class AbstractMapperTest extends \PHPUnit_Framework_TestCase
 {
@@ -17,11 +17,11 @@ class AbstractMapperTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-        $this->object = $this->getMockForAbstractClass('IseBread\Mapper\DoctrineOrm\AbstractMapper');
+        $this->object = $this->getMockForAbstractClass('Ise\Bread\Mapper\DoctrineOrm\AbstractMapper');
     }
 
     /**
-     * @covers IseBread\Mapper\DoctrineOrm\AbstractMapper::__destruct
+     * @covers Ise\Bread\Mapper\DoctrineOrm\AbstractMapper::__destruct
      * @todo   Implement testDestruct().
      */
     public function testDestruct()
@@ -33,7 +33,7 @@ class AbstractMapperTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers IseBread\Mapper\DoctrineOrm\AbstractMapper::browse
+     * @covers Ise\Bread\Mapper\DoctrineOrm\AbstractMapper::browse
      * @todo   Implement testBrowse().
      */
     public function testBrowse()
@@ -45,7 +45,7 @@ class AbstractMapperTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers IseBread\Mapper\DoctrineOrm\AbstractMapper::read
+     * @covers Ise\Bread\Mapper\DoctrineOrm\AbstractMapper::read
      * @todo   Implement testRead().
      */
     public function testRead()
@@ -57,7 +57,7 @@ class AbstractMapperTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers IseBread\Mapper\DoctrineOrm\AbstractMapper::add
+     * @covers Ise\Bread\Mapper\DoctrineOrm\AbstractMapper::add
      * @todo   Implement testAdd().
      */
     public function testAdd()
@@ -69,7 +69,7 @@ class AbstractMapperTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers IseBread\Mapper\DoctrineOrm\AbstractMapper::edit
+     * @covers Ise\Bread\Mapper\DoctrineOrm\AbstractMapper::edit
      * @todo   Implement testEdit().
      */
     public function testEdit()
@@ -81,7 +81,7 @@ class AbstractMapperTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers IseBread\Mapper\DoctrineOrm\AbstractMapper::delete
+     * @covers Ise\Bread\Mapper\DoctrineOrm\AbstractMapper::delete
      * @todo   Implement testDelete().
      */
     public function testDelete()
@@ -93,7 +93,7 @@ class AbstractMapperTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers IseBread\Mapper\DoctrineOrm\AbstractMapper::disable
+     * @covers Ise\Bread\Mapper\DoctrineOrm\AbstractMapper::disable
      * @todo   Implement testDisable().
      */
     public function testDisable()
@@ -105,7 +105,7 @@ class AbstractMapperTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers IseBread\Mapper\DoctrineOrm\AbstractMapper::enable
+     * @covers Ise\Bread\Mapper\DoctrineOrm\AbstractMapper::enable
      * @todo   Implement testEnable().
      */
     public function testEnable()
@@ -117,7 +117,7 @@ class AbstractMapperTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers IseBread\Mapper\DoctrineOrm\AbstractMapper::getEntityManager
+     * @covers Ise\Bread\Mapper\DoctrineOrm\AbstractMapper::getEntityManager
      * @todo   Implement testGetEntityManager().
      */
     public function testGetEntityManager()
@@ -129,7 +129,7 @@ class AbstractMapperTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers IseBread\Mapper\DoctrineOrm\AbstractMapper::setEntityManager
+     * @covers Ise\Bread\Mapper\DoctrineOrm\AbstractMapper::setEntityManager
      * @todo   Implement testSetEntityManager().
      */
     public function testSetEntityManager()

@@ -1,8 +1,8 @@
 <?php
 
-namespace IseBread\Mapper\DoctrineOrm;
+namespace Ise\Bread\Mapper\DoctrineOrm;
 
-use IseBread\Mapper\MapperInterface as IseMapperInterface;
+use Ise\Bread\Mapper\MapperInterface as IseMapperInterface;
 
 /**
  * @SuppressWarnings(PHPMD.ShortVariableName)

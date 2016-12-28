@@ -1,6 +1,6 @@
 <?php
 
-namespace IseBread;
+namespace Ise\Bread;
 
 use Zend\EventManager\EventInterface;
 use Zend\ModuleManager\Feature\BootstrapListenerInterface;

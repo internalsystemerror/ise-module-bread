@@ -1,8 +1,8 @@
 <?php
 
-namespace IseBreadTest\Entity;
+namespace Ise\BreadTest\Entity;
 
-use IseBread\Entity\AbstractBasicEntity;
+use Ise\Bread\Entity\AbstractBasicEntity;
 
 class AbstractBasicEntityTest extends \PHPUnit_Framework_TestCase
 {
@@ -17,11 +17,11 @@ class AbstractBasicEntityTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-        $this->object = $this->getMockForAbstractClass('IseBread\Entity\AbstractBasicEntity');
+        $this->object = $this->getMockForAbstractClass('Ise\Bread\Entity\AbstractBasicEntity');
     }
 
     /**
-     * @covers IseBread\Entity\AbstractBasicEntity::__toString
+     * @covers Ise\Bread\Entity\AbstractBasicEntity::__toString
      * @todo   Implement testToString().
      */
     public function testToString()
@@ -33,7 +33,7 @@ class AbstractBasicEntityTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers IseBread\Entity\AbstractBasicEntity::setName
+     * @covers Ise\Bread\Entity\AbstractBasicEntity::setName
      * @todo   Implement testSetName().
      */
     public function testSetName()
@@ -45,7 +45,7 @@ class AbstractBasicEntityTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers IseBread\Entity\AbstractBasicEntity::getName
+     * @covers Ise\Bread\Entity\AbstractBasicEntity::getName
      * @todo   Implement testGetName().
      */
     public function testGetName()
@@ -57,7 +57,7 @@ class AbstractBasicEntityTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers IseBread\Entity\AbstractBasicEntity::setDescription
+     * @covers Ise\Bread\Entity\AbstractBasicEntity::setDescription
      * @todo   Implement testSetDescription().
      */
     public function testSetDescription()
@@ -69,7 +69,7 @@ class AbstractBasicEntityTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers IseBread\Entity\AbstractBasicEntity::getDescription
+     * @covers Ise\Bread\Entity\AbstractBasicEntity::getDescription
      * @todo   Implement testGetDescription().
      */
     public function testGetDescription()

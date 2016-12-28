@@ -1,6 +1,6 @@
 <?php
 
-namespace IseBread\Entity;
+namespace Ise\Bread\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Zend\Form\Annotation as ZF;

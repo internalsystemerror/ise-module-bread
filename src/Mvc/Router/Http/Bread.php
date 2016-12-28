@@ -1,6 +1,6 @@
 <?php
 
-namespace IseBread\Mvc\Router\Http;
+namespace Ise\Bread\Mvc\Router\Http;
 
 use Zend\Mvc\Router\Http\Literal;
 

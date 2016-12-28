@@ -7,7 +7,7 @@
  * @license   http://framework.zend.com/license/new-bsd New BSD License
  */
 
-namespace IseBread\Factory;
+namespace Ise\Bread\Factory;
 
 use Doctrine\ORM\EntityManager;
 use DoctrineORMModule\Form\Annotation\AnnotationBuilder;

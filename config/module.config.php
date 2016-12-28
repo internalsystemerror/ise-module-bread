@@ -1,12 +1,12 @@
 <?php
 
-namespace IseBread;
+namespace Ise\Bread;
 
 use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
-use IseBread\DBAL\Types\DateIntervalType;
-use IseBread\Mvc\Router\Http\BreadRouteStack;
-use IseBread\Mvc\Router\Http\Bread;
-use IseBread\Listener\RouteCacheListener;
+use Ise\Bread\DBAL\Types\DateIntervalType;
+use Ise\Bread\Mvc\Router\Http\BreadRouteStack;
+use Ise\Bread\Mvc\Router\Http\Bread;
+use Ise\Bread\Listener\RouteCacheListener;
 use Zend\Serializer\Adapter\PhpSerialize;
 
 return [

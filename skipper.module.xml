@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
 <skipper version="3.2.7.1338" mvc="Zend Framework" orm="Doctrine2">
-  <module name="\IseBread" local-name="IseBread" namespace="\IseBread\Entity" local-namespace="IseBread\Entity" export-format="Doctrine2Php" export-path="src/Entity" uuid="5b6f9092-8bbc-4806-9ecd-adb8afda4622">
-    <entity name="\IseBread\Entity\AbstractBasicEntity" local-name="AbstractBasicEntity" namespace="\IseBread\Entity" uuid="32ee202e-c7aa-46c1-8191-8f2dffee4ffa">
+  <module name="\Ise\Bread" local-name="Ise\Bread" namespace="\Ise\Bread\Entity" local-namespace="Ise\Bread\Entity" export-format="Doctrine2Php" export-path="src/Entity" uuid="5b6f9092-8bbc-4806-9ecd-adb8afda4622">
+    <entity name="\Ise\Bread\Entity\AbstractBasicEntity" local-name="AbstractBasicEntity" namespace="\Ise\Bread\Entity" uuid="32ee202e-c7aa-46c1-8191-8f2dffee4ffa">
       <field name="name" type="string" size="128" required="true" unique="true" uuid="4f0b2344-898a-46de-9537-949a7e0485f3"/>
       <field name="description" type="string" size="255" uuid="a014a027-e122-4afd-ae08-c281773fe9d4"/>
       <inheritance-parent type="MAPPED_SUPERCLASS" uuid="46d98966-658f-48af-95b1-0d081e29f27d"/>
-      <inheritance-child derived-from="\IseBread\Entity\AbstractEntity" uuid="8c62f3f3-194a-4425-8729-c847ec50f633"/>
+      <inheritance-child derived-from="\Ise\Bread\Entity\AbstractEntity" uuid="8c62f3f3-194a-4425-8729-c847ec50f633"/>
     </entity>
-    <entity name="\IseBread\Entity\AbstractEntity" local-name="AbstractEntity" namespace="\IseBread\Entity" uuid="51f21c4a-6b27-4a5d-bfbd-724cb9fd60d8">
+    <entity name="\Ise\Bread\Entity\AbstractEntity" local-name="AbstractEntity" namespace="\Ise\Bread\Entity" uuid="51f21c4a-6b27-4a5d-bfbd-724cb9fd60d8">
       <field name="disabled" type="boolean" required="true" uuid="4b7200f7-622b-4970-b591-be99d314a046"/>
       <field name="lastModified" type="datetime" required="true" uuid="677fb5b5-d050-4a18-b9a2-0ec4279423a8">
         <orm-attributes>
@@ -17,7 +17,7 @@
       <field name="created" type="datetime" required="true" uuid="250f97fd-5b93-4cdb-95d8-4bc411dd1d52"/>
       <inheritance-parent type="MAPPED_SUPERCLASS" uuid="00246671-eeeb-44c5-9a6b-94a8a3861238"/>
     </entity>
-    <entity name="\IseBread\Entity\DatePeriod" local-name="DatePeriod" namespace="\IseBread\Entity" uuid="9db2f365-8d56-4b98-a58b-486524950248">
+    <entity name="\Ise\Bread\Entity\DatePeriod" local-name="DatePeriod" namespace="\Ise\Bread\Entity" uuid="9db2f365-8d56-4b98-a58b-486524950248">
       <field name="start" type="datetime" required="true" uuid="d2c25959-ed56-440a-8bdb-0fec7d1bd6f9"/>
       <field name="interval" type="dateinterval" required="true" uuid="28525a3d-5dcb-4d7a-bfed-87b11ab59da0"/>
       <field name="end" type="datetime" required="true" uuid="a8ecb97d-6399-43a3-ba52-02a34b7f67a5"/>

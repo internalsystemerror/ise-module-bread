@@ -1,10 +1,10 @@
 <?php
 
-namespace IseBread\Service;
+namespace Ise\Bread\Service;
 
 use DateTime;
-use IseBread\Mapper\MapperInterface;
-use IseBread\Mvc\Router\Http\BreadRouteStack;
+use Ise\Bread\Mapper\MapperInterface;
+use Ise\Bread\Mvc\Router\Http\BreadRouteStack;
 use Zend\Form\FormInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 

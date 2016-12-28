@@ -1,6 +1,6 @@
 <?php
 
-namespace IseBread\Entity;
+namespace Ise\Bread\Entity;
 
 use DateInterval;
 use DateTime;

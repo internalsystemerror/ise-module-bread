@@ -187,7 +187,7 @@ abstract class AbstractActionController extends ZendAbstractActionController imp
         ];
         $viewModel = new ViewModel(array_merge($defaults, $parameters));
         if (!$viewTemplate) {
-            $viewTemplate = 'ise-bread/bread/' . $actionType;
+            $viewTemplate = 'ise/bread/bread/' . $actionType;
         }
         $viewModel->setTemplate($viewTemplate);
         return $viewModel;

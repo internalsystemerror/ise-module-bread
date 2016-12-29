@@ -69,15 +69,18 @@ return [
         ],
     ],
     'view_manager'  => [
+        'controller_map' => [
+            'Ise' => true,
+        ],
         'template_map'        => [
-            'ise-bread/bread/_dialogue' => __DIR__ . '/../view/ise-bread/bread/_dialogue.phtml',
-            'ise-bread/bread/browse'    => __DIR__ . '/../view/ise-bread/bread/browse.phtml',
-            'ise-bread/bread/read'      => __DIR__ . '/../view/ise-bread/bread/read.phtml',
-            'ise-bread/bread/add'       => __DIR__ . '/../view/ise-bread/bread/add.phtml',
-            'ise-bread/bread/edit'      => __DIR__ . '/../view/ise-bread/bread/edit.phtml',
-            'ise-bread/bread/delete'    => __DIR__ . '/../view/ise-bread/bread/delete.phtml',
-            'ise-bread/bread/enable'    => __DIR__ . '/../view/ise-bread/bread/enable.phtml',
-            'ise-bread/bread/disable'   => __DIR__ . '/../view/ise-bread/bread/disable.phtml',
+            'ise/bread/bread/_dialogue' => __DIR__ . '/../view/ise/bread/bread/_dialogue.phtml',
+            'ise/bread/bread/browse'    => __DIR__ . '/../view/ise/bread/bread/browse.phtml',
+            'ise/bread/bread/read'      => __DIR__ . '/../view/ise/bread/bread/read.phtml',
+            'ise/bread/bread/add'       => __DIR__ . '/../view/ise/bread/bread/add.phtml',
+            'ise/bread/bread/edit'      => __DIR__ . '/../view/ise/bread/bread/edit.phtml',
+            'ise/bread/bread/delete'    => __DIR__ . '/../view/ise/bread/bread/delete.phtml',
+            'ise/bread/bread/enable'    => __DIR__ . '/../view/ise/bread/bread/enable.phtml',
+            'ise/bread/bread/disable'   => __DIR__ . '/../view/ise/bread/bread/disable.phtml',
         ],
         'template_path_stack' => [
             __DIR__ . '/../view',

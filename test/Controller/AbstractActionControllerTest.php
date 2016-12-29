@@ -1,6 +1,6 @@
 <?php
 
-namespace Ise\BreadTest\Controller;
+namespace IseTest\Bread\Controller;
 
 use Ise\Bread\Controller\AbstractActionController;
 

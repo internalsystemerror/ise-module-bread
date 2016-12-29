@@ -1,6 +1,6 @@
 <?php
 
-namespace Ise\BreadTest\Mvc\Router\Http;
+namespace IseTest\Bread\Mvc\Router\Http;
 
 use Ise\Bread\Mvc\Router\Http\BreadRouteStack;
 

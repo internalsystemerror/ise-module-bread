@@ -1,6 +1,6 @@
 <?php
 
-namespace Ise\BreadTest\Form;
+namespace IseTest\Bread\Form;
 
 use Ise\Bread\Factory\FormAbstractFactory;
 

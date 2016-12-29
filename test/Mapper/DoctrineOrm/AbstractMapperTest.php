@@ -1,6 +1,6 @@
 <?php
 
-namespace Ise\BreadTest\Mapper\DoctrineOrm;
+namespace IseTest\Bread\Mapper\DoctrineOrm;
 
 use Ise\Bread\Mapper\DoctrineOrm\AbstractMapper;
 

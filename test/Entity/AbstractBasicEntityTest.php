@@ -1,6 +1,6 @@
 <?php
 
-namespace Ise\BreadTest\Entity;
+namespace IseTest\Bread\Entity;
 
 use Ise\Bread\Entity\AbstractBasicEntity;
 

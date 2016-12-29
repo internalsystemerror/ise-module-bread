@@ -3,9 +3,11 @@
 $form->setAttribute('action', $this->url(null, array(), null, true));
 $form->setAttribute('class', 'form-horizontal');
 
+$camelFilter = new Zend\Filter\Word\CamelCaseToSeparator;
+$title       = ucfirst($camelFilter->filter($entityType));
 ?>
 <h1 class="page-header">
-    Editing <?php echo ucfirst($entityType) ?>: <em><?php echo $entity ?></em>
+    Editing <?php echo $title ?>: <em><?php echo $entity ?></em>
 </h1>
 <?php
 // Display form

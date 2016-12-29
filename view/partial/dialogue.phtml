@@ -1,3 +1,9 @@
+<?php
+$camelFilter   = new Zend\Filter\Word\CamelCaseToSeparator;
+$actionTitle   = strtolower($camelFilter->filter($dialogueType));
+$entityTitle   = strtolower($camelFilter->filter($entityType));
+$dialogueTitle = ucwords($actionTitle . ' ' . $entityTitle);
+?>
 <div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"
      aria-labelledby="admin-modal-label">
     <div class="modal-dialog">
@@ -8,13 +14,13 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
                 <h4 class="modal-title" id="admin-modal-label">
-                    <?php echo ucfirst($dialogueType) ?> <?php echo ucfirst($entityType) ?>
+                    <?php echo $dialogueTitle ?>
                 </h4>
             </div>
             <div class="modal-body">
                 <p>
                     <strong>Are you sure</strong> you really want to
-                    <?php echo $dialogueType ?> the <?php echo $entityType ?>:
+                    <?php echo $actionTitle ?> the <?php echo $entityTitle ?>:
                     <em><?php echo $entity ?></em>?
                 </p>
             </div>
@@ -24,7 +30,6 @@
                 $cancel->setAttribute('data-href', $this->url($indexRoute));
                 $cancel->setAttribute('data-dismiss', 'modal');
                 echo $this->form($form);
-
                 ?>
             </div>
         </div>

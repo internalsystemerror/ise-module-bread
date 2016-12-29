@@ -22,7 +22,7 @@ return [
                 'exception_handler' => [
                     'throw_exceptions' => false,
                 ],
-                'serializer' => [
+                'serializer'        => [
                     'serializer' => PhpSerialize::class,
                 ],
             ],
@@ -69,7 +69,7 @@ return [
         ],
     ],
     'view_manager'  => [
-        'controller_map' => [
+        'controller_map'      => [
             'Ise' => true,
         ],
         'template_map'        => [

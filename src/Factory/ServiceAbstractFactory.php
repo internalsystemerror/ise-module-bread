@@ -48,16 +48,26 @@ class ServiceAbstractFactory implements AbstractFactoryInterface
     /**
      * Translate service name to mapper class
      *
-     * @param  string $serviceName Service name to translate to mapper class
+     * @param  ContainerInterface $container   Service manager
+     * @param  string             $serviceName Service name to translate to mapper class
      * @return boolean
      */
-    protected function translateServiceToMapper(ServiceLocatorInterface $serviceLocator, $serviceName)
+    protected function translateServiceToMapper(ContainerInterface $container, $serviceName)
     {
-        $mapperClass = trim(str_replace('Service', 'Mapper', substr($serviceName, 0, strrpos($serviceName, 'Service'))), '\\');
-        if (!$mapperClass) {
+        if (strpos($serviceName, '\\Service\\') === false) {
             return false;
         }
         
-        return $serviceLocator->has($mapperClass) ? $mapperClass : false;
+        $class = trim($serviceName, '\\');
+        if (substr($class, -7) === 'Service') {
+            $class = substr($class, 0, -7);
+        }
+        
+        $mapperClass = str_replace('\\Service\\', '\\Mapper\\', $class);
+        if (!$mapperClass || !$container->has($mapperClass)) {
+            return false;
+        }
+        
+        return $mapperClass;
     }
 }

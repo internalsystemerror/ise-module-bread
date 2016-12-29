@@ -36,11 +36,11 @@ class AbstractActionControllerFactory implements FactoryInterface
      */
     protected function translateControllerToService($controllerName)
     {
-        $serviceClass = trim(str_replace('Controller', 'Service', $controllerName), '\\');
-        if (!$serviceClass) {
-            return false;
+        $class = trim($controllerName, '\\');
+        if (substr($class, -10) === 'Controller') {
+            $class = substr($class, 0, -10);
         }
         
-        return class_exists($serviceClass) ? $serviceClass : false;
+        return str_replace('\\Controller\\', '\\Service\\', $class);
     }
 }

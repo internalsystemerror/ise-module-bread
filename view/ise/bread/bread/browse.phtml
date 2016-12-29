@@ -1,5 +1,9 @@
+<?php
+$camelFilter = new Zend\Filter\Word\CamelCaseToSeparator;
+$title       = ucfirst($camelFilter->filter($entityType));
+?>
 <h1 class="page-header">
-    Browsing <?php echo ucfirst($entityType) ?>
+    Browsing <?php echo $title ?>
     <?php if ($this->isGranted($this->basePermission . '.add')): ?>
     <a class="btn btn-primary pull-right" role="button" title="Add New"
        href="<?php echo $this->url($this->indexRoute . '/add') ?>">

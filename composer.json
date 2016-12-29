@@ -28,7 +28,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "IseTest\\Test\\": "ise"
+            "IseTest\\Test\\": "test"
         }
     },
     "extra": {
@@ -41,7 +41,7 @@
         "cs-fix": "phpcbf",
         "cs-check": [
             "phpcs",
-            "phpmd ./config,./src,./ise,./view html --reportfile ./build/logs/phpmd.html --suffixes php,phtml ./phpmd.xml.dist",
+            "phpmd ./config,./src,./test,./view html --reportfile ./build/logs/phpmd.html --suffixes php,phtml ./phpmd.xml.dist",
             "phpcpd . --exclude=build --exclude=vendor"
         ]
     }

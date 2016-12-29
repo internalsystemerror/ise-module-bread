@@ -13,7 +13,7 @@
 
     <testsuites>
         <testsuite name="ISE: Module (BREAD)">
-            <directory>./ise</directory>
+            <directory>./test</directory>
         </testsuite>
     </testsuites>
     <groups>

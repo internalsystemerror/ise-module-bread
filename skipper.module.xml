@@ -17,11 +17,6 @@
       <field name="created" type="datetime" required="true" uuid="250f97fd-5b93-4cdb-95d8-4bc411dd1d52"/>
       <inheritance-parent type="MAPPED_SUPERCLASS" uuid="00246671-eeeb-44c5-9a6b-94a8a3861238"/>
     </entity>
-    <entity name="\Ise\Bread\Entity\DatePeriod" local-name="DatePeriod" namespace="\Ise\Bread\Entity" uuid="9db2f365-8d56-4b98-a58b-486524950248">
-      <field name="start" type="datetime" required="true" uuid="d2c25959-ed56-440a-8bdb-0fec7d1bd6f9"/>
-      <field name="interval" type="dateinterval" required="true" uuid="28525a3d-5dcb-4d7a-bfed-87b11ab59da0"/>
-      <field name="end" type="datetime" required="true" uuid="a8ecb97d-6399-43a3-ba52-02a34b7f67a5"/>
-    </entity>
     <orm-attributes>
       <attribute name="file-suffix">without-suffix</attribute>
       <attribute name="filename-format">entity-name-only</attribute>
@@ -30,8 +25,7 @@
   <visual-data>
     <entity uuid="32ee202e-c7aa-46c1-8191-8f2dffee4ffa" bg-color="4294967295" hdr-color="4292006610" position-x="163" position-y="30" size-x="0" size-x2="123" size-y="0" size-y2="45"/>
     <entity uuid="51f21c4a-6b27-4a5d-bfbd-724cb9fd60d8" bg-color="#FFFFFF" hdr-color="#D2D2D2" position-x="-8" position-y="23" size-x="0" size-x2="120" size-y="0" size-y2="59"/>
-    <entity uuid="9db2f365-8d56-4b98-a58b-486524950248" bg-color="#FFFFFF" hdr-color="#D2D2D2" position-x="423" position-y="25" size-x="0" size-x2="114" size-y="0" size-y2="59"/>
     <inheritance-child uuid="8c62f3f3-194a-4425-8729-c847ec50f633" caption1-position-x="0" caption1-position-y="0" center-position-x="0" center-position-y="0" color="#969696"/>
-    <module uuid="5b6f9092-8bbc-4806-9ecd-adb8afda4622" bg-color="#EAE4F1" size-x="28" size-x2="1001" size-y="0" size-y2="130"/>
+    <module uuid="5b6f9092-8bbc-4806-9ecd-adb8afda4622" bg-color="#EAE4F1" size-x="28" size-x2="310" size-y="0" size-y2="130"/>
   </visual-data>
 </skipper>

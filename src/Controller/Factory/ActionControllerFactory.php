@@ -6,7 +6,7 @@ use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
-class AbstractActionControllerFactory implements FactoryInterface
+class ActionControllerFactory implements FactoryInterface
 {
     
     /**
@@ -14,9 +14,12 @@ class AbstractActionControllerFactory implements FactoryInterface
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $serviceClass = $this->translateControllerToService($requestedName);
-        $service      = $container->getServiceLocator()->get($serviceClass);
+        $serviceClass = $requestedName::getServiceClass();
+        if (!$serviceClass) {
+            $serviceClass = $this->translateControllerToService($requestedName);
+        }
         
+        $service = $container->getServiceLocator()->get($serviceClass);
         return new $requestedName($service);
     }
 

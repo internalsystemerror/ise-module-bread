@@ -8,19 +8,18 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 
 class ServiceAbstractFactory implements AbstractFactoryInterface
 {
-    
+
     /**
      * {@inheritDoc}
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $mapperClass        = $this->translateServiceToMapper($container, $requestedName);
-        $formElementManager = $container->get('FormElementManager');
-        $mapper             = $container->get($mapperClass);
-        
-        return new $requestedName($formElementManager, $mapper);
+        $mapperClass = $this->translateServiceToMapper($container, $requestedName);
+        $mapper      = $container->get($mapperClass);
+
+        return new $requestedName($container, $mapper);
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -36,7 +35,7 @@ class ServiceAbstractFactory implements AbstractFactoryInterface
     {
         return $this($serviceLocator, $requestedName);
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -57,17 +56,17 @@ class ServiceAbstractFactory implements AbstractFactoryInterface
         if (strpos($serviceName, '\\Service\\') === false) {
             return false;
         }
-        
+
         $class = trim($serviceName, '\\');
         if (substr($class, -7) === 'Service') {
             $class = substr($class, 0, -7);
         }
-        
+
         $mapperClass = str_replace('\\Service\\', '\\Mapper\\', $class);
         if (!$mapperClass || !$container->has($mapperClass)) {
             return false;
         }
-        
+
         return $mapperClass;
     }
 }

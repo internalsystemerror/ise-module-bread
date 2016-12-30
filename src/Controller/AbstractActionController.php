@@ -14,7 +14,12 @@ use ZfcRbac\Exception\UnauthorizedException;
  */
 abstract class AbstractActionController extends ZendAbstractActionController implements ActionControllerInterface
 {
-
+    
+    /**
+     * @var string
+     */
+    protected static $serviceClass = '';
+    
     /**
      * @var ServiceInterface
      */
@@ -39,6 +44,16 @@ abstract class AbstractActionController extends ZendAbstractActionController imp
      * @var string
      */
     protected $entityType = '';
+    
+    /**
+     * Get service class
+     * 
+     * @return string
+     */
+    public static function getServiceClass()
+    {
+        return static::$serviceClass;
+    }
 
     /**
      * Constructor

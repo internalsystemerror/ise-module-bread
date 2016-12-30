@@ -135,7 +135,7 @@ abstract class AbstractService implements ServiceInterface
             throw new Exception\InvalidArgumentException('Invalid form name given, "' . $action . '"');
         }
         if (is_string($this->form[$action])) {
-            $form                = $this->formElementManager->getServiceLocator()->get($this->form[$action]);
+            $form                = $this->formElementManager->get($this->form[$action]);
             $this->form[$action] = $form;
         }
         return $this->form[$action];

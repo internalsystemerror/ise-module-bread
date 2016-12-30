@@ -56,7 +56,7 @@ abstract class AbstractActionController extends ZendAbstractActionController imp
     public function browseAction()
     {
         // Check for access permission
-        if (!$this->isGranted($this->basePermission . '.browse')) {
+        if (!$this->isGranted($this->basePermission)) {
             throw new UnauthorizedException();
         }
         return $this->createViewModel('browse', ['list' => $this->service->browse()]);
@@ -75,7 +75,7 @@ abstract class AbstractActionController extends ZendAbstractActionController imp
             return $this->notFoundAction();
         }
         // Check for access permission
-        if (!$this->isGranted($this->basePermission . '.read')) {
+        if (!$this->isGranted($this->basePermission, $entity)) {
             throw new UnauthorizedException();
         }
         return $this->createViewModel('read', ['entity' => $entity]);
@@ -137,7 +137,7 @@ abstract class AbstractActionController extends ZendAbstractActionController imp
         }
 
         // Check for access permission
-        if (!$this->isGranted($this->basePermission . '.' . $actionType)) {
+        if (!$this->isGranted($this->basePermission . '.' . $actionType, $entity)) {
             throw new UnauthorizedException();
         }
 

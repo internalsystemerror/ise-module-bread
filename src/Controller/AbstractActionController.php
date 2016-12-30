@@ -138,7 +138,7 @@ abstract class AbstractActionController extends ZendAbstractActionController imp
 
         // Check for access permission
         if (!$this->isGranted($this->basePermission . '.' . $actionType, $entity)) {
-            throw new UnauthorizedException();
+            throw new UnauthorizedException;
         }
 
         // Load form
@@ -157,7 +157,7 @@ abstract class AbstractActionController extends ZendAbstractActionController imp
                 // Set success message
                 $this->flashMessenger()->addSuccessMessage(
                     ucfirst($actionType) . ' ' . $this->entityType . ' "'
-                    . $form->getData() . '" successful'
+                    . $form->getData() . '" successful.'
                 );
                 return $this->redirect()->toRoute($this->indexRoute);
             }

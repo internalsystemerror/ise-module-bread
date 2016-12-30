@@ -2,9 +2,12 @@
 // Prepare form
 $form->setAttribute('action', $this->url(null, array(), null, true));
 $form->setAttribute('class', 'form-horizontal');
+$cancel = $form->get('buttons')->get('cancel');
+$cancel->setAttribute('href', $this->url($indexRoute));
 
 $camelFilter = new Zend\Filter\Word\CamelCaseToSeparator;
 $title       = ucfirst($camelFilter->filter($entityType));
+
 ?>
 <h1 class="page-header">
     Adding <?php echo $title ?>

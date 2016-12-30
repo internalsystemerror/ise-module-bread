@@ -13,7 +13,7 @@ interface ServiceInterface
      *
      * @return object[]
      */
-    public function browse();
+    public function browse($criteria = [], $orderBy = null, $limit = null, $offset = null);
 
     /**
      * Read entity

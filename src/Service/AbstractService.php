@@ -52,9 +52,9 @@ abstract class AbstractService implements ServiceInterface
     /**
      * {@inheritDoc}
      */
-    public function browse()
+    public function browse($criteria = [], $orderBy = null, $limit = null, $offset = null)
     {
-        return $this->mapper->browse();
+        return $this->mapper->browse($criteria, $orderBy, $limit, $offset);
     }
 
     /**

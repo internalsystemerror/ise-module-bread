@@ -15,6 +15,8 @@ use DoctrineORMModule\Form\Element\EntityMultiCheckbox;
 use DoctrineORMModule\Form\Element\EntityRadio;
 use DoctrineORMModule\Form\Element\EntitySelect;
 use DoctrineORMModule\Stdlib\Hydrator\DoctrineEntity;
+use Ise\Bread\Form\Annotation\ElementAnnotationsListener;
+use Ise\Bread\Mvc\Router\Http\BreadRouteStack;
 use Interop\Container\ContainerInterface;
 use Zend\Form\Form;
 use Zend\ServiceManager\AbstractFactoryInterface;
@@ -29,6 +31,7 @@ class FormAbstractFactory implements AbstractFactoryInterface
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         // Create entity
+        $actionType  = $this->translateFormToType($requestedName);
         $entityClass = $this->translateFormToEntity($requestedName);
         $entity      = new $entityClass;
 
@@ -36,18 +39,19 @@ class FormAbstractFactory implements AbstractFactoryInterface
         $entityManager      = $container->get('Doctrine\ORM\EntityManager');
         $formElementManager = $container->get('FormElementManager');
         $builder            = new AnnotationBuilder($entityManager);
+        $elementListener    = new ElementAnnotationsListener($entityManager, $actionType);
+        $elementListener->attach($builder->getEventManager());
         $builder->getFormFactory()->setFormElementManager($formElementManager);
 
         // Choose value for submit button
-        $translatedName = $this->translateFormToType($requestedName);
-        switch ($translatedName) {
-            case 'add':
-            case 'edit':
+        switch ($actionType) {
+            case BreadRouteStack::ACTION_CREATE:
+            case BreadRouteStack::ACTION_UPDATE:
                 $submit = 'Save';
                 $form   = $builder->createForm($entity);
                 $this->injectEntityManagerIntoElements($form, $entityManager);
                 break;
-            case 'delete':
+            case BreadRouteStack::ACTION_DELETE:
             default:
                 $submit = 'Confirm';
                 $form   = new Form();
@@ -57,7 +61,7 @@ class FormAbstractFactory implements AbstractFactoryInterface
         // Add hydrator
         $hydrator = new DoctrineEntity($entityManager);
         $form->setHydrator($hydrator);
-        if ($translatedName === 'add') {
+        if ($actionType === BreadRouteStack::ACTION_CREATE) {
             $form->bind($entity);
         }
 

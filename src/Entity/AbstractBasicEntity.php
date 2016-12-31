@@ -12,7 +12,7 @@ abstract class AbstractBasicEntity extends AbstractEntity
 {
 
     /**
-     * @ORM\Column(type="string", unique=true, length=128, nullable=false)
+     * @ORM\Column(type="string", length=128, nullable=false)
      * @ZF\Flags({"priority": 100})
      * @ZF\Options({"label": "Name"})
      * @var string

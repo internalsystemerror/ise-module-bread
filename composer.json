@@ -5,6 +5,7 @@
     "homepage": "https://github.com/internalsystemerror/ise-module-bread",
     "require": {
         "php": "^5.6 || ^7.0",
+        "ise/ise-module-bootstrap": "dev-feature/zf3",
         "doctrine/doctrine-orm-module": "^1.0",
         "zendframework/zend-eventmanager": "^2.5 || ^3.0",
         "zendframework/zend-form": "^2.5 || ^3.0",

@@ -14,7 +14,10 @@ class BreadRouteStack extends TreeRouteStack
     const IDENTIFIER    = 'id';
     const ACTION_INDEX  = 'browse';
     const ACTION_CREATE = 'add';
-    const ACTIONS       = ['read', 'add', 'edit', 'delete', 'enable', 'disable'];
+    const ACTION_READ   = 'read';
+    const ACTION_UPDATE = 'edit';
+    const ACTION_DELETE = 'delete';
+    const ACTIONS       = [self::ACTION_READ, self::ACTION_CREATE, self::ACTION_UPDATE, self::ACTION_DELETE, 'enable', 'disable'];
 
     /**
      * {@inheritDoc}

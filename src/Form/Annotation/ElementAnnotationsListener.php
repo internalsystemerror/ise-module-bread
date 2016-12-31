@@ -31,11 +31,11 @@ class ElementAnnotationsListener extends AbstractListenerAggregate
      */
     public function attach(EventManagerInterface $events, $priority = 10)
     {
-        $this->listeners[] = $events->attach(
-            AnnotationBuilder::EVENT_CONFIGURE_FIELD,
-            [$this, 'handleUniqueFields'],
-            $priority
-        );
+//        $this->listeners[] = $events->attach(
+//            AnnotationBuilder::EVENT_CONFIGURE_FIELD,
+//            [$this, 'handleUniqueFields'],
+//            $priority
+//        );
     }
     
     /**
@@ -43,12 +43,12 @@ class ElementAnnotationsListener extends AbstractListenerAggregate
      * 
      * @param EventInterface $event
      */
-    protected function handleUniqueFields(EventInterface $event)
+    public function handleUniqueFields(EventInterface $event)
     {
-        $mapping  = $this->getFieldMapping($event);
-        $metadata = $event->getParam('metadata');
-        $name     = $event->getParam('name');
-        if ($name === 'name') {
-        }
+//        $mapping  = $this->getFieldMapping($event);
+//        $metadata = $event->getParam('metadata');
+//        $name     = $event->getParam('name');
+//        if ($name === 'name') {
+//        }
     }
 }

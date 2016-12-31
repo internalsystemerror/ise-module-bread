@@ -39,8 +39,8 @@ class FormAbstractFactory implements AbstractFactoryInterface
         $entityManager      = $container->get('Doctrine\ORM\EntityManager');
         $formElementManager = $container->get('FormElementManager');
         $builder            = new AnnotationBuilder($entityManager);
-        $elementListener    = new ElementAnnotationsListener($entityManager, $actionType);
-        $elementListener->attach($builder->getEventManager());
+//        $elementListener    = new ElementAnnotationsListener($entityManager, $actionType);
+//        $elementListener->attach($builder->getEventManager());
         $builder->getFormFactory()->setFormElementManager($formElementManager);
 
         // Choose value for submit button

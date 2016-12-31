@@ -1,6 +1,6 @@
 <?php
 
-namespace Ise\Bot\Form\Annotation;
+namespace Ise\Bread\Form\Annotation;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use DoctrineORMModule\Form\Annotation\AnnotationBuilder;

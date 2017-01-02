@@ -16,5 +16,4 @@ class AnnotationBuilder extends DoctrineAnnotationBuilder
         $formSpec['options']['prefer_form_input_filter'] = false;
         return $formSpec;
     }
-    
 }

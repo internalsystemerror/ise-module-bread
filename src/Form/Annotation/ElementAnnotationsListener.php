@@ -23,7 +23,7 @@ class ElementAnnotationsListener extends AbstractListenerAggregate
 
     /**
      * Constructor
-     * 
+     *
      * @param ObjectManager $objectManager
      */
     public function __construct(ObjectManager $objectManager, $actionType = null)
@@ -38,16 +38,20 @@ class ElementAnnotationsListener extends AbstractListenerAggregate
     public function attach(EventManagerInterface $events, $priority = 1)
     {
         $this->listeners[] = $events->attach(
-            AnnotationBuilder::EVENT_CONFIGURE_FIELD, [$this, 'handleIdentifierFields'], $priority
+            AnnotationBuilder::EVENT_CONFIGURE_FIELD,
+            [$this, 'handleIdentifierFields'],
+            $priority
         );
         $this->listeners[] = $events->attach(
-            AnnotationBuilder::EVENT_CONFIGURE_FIELD, [$this, 'handleUniqueFields'], $priority
+            AnnotationBuilder::EVENT_CONFIGURE_FIELD,
+            [$this, 'handleUniqueFields'],
+            $priority
         );
     }
 
     /**
      * Handle identifier fields
-     * 
+     *
      * @param EventInterface $event
      * @return void
      */
@@ -78,7 +82,7 @@ class ElementAnnotationsListener extends AbstractListenerAggregate
 
     /**
      * Handle unique fields
-     * 
+     *
      * @param EventInterface $event
      */
     public function handleUniqueFields(EventInterface $event)
@@ -103,7 +107,7 @@ class ElementAnnotationsListener extends AbstractListenerAggregate
     
     /**
      * Get event element spec
-     * 
+     *
      * @param EventInterface $event
      * @return array
      */
@@ -122,7 +126,7 @@ class ElementAnnotationsListener extends AbstractListenerAggregate
     
     /**
      * Get event input spec
-     * 
+     *
      * @param EventInterface $event
      * @return array
      */
@@ -141,7 +145,7 @@ class ElementAnnotationsListener extends AbstractListenerAggregate
 
     /**
      * Add NoObjectExists validation
-     * 
+     *
      * @param EventInterface $event
      * @param ClassMetadata $metadata
      * @param array $mapping
@@ -163,7 +167,7 @@ class ElementAnnotationsListener extends AbstractListenerAggregate
 
     /**
      * Add UniqueObject validation
-     * 
+     *
      * @param EventInterface $event
      * @param ClassMetadata $metadata
      * @param array $mapping

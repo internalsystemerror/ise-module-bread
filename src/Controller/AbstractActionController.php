@@ -48,7 +48,7 @@ abstract class AbstractActionController extends ZendAbstractActionController imp
     
     /**
      * Get service class
-     * 
+     *
      * @return string
      */
     public static function getServiceClass()

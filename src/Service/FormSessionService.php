@@ -18,7 +18,7 @@ class FormSessionService
 
     /**
      * Constructor
-     * 
+     *
      * @param Container $sessionContainer
      */
     public function __construct(Container $sessionContainer)
@@ -28,7 +28,7 @@ class FormSessionService
 
     /**
      * Invoke this service
-     * 
+     *
      * @return Container
      */
     public function __invoke()
@@ -38,7 +38,7 @@ class FormSessionService
 
     /**
      * Save form to session
-     * 
+     *
      * @param Form $form
      */
     public function saveForm(Form $form)
@@ -49,7 +49,7 @@ class FormSessionService
 
     /**
      * Load form from session
-     * 
+     *
      * @param Form $form
      */
     public function loadForm(Form $form)

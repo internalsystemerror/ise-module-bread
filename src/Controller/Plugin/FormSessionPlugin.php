@@ -15,7 +15,7 @@ class FormSessionPlugin extends AbstractPlugin
     
     /**
      * Constructor
-     * 
+     *
      * @param FormSessionService $formSessionService
      */
     public function __construct(FormSessionService $formSessionService)
@@ -25,12 +25,11 @@ class FormSessionPlugin extends AbstractPlugin
     
     /**
      * Invoke
-     * 
+     *
      * @return FormSessionService;
      */
     public function __invoke()
     {
         return $this->formSessionService;
     }
-    
 }

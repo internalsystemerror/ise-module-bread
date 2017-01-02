@@ -22,11 +22,7 @@ class RouteCacheListenerFactory implements FactoryInterface
     /**
      * {@inheritDoc}
      */
-    public function createService(
-        ServiceLocatorInterface $serviceLocator,
-        $name = null,
-        $requestedName = null
-    ) {
+    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null) {
     
         return $this($serviceLocator, $requestedName);
     }

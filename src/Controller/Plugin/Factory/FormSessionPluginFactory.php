@@ -1,12 +1,13 @@
 <?php
 
-namespace Ise\Bread\Factory;
+namespace Ise\Bread\Controller\Plugin\Factory;
 
+use Ise\Bread\Service\FormSessionService;
 use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
-class DoctrineOrmMapperFactory implements FactoryInterface
+class FormSessionPluginFactory implements FactoryInterface
 {
     
     /**
@@ -14,8 +15,8 @@ class DoctrineOrmMapperFactory implements FactoryInterface
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $entityManager = $container->get('Doctrine\ORM\EntityManager');
-        return new $requestedName($entityManager);
+        $formSessionService = $container->getServiceLocator()->get(FormSessionService::class);
+        return new $requestedName($formSessionService);
     }
 
     /**

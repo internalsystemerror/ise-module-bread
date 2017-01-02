@@ -3,6 +3,8 @@
 namespace Ise\Bread;
 
 use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
+use Ise\Bread\Controller\Plugin\FormSessionPlugin;
+use Ise\Bread\Controller\Plugin\Factory\FormSessionPluginFactory;
 use Ise\Bread\DBAL\Types\DateIntervalType;
 use Ise\Bread\Router\Http\BreadRouteStack;
 use Ise\Bread\Router\Http\Bread;
@@ -10,6 +12,14 @@ use Ise\Bread\Listener\RouteCacheListener;
 use Zend\Serializer\Adapter\PhpSerialize;
 
 return [
+    'controller_plugins' => [
+        'aliases'   => [
+            'formSession' => FormSessionPlugin::class,
+        ],
+        'factories' => [
+            FormSessionPlugin::class => FormSessionPluginFactory::class,
+        ],
+    ],
     'caches'        => [
         RouteCacheListener::CACHE_SERVICE => [
             'adapter' => [

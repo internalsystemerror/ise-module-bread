@@ -82,6 +82,9 @@ abstract class AbstractMapper extends IseAbstractMapper implements MapperInterfa
             $this->entityManager->flush($entity);
             return true;
         } catch (\Exception $e) {
+            if (APPLICATION_ENV === 'development') {
+                throw $e;
+            }
             return false;
         }
     }

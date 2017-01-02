@@ -62,6 +62,7 @@ class FormAbstractFactory implements AbstractFactoryInterface
         $form->setHydrator($hydrator);
         if ($actionType === BreadRouteStack::ACTION_CREATE) {
             $form->remove(BreadRouteStack::IDENTIFIER);
+            $form->getInputFilter()->remove(BreadRouteStack::IDENTIFIER);
             $form->bind($entity);
         }
 

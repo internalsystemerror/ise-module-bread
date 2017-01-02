@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
 use Ise\Bread\Controller\Plugin\FormSessionPlugin;
 use Ise\Bread\Controller\Plugin\Factory\FormSessionPluginFactory;
 use Ise\Bread\DBAL\Types\DateIntervalType;
+use Ise\Bread\Factory\AnnotationBuilderFactory;
 use Ise\Bread\Router\Http\BreadRouteStack;
 use Ise\Bread\Router\Http\Bread;
 use Ise\Bread\Listener\RouteCacheListener;
@@ -69,6 +70,9 @@ return [
                 ],
             ],
         ],
+    ],
+    'doctrine_factories' => [
+        'formannotationbuilder' => AnnotationBuilderFactory::class,
     ],
     'router'        => [
         'router_class' => BreadRouteStack::class,

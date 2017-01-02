@@ -35,10 +35,10 @@ class ElementAnnotationsListener extends AbstractListenerAggregate
     /**
      * {@inheritDoc}
      */
-    public function attach(EventManagerInterface $events, $priority = 10)
+    public function attach(EventManagerInterface $events, $priority = 1)
     {
         $this->listeners[] = $events->attach(
-            AnnotationBuilder::EVENT_CONFIGURE_FIELD, [$this, 'handleIdentifierFields'], $priority + 1
+            AnnotationBuilder::EVENT_CONFIGURE_FIELD, [$this, 'handleIdentifierFields'], $priority
         );
         $this->listeners[] = $events->attach(
             AnnotationBuilder::EVENT_CONFIGURE_FIELD, [$this, 'handleUniqueFields'], $priority

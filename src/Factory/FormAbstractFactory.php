@@ -10,7 +10,6 @@
 namespace Ise\Bread\Factory;
 
 use Doctrine\ORM\EntityManager;
-use DoctrineORMModule\Form\Annotation\AnnotationBuilder;
 use DoctrineORMModule\Form\Element\EntityMultiCheckbox;
 use DoctrineORMModule\Form\Element\EntityRadio;
 use DoctrineORMModule\Form\Element\EntitySelect;
@@ -37,11 +36,9 @@ class FormAbstractFactory implements AbstractFactoryInterface
 
         // Create builder
         $entityManager      = $container->get('Doctrine\ORM\EntityManager');
-        $formElementManager = $container->get('FormElementManager');
-        $builder            = new AnnotationBuilder($entityManager);
+        $builder            = $container->get('doctrine.formannotationbuilder.orm_default');
         $elementListener    = new ElementAnnotationsListener($entityManager, $actionType);
         $elementListener->attach($builder->getEventManager());
-        $builder->getFormFactory()->setFormElementManager($formElementManager);
 
         // Choose value for submit button
         switch ($actionType) {

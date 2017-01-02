@@ -2,7 +2,7 @@
 <skipper version="3.2.7.1338" mvc="Zend Framework" orm="Doctrine2">
   <module name="\Ise\Bread" local-name="Ise\Bread" namespace="\Ise\Bread\Entity" local-namespace="Ise\Bread\Entity" export-format="Doctrine2Php" export-path="src/Entity" uuid="5b6f9092-8bbc-4806-9ecd-adb8afda4622">
     <entity name="\Ise\Bread\Entity\AbstractBasicEntity" local-name="AbstractBasicEntity" namespace="\Ise\Bread\Entity" uuid="32ee202e-c7aa-46c1-8191-8f2dffee4ffa">
-      <field name="name" type="string" size="128" required="true" unique="true" uuid="4f0b2344-898a-46de-9537-949a7e0485f3"/>
+      <field name="name" type="string" size="128" required="true" uuid="4f0b2344-898a-46de-9537-949a7e0485f3"/>
       <field name="description" type="string" size="255" uuid="a014a027-e122-4afd-ae08-c281773fe9d4"/>
       <inheritance-parent type="MAPPED_SUPERCLASS" uuid="46d98966-658f-48af-95b1-0d081e29f27d"/>
       <inheritance-child derived-from="\Ise\Bread\Entity\AbstractEntity" uuid="8c62f3f3-194a-4425-8729-c847ec50f633"/>

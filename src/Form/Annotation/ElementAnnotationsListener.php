@@ -11,6 +11,7 @@ use Ise\Bread\Router\Http\BreadRouteStack;
 use Zend\EventManager\AbstractListenerAggregate;
 use Zend\EventManager\EventInterface;
 use Zend\EventManager\EventManagerInterface;
+use Zend\Validator\Uuid;
 
 class ElementAnnotationsListener extends AbstractListenerAggregate
 {
@@ -52,7 +53,6 @@ class ElementAnnotationsListener extends AbstractListenerAggregate
      */
     public function handleIdentifierFields(EventInterface $event)
     {
-
         $name     = $event->getParam('name');
         $metadata = $event->getParam('metadata');
         if (!$metadata || !$metadata->hasField($name)) {
@@ -63,17 +63,17 @@ class ElementAnnotationsListener extends AbstractListenerAggregate
             return;
         }
 
-        $elementSpec = $event->getParam('elementSpec');
-        if (!$elementSpec) {
-            $event->setParam('elementSpec', []);
-            $elementSpec = $event->getParam('elementSpec');
-        }
-
-        if (!isset($elementSpec['spec'])) {
-            $elementSpec['spec'] = [];
-        }
-
+        // Hide element
+        $elementSpec = $this->getEventElementSpec($event);
         $elementSpec['spec']['type'] = 'hidden';
+        
+        // Add validation
+        $inputSpec = $this->getEventInputSpec($event);
+        switch ($metadata->getTypeOfField($name)) {
+            case 'guid':
+                $inputSpec['validators'][] = ['name' => Uuid::class,];
+                break;
+        }
     }
 
     /**
@@ -100,6 +100,44 @@ class ElementAnnotationsListener extends AbstractListenerAggregate
                 return $this->addUniqueObjectValidator($event, $metadata, $mapping);
         }
     }
+    
+    /**
+     * Get event element spec
+     * 
+     * @param EventInterface $event
+     * @return array
+     */
+    protected function getEventElementSpec(EventInterface $event)
+    {
+        $elementSpec = $event->getParam('elementSpec');
+        if (!$elementSpec) {
+            $event->setParam('elementSpec', []);
+            $elementSpec = $event->getParam('elementSpec');
+        }
+        if (!isset($elementSpec['spec'])) {
+            $elementSpec['spec'] = [];
+        }
+        return $elementSpec;
+    }
+    
+    /**
+     * Get event input spec
+     * 
+     * @param EventInterface $event
+     * @return array
+     */
+    protected function getEventInputSpec(EventInterface $event)
+    {
+        $inputSpec = $event->getParam('inputSpec');
+        if (!$inputSpec) {
+            $event->setParam('inputSpec', []);
+            $inputSpec = $event->getParam('inputSpec');
+        }
+        if (!isset($inputSpec['validators'])) {
+            $inputSpec['validators'] = [];
+        }
+        return $inputSpec;
+    }
 
     /**
      * Add NoObjectExists validation
@@ -108,18 +146,9 @@ class ElementAnnotationsListener extends AbstractListenerAggregate
      * @param ClassMetadata $metadata
      * @param array $mapping
      */
-    public function addNoObjectExistsValidator(EventInterface $event, ClassMetadata $metadata, array $mapping)
+    protected function addNoObjectExistsValidator(EventInterface $event, ClassMetadata $metadata, array $mapping)
     {
-        $inputSpec = $event->getParam('inputSpec');
-        if (!$inputSpec) {
-            $event->setParam('inputSpec', []);
-            $inputSpec = $event->getParam('inputSpec');
-        }
-
-        if (!isset($inputSpec['validators'])) {
-            $inputSpec['validators'] = [];
-        }
-
+        $inputSpec = $this->getEventInputSpec($event);
         $inputSpec['validators'][] = [
             'name'    => NoObjectExists::class,
             'options' => [
@@ -139,18 +168,9 @@ class ElementAnnotationsListener extends AbstractListenerAggregate
      * @param ClassMetadata $metadata
      * @param array $mapping
      */
-    public function addUniqueObjectValidator(EventInterface $event, ClassMetadata $metadata, array $mapping)
+    protected function addUniqueObjectValidator(EventInterface $event, ClassMetadata $metadata, array $mapping)
     {
-        $inputSpec = $event->getParam('inputSpec');
-        if (!$event->getParam('inputSpec')) {
-            $event->setParam('inputSpec', []);
-            $inputSpec = $event->getParam('inputSpec');
-        }
-
-        if (!isset($inputSpec['validators'])) {
-            $inputSpec['validators'] = [];
-        }
-
+        $inputSpec = $this->getEventInputSpec($event);
         $inputSpec['validators'][] = [
             'name'    => UniqueObject::class,
             'options' => [

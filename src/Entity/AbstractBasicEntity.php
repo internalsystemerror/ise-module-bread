@@ -12,16 +12,18 @@ abstract class AbstractBasicEntity extends AbstractEntity
 {
 
     /**
-     * @ORM\Column(type="string", unique=true, length=128, nullable=false)
-     * @ZF\Flags({"priority": 100})
+     * @ORM\Column(type="string", length=128, nullable=false)
+     * @ZF\Flags({"priority": 11})
      * @ZF\Options({"label": "Name"})
+     * @ZF\Filter({"name": "StripNewlines"})
+     * @ZF\Validator({"name": "StringLength", "options": {"min": 3}})
      * @var string
      */
     protected $name;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @ZF\Flags({"priority": 100})
+     * @ZF\Flags({"priority": 10})
      * @ZF\Options({"label": "Description"})
      * @var string
      */

@@ -3,6 +3,7 @@
 namespace Ise\Bread\Controller;
 
 use Ise\Bread\Entity\AbstractEntity;
+use Ise\Bread\Router\Http\BreadRouteStack;
 use Ise\Bread\Service\ServiceInterface;
 use Zend\Mvc\Controller\AbstractActionController as ZendAbstractActionController;
 use Zend\Stdlib\ResponseInterface;
@@ -101,7 +102,7 @@ abstract class AbstractActionController extends ZendAbstractActionController imp
      */
     public function addAction()
     {
-        return $this->bread('add');
+        return $this->bread(BreadRouteStack::ACTION_CREATE);
     }
 
     /**
@@ -109,7 +110,7 @@ abstract class AbstractActionController extends ZendAbstractActionController imp
      */
     public function editAction()
     {
-        return $this->bread('edit');
+        return $this->bread(BreadRouteStack::ACTION_UPDATE);
     }
 
     /**
@@ -117,7 +118,7 @@ abstract class AbstractActionController extends ZendAbstractActionController imp
      */
     public function deleteAction()
     {
-        return $this->bread('delete');
+        return $this->bread(BreadRouteStack::ACTION_DELETE);
     }
 
     /**
@@ -125,7 +126,7 @@ abstract class AbstractActionController extends ZendAbstractActionController imp
      */
     public function enableAction()
     {
-        return $this->bread('enable');
+        return $this->bread(BreadRouteStack::ACTION_ENABLE);
     }
 
     /**
@@ -133,7 +134,7 @@ abstract class AbstractActionController extends ZendAbstractActionController imp
      */
     public function disableAction()
     {
-        return $this->bread('disable');
+        return $this->bread(BreadRouteStack::ACTION_DISABLE);
     }
 
     /**
@@ -158,7 +159,7 @@ abstract class AbstractActionController extends ZendAbstractActionController imp
 
         // Load form
         $form = $this->service->getForm($actionType);
-        if ($actionType !== 'add') {
+        if ($actionType !== BreadRouteStack::ACTION_CREATE) {
             $form->bind($entity);
         }
 
@@ -222,7 +223,7 @@ abstract class AbstractActionController extends ZendAbstractActionController imp
             if ($entity) {
                 return $entity;
             }
-        } elseif ($actionType === 'add') {
+        } elseif ($actionType === BreadRouteStack::ACTION_CREATE) {
             return null;
         }
         return false;

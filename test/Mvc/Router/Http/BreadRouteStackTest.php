@@ -2,7 +2,7 @@
 
 namespace IseTest\Bread\Mvc\Router\Http;
 
-use Ise\Bread\Mvc\Router\Http\BreadRouteStack;
+use Ise\Bread\Router\Http\BreadRouteStack;
 
 class BreadRouteStackTest extends \PHPUnit_Framework_TestCase
 {

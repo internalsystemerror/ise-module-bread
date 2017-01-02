@@ -4,8 +4,8 @@ namespace Ise\Bread;
 
 use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
 use Ise\Bread\DBAL\Types\DateIntervalType;
-use Ise\Bread\Mvc\Router\Http\BreadRouteStack;
-use Ise\Bread\Mvc\Router\Http\Bread;
+use Ise\Bread\Router\Http\BreadRouteStack;
+use Ise\Bread\Router\Http\Bread;
 use Ise\Bread\Listener\RouteCacheListener;
 use Zend\Serializer\Adapter\PhpSerialize;
 

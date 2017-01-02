@@ -14,7 +14,6 @@ abstract class AbstractEntity
 {
 
     /**
-     * @ZF\Exclude()
      * @var string
      */
     protected $id;

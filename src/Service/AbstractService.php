@@ -4,7 +4,7 @@ namespace Ise\Bread\Service;
 
 use DateTime;
 use Ise\Bread\Mapper\MapperInterface;
-use Ise\Bread\Mvc\Router\Http\BreadRouteStack;
+use Ise\Bread\Router\Http\BreadRouteStack;
 use Zend\Form\FormInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -20,11 +20,11 @@ abstract class AbstractService implements ServiceInterface
      * @var string[]|FormInterface[]
      */
     protected $form = [
-        'add'     => '',
-        'edit'    => '',
-        'delete'  => '',
-        'enable'  => '',
-        'disable' => '',
+        BreadRouteStack::ACTION_CREATE  => '',
+        BreadRouteStack::ACTION_UPDATE  => '',
+        BreadRouteStack::ACTION_DELETE  => '',
+        BreadRouteStack::ACTION_ENABLE  => '',
+        BreadRouteStack::ACTION_DISABLE => '',
     ];
 
     /**
@@ -71,7 +71,7 @@ abstract class AbstractService implements ServiceInterface
      */
     public function add(array $data)
     {
-        return $this->aed('add', $data);
+        return $this->aed(BreadRouteStack::ACTION_CREATE, $data);
     }
 
     /**
@@ -79,7 +79,7 @@ abstract class AbstractService implements ServiceInterface
      */
     public function edit(array $data)
     {
-        return $this->aed('edit', $data);
+        return $this->aed(BreadRouteStack::ACTION_UPDATE, $data);
     }
 
     /**
@@ -87,7 +87,7 @@ abstract class AbstractService implements ServiceInterface
      */
     public function delete(array $data)
     {
-        return $this->aed('delete', $data);
+        return $this->aed(BreadRouteStack::ACTION_DELETE, $data);
     }
 
     /**
@@ -96,7 +96,7 @@ abstract class AbstractService implements ServiceInterface
     public function disable(array $data)
     {
         // Validate form
-        $entity = $this->validateForm('disable', $data);
+        $entity = $this->validateForm(BreadRouteStack::ACTION_DISABLE, $data);
         if (!$entity) {
             return false;
         }
@@ -114,7 +114,7 @@ abstract class AbstractService implements ServiceInterface
     public function enable(array $data)
     {
         // Validate form
-        $entity = $this->validateForm('enable', $data);
+        $entity = $this->validateForm(BreadRouteStack::ACTION_ENABLE, $data);
         if (!$entity) {
             return false;
         }

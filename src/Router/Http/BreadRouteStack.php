@@ -1,6 +1,6 @@
 <?php
 
-namespace Ise\Bread\Mvc\Router\Http;
+namespace Ise\Bread\Router\Http;
 
 use Zend\Mvc\Router\Http\TreeRouteStack;
 use Zend\Validator\Uuid;
@@ -11,13 +11,22 @@ class BreadRouteStack extends TreeRouteStack
     /**
      * Class constants
      */
-    const IDENTIFIER    = 'id';
-    const ACTION_INDEX  = 'browse';
-    const ACTION_CREATE = 'add';
-    const ACTION_READ   = 'read';
-    const ACTION_UPDATE = 'edit';
-    const ACTION_DELETE = 'delete';
-    const ACTIONS       = [self::ACTION_READ, self::ACTION_CREATE, self::ACTION_UPDATE, self::ACTION_DELETE, 'enable', 'disable'];
+    const IDENTIFIER     = 'id';
+    const ACTION_INDEX   = 'browse';
+    const ACTION_CREATE  = 'add';
+    const ACTION_READ    = 'read';
+    const ACTION_UPDATE  = 'edit';
+    const ACTION_DELETE  = 'delete';
+    const ACTION_ENABLE  = 'enable';
+    const ACTION_DISABLE = 'disable';
+    const ACTIONS        = [
+        self::ACTION_READ,
+        self::ACTION_CREATE,
+        self::ACTION_UPDATE,
+        self::ACTION_DELETE,
+        self::ACTION_ENABLE,
+        self::ACTION_DISABLE
+    ];
 
     /**
      * {@inheritDoc}
@@ -74,13 +83,13 @@ class BreadRouteStack extends TreeRouteStack
         if (!isset($route['type']) || $route['type'] !== 'bread') {
             return $route;
         }
-        
+
         // Set variables
         $identifier = self::IDENTIFIER;
         if (isset($route['options']['identifier'])) {
             $identifier = $route['options']['identifier'];
         }
-        
+
         $uuidRegex   = trim(Uuid::REGEX_UUID, '/^$');
         $constraints = [$identifier => $uuidRegex];
         if (isset($route['options']['constraints'])) {

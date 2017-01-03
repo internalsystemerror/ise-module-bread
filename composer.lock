@@ -818,12 +818,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/internalsystemerror/ise-module-bootstrap.git",
-                "reference": "5f652c3a9818812c40a465408cb6543417d3b5b5"
+                "reference": "466d6ff5083c84c04c2f0b7898feb7d9f45cc507"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/internalsystemerror/ise-module-bootstrap/zipball/5f652c3a9818812c40a465408cb6543417d3b5b5",
-                "reference": "5f652c3a9818812c40a465408cb6543417d3b5b5",
+                "url": "https://api.github.com/repos/internalsystemerror/ise-module-bootstrap/zipball/466d6ff5083c84c04c2f0b7898feb7d9f45cc507",
+                "reference": "466d6ff5083c84c04c2f0b7898feb7d9f45cc507",
                 "shasum": ""
             },
             "require": {
@@ -860,7 +860,7 @@
             ],
             "description": "Twitter Bootstrap module for Zend Framework used by Internalsystemerror Limited",
             "homepage": "https://github.com/internalsystemerror/ise-module-bootstrap",
-            "time": "2017-01-02 23:35:53"
+            "time": "2017-01-02 23:37:43"
         },
         {
             "name": "kriswallsmith/assetic",

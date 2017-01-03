@@ -7,15 +7,10 @@
         "php": "^5.6 || ^7.0",
         "ise/ise-module-bootstrap": "dev-feature/zf3",
         "doctrine/doctrine-orm-module": "^1.0",
-        "zendframework/zend-eventmanager": "^2.5 || ^3.0",
-        "zendframework/zend-form": "^2.5 || ^3.0",
         "zendframework/zend-http": "^2.5 || ^3.0",
-        "zendframework/zend-modulemanager": "^2.5 || ^3.0",
-        "zendframework/zend-mvc": "^2.5 || ^3.0",
         "zendframework/zend-servicemanager": "^2.5 || ^3.0",
         "zendframework/zend-stdlib": "^2.5 || ^3.0",
-        "zendframework/zend-validator": "^2.5 || ^3.0",
-        "zendframework/zend-view": "^2.5 || ^3.0"
+        "zendframework/zend-validator": "^2.5 || ^3.0"
     },
     "require-dev": {
         "zendframework/zftool": "^0.1 || ^1.0",

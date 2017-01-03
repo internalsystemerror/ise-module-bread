@@ -43,8 +43,12 @@ class FormSessionService
      */
     public function saveForm(Form $form)
     {
-        $this->sessionContainer[self::KEY_MESSAGES] = (array) $form->getMessages();
-        $this->sessionContainer[self::KEY_DATA]     = (array) $form->getInputFilter()->getRawValues();
+        $name = $form->getName();
+        if (!isset($this->sessionContainer[$name])){ 
+            $this->sessionContainer[$name] = [];
+        }
+        $this->sessionContainer[$name][self::KEY_MESSAGES] = (array) $form->getMessages();
+        $this->sessionContainer[$name][self::KEY_DATA]     = (array) $form->getInputFilter()->getRawValues();
     }
 
     /**
@@ -54,13 +58,14 @@ class FormSessionService
      */
     public function loadForm(Form $form)
     {
-        if (isset($this->sessionContainer[self::KEY_MESSAGES])) {
-            $form->setMessages($this->sessionContainer[self::KEY_MESSAGES]);
-            unset($this->sessionContainer[self::KEY_MESSAGES]);
+        $name = $form->getName();
+        if (isset($this->sessionContainer[$name][self::KEY_MESSAGES])) {
+            $form->setMessages($this->sessionContainer[$name][self::KEY_MESSAGES]);
+            unset($this->sessionContainer[$name][self::KEY_MESSAGES]);
         }
-        if (isset($this->sessionContainer[self::KEY_DATA])) {
-            $form->setData($this->sessionContainer[self::KEY_DATA]);
-            unset($this->sessionContainer[self::KEY_DATA]);
+        if (isset($this->sessionContainer[$name][self::KEY_DATA])) {
+            $form->setData($this->sessionContainer[$name][self::KEY_DATA]);
+            unset($this->sessionContainer[$name][self::KEY_DATA]);
         }
     }
 }

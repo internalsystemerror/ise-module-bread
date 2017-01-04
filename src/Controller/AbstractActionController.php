@@ -5,6 +5,8 @@ namespace Ise\Bread\Controller;
 use Ise\Bread\Entity\AbstractEntity;
 use Ise\Bread\Router\Http\BreadRouteStack;
 use Ise\Bread\Service\ServiceInterface;
+use Zend\Filter\Word\CamelCaseToSeparator;
+use Zend\Form\Form;
 use Zend\Mvc\Controller\AbstractActionController as ZendAbstractActionController;
 use Zend\Stdlib\ResponseInterface;
 use Zend\View\Model\ViewModel;
@@ -75,7 +77,7 @@ abstract class AbstractActionController extends ZendAbstractActionController imp
         if (!$this->isGranted($this->basePermission)) {
             throw new UnauthorizedException();
         }
-        return $this->createViewModel('browse', ['list' => $this->service->browse()]);
+        return $this->createActionViewModel('browse', ['list' => $this->service->browse()]);
     }
 
     /**
@@ -84,17 +86,13 @@ abstract class AbstractActionController extends ZendAbstractActionController imp
     public function readAction()
     {
         // Load entity
-        $id      = (string) $this->params($this->identifier, 0);
-        $service = $this->service;
-        $entity  = $service->read($id);
+        $entity  = $this->getEntity();
         if (!$entity) {
             return $this->notFoundAction();
         }
         // Check for access permission
-        if (!$this->isGranted($this->basePermission, $entity)) {
-            throw new UnauthorizedException();
-        }
-        return $this->createViewModel('read', ['entity' => $entity]);
+        $this->checkPermission(null, $entity);
+        return $this->createActionViewModel('read', ['entity' => $entity]);
     }
 
     /**
@@ -102,7 +100,19 @@ abstract class AbstractActionController extends ZendAbstractActionController imp
      */
     public function addAction()
     {
-        return $this->bread(BreadRouteStack::ACTION_CREATE);
+        // Check access
+        $this->checkPermission(BreadRouteStack::ACTION_CREATE);
+        $action = $this->performAction(BreadRouteStack::ACTION_CREATE);
+        if ($action) {
+            return $action;
+        }
+        
+        // Setup form
+        $form = $this->service->getForm(BreadRouteStack::ACTION_CREATE);
+        $this->setupFormForView($form);
+        
+        // Return view
+        return $this->createActionViewModel(BreadRouteStack::ACTION_CREATE, ['form' => $form,]);
     }
 
     /**
@@ -110,7 +120,29 @@ abstract class AbstractActionController extends ZendAbstractActionController imp
      */
     public function editAction()
     {
-        return $this->bread(BreadRouteStack::ACTION_UPDATE);
+        // Check access
+        $entity = $this->getEntity();
+        if (!$entity) {
+            return $this->notFoundAction();
+        }
+        $this->checkPermission(BreadRouteStack::ACTION_UPDATE, $entity);
+        
+        // Setup form
+        $form = $this->service->getForm(BreadRouteStack::ACTION_UPDATE);
+        $form->bind($entity);
+        
+        // Perform action
+        $action = $this->performAction(BreadRouteStack::ACTION_UPDATE);
+        if ($action) {
+            return $action;
+        }
+        
+        // Return view
+        $this->setupFormForView($form);
+        return $this->createActionViewModel(BreadRouteStack::ACTION_UPDATE, [
+            'entity' => $entity,
+            'form'   => $form,
+        ]);
     }
 
     /**
@@ -118,7 +150,7 @@ abstract class AbstractActionController extends ZendAbstractActionController imp
      */
     public function deleteAction()
     {
-        return $this->bread(BreadRouteStack::ACTION_DELETE);
+        return $this->dialogueAction(BreadRouteStack::ACTION_DELETE);
     }
 
     /**
@@ -126,7 +158,7 @@ abstract class AbstractActionController extends ZendAbstractActionController imp
      */
     public function enableAction()
     {
-        return $this->bread(BreadRouteStack::ACTION_ENABLE);
+        return $this->dialogueAction(BreadRouteStack::ACTION_ENABLE);
     }
 
     /**
@@ -134,35 +166,47 @@ abstract class AbstractActionController extends ZendAbstractActionController imp
      */
     public function disableAction()
     {
-        return $this->bread(BreadRouteStack::ACTION_DISABLE);
+        return $this->dialogueAction(BreadRouteStack::ACTION_DISABLE);
+    }
+    
+    /**
+     * Perform dialogue action
+     * 
+     * @param string $actionType
+     * @return ResponseInterface|ViewModel
+     */
+    protected function dialogueAction($actionType, $viewTemplate = null)
+    {
+        // Check access
+        $entity = $this->getEntity();
+        if (!$entity) {
+            return $this->notFoundAction();
+        }
+        $this->checkPermission($actionType, $entity);
+        
+        // Setup form
+        $form = $this->service->getForm($actionType);
+        $form->bind($entity);
+        
+        // Perform action
+        $action = $this->performAction($actionType);
+        if ($action) {
+            return $action;
+        }
+        
+        // Return view
+        $this->setupFormForDialogue($form);
+        return $this->createDialogueViewModelWrapper($actionType, $form, $entity, $viewTemplate);
     }
 
     /**
-     * Perform bread dialogue action
+     * Perform action
      *
      * @param  string $actionType
-     * @param  null|string $viewTemplate
-     * @return ResponseInterface|ViewModel
+     * @return ResponseInterface|null
      */
-    protected function bread($actionType, $viewTemplate = null)
+    protected function performAction($actionType)
     {
-        // Load entity
-        $entity = $this->getEntity($actionType);
-        if ($entity === false) {
-            return $this->notFoundAction();
-        }
-
-        // Check for access permission
-        if (!$this->isGranted($this->basePermission . '.' . $actionType, $entity)) {
-            throw new UnauthorizedException;
-        }
-
-        // Load form
-        $form = $this->service->getForm($actionType);
-        if ($actionType !== BreadRouteStack::ACTION_CREATE) {
-            $form->bind($entity);
-        }
-
         // Create PRG wrapper
         $prg = $this->prg();
         if ($prg instanceof ResponseInterface) {
@@ -172,38 +216,68 @@ abstract class AbstractActionController extends ZendAbstractActionController imp
             if ($this->service->$actionType($prg)) {
                 // Set success message
                 $this->flashMessenger()->addSuccessMessage(
-                    ucfirst($actionType) . ' ' . $this->entityType . ' "'
-                    . $form->getData() . '" successful.'
+                    ucfirst($actionType) . ' ' . $this->entityType . ' successful.'
                 );
                 return $this->redirect()->toRoute($this->indexRoute);
             }
         }
-
-        // Create view model
-        return $this->createViewModel($actionType, [
-            'entity' => $entity,
-            'form'   => $form,
+    }
+    
+    /**
+     * Create dialogue view model wrapper
+     * 
+     * @param string $actionType
+     * @param Form $form
+     * @param AbstractEntity $entity
+     * @param null|string $viewTemplate
+     * @return ViewModel
+     */
+    protected function createDialogueViewModelWrapper($actionType, Form $form, AbstractEntity $entity, $viewTemplate = null)
+    {
+        // Create titles
+        $camelFilter   = new CamelCaseToSeparator;
+        $actionTitle   = strtolower($camelFilter->filter($actionType));
+        $entityTitle   = strtolower($camelFilter->filter($this->entityType));
+        
+        // Create body
+        $dialogueBody  = $this->createActionViewModel('dialogue', [
+            'actionTitle' => $actionTitle,
+            'entityTitle' => $entityTitle,
+            'entity'      => $entity,
         ], $viewTemplate);
+        
+        // Create view model wrapper
+        $viewModel = new ViewModel([
+            'form'          => $form,
+            'dialogueTitle' => ucwords($actionTitle . ' ' . $entityTitle),
+        ]);
+        $viewModel->setTemplate('partial/dialogue');
+        $viewModel->addChild($dialogueBody, 'dialogueBody');
+        
+        return $viewModel;
     }
 
     /**
      * Create view model
      *
-     * @param string      $actionType
+     * @param string      $actionTemplate
      * @param array       $parameters
      * @param string|null $viewTemplate
      * @return ViewModel
      */
-    protected function createViewModel($actionType, array $parameters = [], $viewTemplate = null)
+    protected function createActionViewModel($actionTemplate, array $parameters = [], $viewTemplate = null)
     {
-        $defaults  = [
+        // Set parameters
+        $variables = array_merge([
             'basePermission' => $this->basePermission,
             'indexRoute'     => $this->indexRoute,
             'entityType'     => $this->entityType,
-        ];
-        $viewModel = new ViewModel(array_merge($defaults, $parameters));
+        ], $parameters);
+        
+        // Set up view model
+        $viewModel = new ViewModel($variables);
         if (!$viewTemplate) {
-            $viewTemplate = 'ise/bread/bread/' . $actionType;
+            $viewTemplate = 'ise/bread/bread/' . $actionTemplate;
         }
         $viewModel->setTemplate($viewTemplate);
         return $viewModel;
@@ -212,10 +286,9 @@ abstract class AbstractActionController extends ZendAbstractActionController imp
     /**
      * Get entity
      *
-     * @param string $actionType
-     * @return AbstractEntity|boolean|null
+     * @return AbstractEntity|boolean
      */
-    protected function getEntity($actionType)
+    protected function getEntity()
     {
         $id = (string) $this->params($this->identifier, '');
         if ($id) {
@@ -223,9 +296,48 @@ abstract class AbstractActionController extends ZendAbstractActionController imp
             if ($entity) {
                 return $entity;
             }
-        } elseif ($actionType === BreadRouteStack::ACTION_CREATE) {
-            return null;
         }
         return false;
+    }
+    
+    /**
+     * Check for permission
+     * 
+     * @param string|null $actionType
+     * @param mixed|null $context
+     * @throws UnauthorizedException
+     */
+    protected function checkPermission($actionType = null, $context = null)
+    {
+        $permission = implode('.', [$this->basePermission, $actionType]);
+        if (!$this->isGranted($permission, $context)) {
+            throw new UnauthorizedException;
+        }
+    }
+    
+    /**
+     * Setup form for view
+     * 
+     * @param Form $form
+     */
+    protected function setupFormForView($form)
+    {
+        $form->get('buttons')->get('cancel')->setAttribute(
+            'href',
+            $this->url()->fromRoute($this->indexRoute)
+        );
+    }
+    
+    /**
+     * Setup form for dialogue
+     * 
+     * @param Form $form
+     */
+    protected function setupFormForDialogue($form)
+    {
+        $form->get('buttons')->get('cancel')->setAttributes([
+            'data-href'    => $this->url()->fromRoute($this->indexRoute),
+            'data-dismiss' => 'modal',
+        ]);
     }
 }

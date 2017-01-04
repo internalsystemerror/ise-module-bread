@@ -11,6 +11,4 @@ $title       = ucfirst($camelFilter->filter($entityType));
 </h1>
 <?php
 // Display form
-$cancel = $form->get('buttons')->get('cancel');
-$cancel->setAttribute('href', $this->url($indexRoute));
 echo $this->form($form);

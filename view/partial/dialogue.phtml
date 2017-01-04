@@ -1,9 +1,3 @@
-<?php
-$camelFilter   = new Zend\Filter\Word\CamelCaseToSeparator;
-$actionTitle   = strtolower($camelFilter->filter($dialogueType));
-$entityTitle   = strtolower($camelFilter->filter($entityType));
-$dialogueTitle = ucwords($actionTitle . ' ' . $entityTitle);
-?>
 <div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"
      aria-labelledby="admin-modal-label">
     <div class="modal-dialog">
@@ -18,19 +12,10 @@ $dialogueTitle = ucwords($actionTitle . ' ' . $entityTitle);
                 </h4>
             </div>
             <div class="modal-body">
-                <p>
-                    <strong>Are you sure</strong> you really want to
-                    <?php echo $actionTitle ?> the <?php echo $entityTitle ?>:
-                    <em><?php echo $entity ?></em>?
-                </p>
+                <?php echo $dialogueBody ?>
             </div>
             <div class="modal-footer">
-                <?php
-                $cancel = $form->get('buttons')->get('cancel');
-                $cancel->setAttribute('data-href', $this->url($indexRoute));
-                $cancel->setAttribute('data-dismiss', 'modal');
-                echo $this->form($form);
-                ?>
+                <?php echo $this->form($form) ?>
             </div>
         </div>
     </div>

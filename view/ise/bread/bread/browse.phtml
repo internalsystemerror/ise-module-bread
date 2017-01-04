@@ -34,7 +34,7 @@
                 <td><?php echo $this->time($entity->getCreated()) ?></td>
                 <td>
                     <?php if ($entity->isDisabled()): ?>
-                        <?php if ($this->isGranted($this->basePermission . '.enable')): ?>
+                        <?php if ($this->isGranted($this->basePermission . '.enable', $entity)): ?>
                     <a class="btn btn-success" role="button" title="Enable"
                        href="<?php echo $this->url($this->indexRoute . '/enable', ['id' => $entity->getId()]) ?>">
                         <span class="glyphicon glyphicon-off"></span>
@@ -46,19 +46,19 @@
                            href="<?php echo $this->url($this->indexRoute . '/read', array('id' => $entity->getId())) ?>">
                             <span class="glyphicon glyphicon-eye-open"></span>
                         </a>
-                        <?php if ($this->isGranted($this->basePermission . '.edit')): ?>
+                        <?php if ($this->isGranted($this->basePermission . '.edit', $entity)): ?>
                             <a class="btn btn-info" role="button" title="Edit"
                                href="<?php echo $this->url($this->indexRoute . '/edit', array('id' => $entity->getId())) ?>">
                                 <span class="glyphicon glyphicon-pencil"></span>
                             </a>
                         <?php endif ?>
-                        <?php if ($this->isGranted($this->basePermission . '.delete')): ?>
+                        <?php if ($this->isGranted($this->basePermission . '.delete', $entity)): ?>
                         <a class="btn btn-danger" role="button" title="Delete"
                            href="<?php echo $this->url($this->indexRoute . '/delete', ['id' => $entity->getId()]) ?>">
                             <span class="glyphicon glyphicon-trash"></span>
                         </a>
                         <?php endif ?>
-                        <?php if ($this->isGranted($this->basePermission . '.disable')): ?>
+                        <?php if ($this->isGranted($this->basePermission . '.disable', $entity)): ?>
                         <a class="btn btn-warning" role="button" title="Disable"
                            href="<?php echo $this->url($this->indexRoute . '/disable', ['id' => $entity->getId()]) ?>">
                             <span class="glyphicon glyphicon-off"></span>

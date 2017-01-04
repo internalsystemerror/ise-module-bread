@@ -74,9 +74,9 @@ abstract class AbstractActionController extends ZendAbstractActionController imp
     public function browseAction()
     {
         // Check for access permission
-        if (!$this->isGranted($this->basePermission)) {
-            throw new UnauthorizedException();
-        }
+        $this->checkPermission();
+        
+        // Create list view model
         return $this->createActionViewModel('browse', ['list' => $this->service->browse()]);
     }
 
@@ -350,5 +350,19 @@ abstract class AbstractActionController extends ZendAbstractActionController imp
             'data-href'    => $this->url()->fromRoute($this->indexRoute),
             'data-dismiss' => 'modal',
         ]);
+    }
+    
+    /**
+     * Redirect browse to index route
+     * 
+     * @return ResponseInterface
+     */
+    protected function redirectBrowse()
+    {
+        // Check for access permission
+        $this->checkPermission();
+        
+        // Redirect to index route
+        return $this->redirect()->toRoute($this->indexRoute);
     }
 }

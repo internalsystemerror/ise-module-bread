@@ -1,9 +1,5 @@
-<?php
-$camelFilter = new Zend\Filter\Word\CamelCaseToSeparator;
-$title       = ucfirst($camelFilter->filter($entityType));
-?>
 <h1 class="page-header">
-    Reading <?php echo $title ?>: <em><?php echo $entity ?></em>
+    Reading <?php echo $entityTitle ?>: <em><?php echo $entity ?></em>
 </h1>
 <form class="form-horizontal">
     <div class="form-group">

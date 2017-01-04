@@ -220,7 +220,9 @@ abstract class AbstractActionController extends ZendAbstractActionController imp
                 );
                 return $this->redirect()->toRoute($this->indexRoute);
             }
+            return false;
         }
+        return null;
     }
     
     /**
@@ -267,11 +269,15 @@ abstract class AbstractActionController extends ZendAbstractActionController imp
      */
     protected function createActionViewModel($actionTemplate, array $parameters = [], $viewTemplate = null)
     {
-        // Set parameters
+        // Create title
+        $camelFilter   = new CamelCaseToSeparator;
+        $entityTitle   = strtolower($camelFilter->filter($this->entityType));
+        
+        // Set parameters$this->entityType
         $variables = array_merge([
             'basePermission' => $this->basePermission,
             'indexRoute'     => $this->indexRoute,
-            'entityType'     => $this->entityType,
+            'entityTitle'    => ucwords($entityTitle),
         ], $parameters);
         
         // Set up view model
@@ -309,7 +315,10 @@ abstract class AbstractActionController extends ZendAbstractActionController imp
      */
     protected function checkPermission($actionType = null, $context = null)
     {
-        $permission = implode('.', [$this->basePermission, $actionType]);
+        $permission = $this->basePermission;
+        if ($actionType) {
+            $permission .= '.' . $actionType;
+        }
         if (!$this->isGranted($permission, $context)) {
             throw new UnauthorizedException;
         }
@@ -322,6 +331,8 @@ abstract class AbstractActionController extends ZendAbstractActionController imp
      */
     protected function setupFormForView($form)
     {
+        $form->setAttribute('action', $this->url()->fromRoute(null, [], null, true));
+        $form->setAttribute('class', 'form-horizontal');
         $form->get('buttons')->get('cancel')->setAttribute(
             'href',
             $this->url()->fromRoute($this->indexRoute)

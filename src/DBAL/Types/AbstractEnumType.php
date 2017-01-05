@@ -58,7 +58,7 @@ abstract class AbstractEnumType extends Type
             return $platform->getVarcharTypeDeclarationSQL($fieldDeclaration);
         }
         
-        $values = implode(', ', array_map(array($this, 'mapValue'), $this->getValues()));
+        $values = implode(', ', array_map([$this, 'mapValue'], $this->getValues()));
         return sprintf('ENUM(%s)', $values);
     }
     

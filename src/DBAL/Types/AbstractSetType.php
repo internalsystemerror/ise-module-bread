@@ -18,7 +18,7 @@ abstract class AbstractSetType extends AbstractEnumType
             return $platform->getClobTypeDeclarationSQL($fieldDeclaration);
         }
         
-        $values = implode(', ', array_map(array($this, 'mapValue'), $this->getValues()));
+        $values = implode(', ', array_map([$this, 'mapValue'], $this->getValues()));
         return sprintf('SET(%s)', $values);
     }
     

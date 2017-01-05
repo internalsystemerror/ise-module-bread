@@ -129,9 +129,9 @@ class FormAbstractFactory implements AbstractFactoryInterface
                 case $element instanceof EntityMultiCheckbox:
                 case $element instanceof EntityRadio:
                 case $element instanceof EntitySelect:
-                    $element->getProxy()->setOptions(array(
+                    $element->getProxy()->setOptions([
                         'object_manager' => $entityManager,
-                    ));
+                    ]);
                     break;
                 default:
                     break;

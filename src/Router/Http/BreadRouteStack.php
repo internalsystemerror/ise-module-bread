@@ -31,7 +31,7 @@ class BreadRouteStack extends TreeRouteStack
     /**
      * {@inheritDoc}
      */
-    public static function factory($options = array())
+    public static function factory($options = [])
     {
         $options['routes'] = self::parseRoutes($options['routes']);
         return parent::factory($options);

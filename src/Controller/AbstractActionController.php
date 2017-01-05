@@ -3,7 +3,7 @@
 namespace Ise\Bread\Controller;
 
 use Ise\Bread\Entity\AbstractEntity;
-use Ise\Bread\Router\Http\BreadRouteStack;
+use Ise\Bread\Router\Http\Bread;
 use Ise\Bread\Service\ServiceInterface;
 use Zend\Filter\Word\CamelCaseToSeparator;
 use Zend\Form\Form;
@@ -101,18 +101,18 @@ abstract class AbstractActionController extends ZendAbstractActionController imp
     public function addAction()
     {
         // Check access
-        $this->checkPermission(BreadRouteStack::ACTION_CREATE);
-        $action = $this->performAction(BreadRouteStack::ACTION_CREATE);
+        $this->checkPermission(Bread::ACTION_CREATE);
+        $action = $this->performAction(Bread::ACTION_CREATE);
         if ($action) {
             return $action;
         }
         
         // Setup form
-        $form = $this->service->getForm(BreadRouteStack::ACTION_CREATE);
+        $form = $this->service->getForm(Bread::ACTION_CREATE);
         $this->setupFormForView($form);
         
         // Return view
-        return $this->createActionViewModel(BreadRouteStack::ACTION_CREATE, ['form' => $form,]);
+        return $this->createActionViewModel(Bread::ACTION_CREATE, ['form' => $form,]);
     }
 
     /**
@@ -125,21 +125,21 @@ abstract class AbstractActionController extends ZendAbstractActionController imp
         if (!$entity) {
             return $this->notFoundAction();
         }
-        $this->checkPermission(BreadRouteStack::ACTION_UPDATE, $entity);
+        $this->checkPermission(Bread::ACTION_UPDATE, $entity);
         
         // Setup form
-        $form = $this->service->getForm(BreadRouteStack::ACTION_UPDATE);
+        $form = $this->service->getForm(Bread::ACTION_UPDATE);
         $form->bind($entity);
         
         // Perform action
-        $action = $this->performAction(BreadRouteStack::ACTION_UPDATE);
+        $action = $this->performAction(Bread::ACTION_UPDATE);
         if ($action) {
             return $action;
         }
         
         // Return view
         $this->setupFormForView($form);
-        return $this->createActionViewModel(BreadRouteStack::ACTION_UPDATE, [
+        return $this->createActionViewModel(Bread::ACTION_UPDATE, [
             'entity' => $entity,
             'form'   => $form,
         ]);
@@ -150,7 +150,7 @@ abstract class AbstractActionController extends ZendAbstractActionController imp
      */
     public function deleteAction()
     {
-        return $this->dialogueAction(BreadRouteStack::ACTION_DELETE);
+        return $this->dialogueAction(Bread::ACTION_DELETE);
     }
 
     /**
@@ -158,7 +158,7 @@ abstract class AbstractActionController extends ZendAbstractActionController imp
      */
     public function enableAction()
     {
-        return $this->dialogueAction(BreadRouteStack::ACTION_ENABLE);
+        return $this->dialogueAction(Bread::ACTION_ENABLE);
     }
 
     /**
@@ -166,7 +166,7 @@ abstract class AbstractActionController extends ZendAbstractActionController imp
      */
     public function disableAction()
     {
-        return $this->dialogueAction(BreadRouteStack::ACTION_DISABLE);
+        return $this->dialogueAction(Bread::ACTION_DISABLE);
     }
     
     /**

@@ -2,26 +2,28 @@
 
 namespace Ise\Bread;
 
-use Zend\EventManager\EventInterface;
-use Zend\ModuleManager\Feature\BootstrapListenerInterface;
 use Zend\ModuleManager\Feature\ConfigProviderInterface;
 use Zend\ModuleManager\Feature\DependencyIndicatorInterface;
+use Zend\ModuleManager\Feature\InitProviderInterface;
 use Zend\ModuleManager\Feature\ServiceProviderInterface;
+use Zend\ModuleManager\ModuleManagerInterface ;
 
 class Module implements
-    BootstrapListenerInterface,
     ConfigProviderInterface,
     DependencyIndicatorInterface,
+    InitProviderInterface,
     ServiceProviderInterface
 {
 
     /**
      * {@inheritDoc}
      */
-    public function onBootstrap(EventInterface $event)
+    public function init(ModuleManagerInterface  $moduleManager)
     {
-        // Attach listeners
-        $application = $event->getTarget();
+        $eventManager = $moduleManager->getEventManager();
+        
+        $configListener = new Listener\ConfigListener();
+        $configListener->attach($eventManager);
     }
 
 

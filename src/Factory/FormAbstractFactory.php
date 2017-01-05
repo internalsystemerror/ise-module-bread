@@ -15,7 +15,7 @@ use DoctrineORMModule\Form\Element\EntityRadio;
 use DoctrineORMModule\Form\Element\EntitySelect;
 use DoctrineORMModule\Stdlib\Hydrator\DoctrineEntity;
 use Ise\Bread\Form\Annotation\ElementAnnotationsListener;
-use Ise\Bread\Router\Http\BreadRouteStack;
+use Ise\Bread\Router\Http\Bread;
 use Interop\Container\ContainerInterface;
 use Zend\Form\Form;
 use Zend\ServiceManager\AbstractFactoryInterface;
@@ -42,8 +42,8 @@ class FormAbstractFactory implements AbstractFactoryInterface
 
         // Choose value for submit button
         switch ($actionType) {
-            case BreadRouteStack::ACTION_CREATE:
-            case BreadRouteStack::ACTION_UPDATE:
+            case Bread::ACTION_CREATE:
+            case Bread::ACTION_UPDATE:
                 $submit = 'Save';
                 $form   = $builder->createForm($entity);
                 $this->injectEntityManagerIntoElements($form, $entityManager);
@@ -57,9 +57,9 @@ class FormAbstractFactory implements AbstractFactoryInterface
         // Add hydrator
         $hydrator = new DoctrineEntity($entityManager);
         $form->setHydrator($hydrator);
-        if ($actionType === BreadRouteStack::ACTION_CREATE) {
-            $form->remove(BreadRouteStack::IDENTIFIER);
-            $form->getInputFilter()->remove(BreadRouteStack::IDENTIFIER);
+        if ($actionType === Bread::ACTION_CREATE) {
+            $form->remove(Bread::IDENTIFIER);
+            $form->getInputFilter()->remove(Bread::IDENTIFIER);
             $form->bind($entity);
         }
 

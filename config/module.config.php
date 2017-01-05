@@ -3,27 +3,21 @@
 namespace Ise\Bread;
 
 use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
-use Ise\Bread\Controller\Plugin\FormSessionPlugin;
-use Ise\Bread\Controller\Plugin\Factory\FormSessionPluginFactory;
-use Ise\Bread\DBAL\Types\DateIntervalType;
-use Ise\Bread\Factory\AnnotationBuilderFactory;
-use Ise\Bread\Router\Http\BreadRouteStack;
-use Ise\Bread\Router\Http\Bread;
 
 return [
     'controller_plugins' => [
         'aliases'   => [
-            'formSession' => FormSessionPlugin::class,
+            'formSession' => Controller\Plugin\FormSessionPlugin::class,
         ],
         'factories' => [
-            FormSessionPlugin::class => FormSessionPluginFactory::class,
+            Controller\Plugin\FormSessionPlugin::class => Controller\Plugin\Factory\FormSessionPluginFactory::class,
         ],
     ],
-    'doctrine'      => [
+    'doctrine'           => [
         'configuration' => [
             'orm_default' => [
                 'types' => [
-                    'dateinterval' => DateIntervalType::class,
+                    'dateinterval' => DBAL\Types\DateIntervalType::class,
                 ],
             ],
         ],
@@ -52,17 +46,9 @@ return [
         ],
     ],
     'doctrine_factories' => [
-        'formannotationbuilder' => AnnotationBuilderFactory::class,
+        'formannotationbuilder' => Factory\AnnotationBuilderFactory::class,
     ],
-    'router'        => [
-        'router_class' => BreadRouteStack::class,
-    ],
-    'route_manager' => [
-        'invokables' => [
-            'bread' => Bread::class,
-        ],
-    ],
-    'view_manager'  => [
+    'view_manager'       => [
         'controller_map'      => [
             'Ise' => true,
         ],

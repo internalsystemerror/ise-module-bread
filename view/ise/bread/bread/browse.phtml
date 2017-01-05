@@ -1,11 +1,11 @@
 <?php
-use Ise\Bread\Router\Http\BreadRouteStack;
+use Ise\Bread\Router\Http\Bread;
 ?>
 <h1 class="page-header">
     Browsing <?php echo $entityTitle, substr($entityTitle, -1, 1) !== 's' ? 's' : null ?>
-    <?php if ($this->isGranted($this->basePermission . '.' . BreadRouteStack::ACTION_CREATE)): ?>
+    <?php if ($this->isGranted($this->basePermission . '.' . Bread::ACTION_CREATE)): ?>
     <a class="btn btn-primary pull-right" role="button" title="Add New"
-       href="<?php echo $this->url($this->indexRoute . '/' . BreadRouteStack::ACTION_CREATE) ?>">
+       href="<?php echo $this->url($this->indexRoute . '/' . Bread::ACTION_CREATE) ?>">
         <span class="glyphicon glyphicon-plus"></span>
     </a>
     <?php endif ?>
@@ -37,33 +37,33 @@ use Ise\Bread\Router\Http\BreadRouteStack;
                 <td><?php echo $this->time($entity->getCreated()) ?></td>
                 <td>
                     <?php if ($entity->isDisabled()): ?>
-                        <?php if ($this->isGranted($this->basePermission . '.' . BreadRouteStack::ACTION_ENABLE, $entity)): ?>
+                        <?php if ($this->isGranted($this->basePermission . '.' . Bread::ACTION_ENABLE, $entity)): ?>
                     <a class="btn btn-success" role="button" title="Enable"
-                       href="<?php echo $this->url($this->indexRoute . '/' . BreadRouteStack::ACTION_ENABLE, ['id' => $entity->getId()]) ?>">
+                       href="<?php echo $this->url($this->indexRoute . '/' . Bread::ACTION_ENABLE, ['id' => $entity->getId()]) ?>">
                         <span class="glyphicon glyphicon-off"></span>
                     </a>
                         <?php endif ?>
                     <?php else: ?>
                     <div class="btn-group" role="group" aria-label="Actions">
                         <a class="btn btn-primary" role="button" title="View"
-                           href="<?php echo $this->url($this->indexRoute . '/' . BreadRouteStack::ACTION_READ, ['id' => $entity->getId()]) ?>">
+                           href="<?php echo $this->url($this->indexRoute . '/' . Bread::ACTION_READ, ['id' => $entity->getId()]) ?>">
                             <span class="glyphicon glyphicon-eye-open"></span>
                         </a>
-                        <?php if ($this->isGranted($this->basePermission . '.' . BreadRouteStack::ACTION_UPDATE, $entity)): ?>
+                        <?php if ($this->isGranted($this->basePermission . '.' . Bread::ACTION_UPDATE, $entity)): ?>
                             <a class="btn btn-info" role="button" title="Edit"
-                               href="<?php echo $this->url($this->indexRoute . '/' . BreadRouteStack::ACTION_UPDATE, ['id' => $entity->getId()]) ?>">
+                               href="<?php echo $this->url($this->indexRoute . '/' . Bread::ACTION_UPDATE, ['id' => $entity->getId()]) ?>">
                                 <span class="glyphicon glyphicon-pencil"></span>
                             </a>
                         <?php endif ?>
-                        <?php if ($this->isGranted($this->basePermission . '.' . BreadRouteStack::ACTION_DELETE, $entity)): ?>
+                        <?php if ($this->isGranted($this->basePermission . '.' . Bread::ACTION_DELETE, $entity)): ?>
                         <a class="btn btn-danger" role="button" title="Delete"
-                           href="<?php echo $this->url($this->indexRoute . '/' . BreadRouteStack::ACTION_DELETE, ['id' => $entity->getId()]) ?>">
+                           href="<?php echo $this->url($this->indexRoute . '/' . Bread::ACTION_DELETE, ['id' => $entity->getId()]) ?>">
                             <span class="glyphicon glyphicon-trash"></span>
                         </a>
                         <?php endif ?>
-                        <?php if ($this->isGranted($this->basePermission . '.' . BreadRouteStack::ACTION_DISABLE, $entity)): ?>
+                        <?php if ($this->isGranted($this->basePermission . '.' . Bread::ACTION_DISABLE, $entity)): ?>
                         <a class="btn btn-warning" role="button" title="Disable"
-                           href="<?php echo $this->url($this->indexRoute . '/' . BreadRouteStack::ACTION_DISABLE, ['id' => $entity->getId()]) ?>">
+                           href="<?php echo $this->url($this->indexRoute . '/' . Bread::ACTION_DISABLE, ['id' => $entity->getId()]) ?>">
                             <span class="glyphicon glyphicon-off"></span>
                         </a>
                         <?php endif ?>

@@ -22,9 +22,6 @@ class Module implements
     {
         // Attach listeners
         $application = $event->getTarget();
-        $application->getEventManager()->attachAggregate(
-            $application->getServiceManager()->get(Listener\RouteCacheListener::class)
-        );
     }
 
 

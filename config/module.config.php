@@ -9,8 +9,6 @@ use Ise\Bread\DBAL\Types\DateIntervalType;
 use Ise\Bread\Factory\AnnotationBuilderFactory;
 use Ise\Bread\Router\Http\BreadRouteStack;
 use Ise\Bread\Router\Http\Bread;
-use Ise\Bread\Listener\RouteCacheListener;
-use Zend\Serializer\Adapter\PhpSerialize;
 
 return [
     'controller_plugins' => [
@@ -19,24 +17,6 @@ return [
         ],
         'factories' => [
             FormSessionPlugin::class => FormSessionPluginFactory::class,
-        ],
-    ],
-    'caches'        => [
-        RouteCacheListener::CACHE_SERVICE => [
-            'adapter' => [
-                'name'    => 'filesystem',
-                'options' => [
-                    'cache_dir' => 'data/cache'
-                ],
-            ],
-            'plugins' => [
-                'exception_handler' => [
-                    'throw_exceptions' => false,
-                ],
-                'serializer'        => [
-                    'serializer' => PhpSerialize::class,
-                ],
-            ],
         ],
     ],
     'doctrine'      => [

@@ -2,6 +2,7 @@
 
 namespace Ise\Bread\Factory;
 
+use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -14,8 +15,7 @@ class DoctrineOrmMapperFactory implements FactoryInterface
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $entityManager = $container->get('Doctrine\ORM\EntityManager');
-        return new $requestedName($entityManager);
+        return new $requestedName($container->get(EntityManager::class));
     }
 
     /**

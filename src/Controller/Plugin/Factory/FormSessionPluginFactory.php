@@ -15,8 +15,7 @@ class FormSessionPluginFactory implements FactoryInterface
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $formSessionService = $container->getServiceLocator()->get(FormSessionService::class);
-        return new $requestedName($formSessionService);
+        return new $requestedName($container->get(FormSessionService::class));
     }
 
     /**
@@ -24,6 +23,6 @@ class FormSessionPluginFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
-        return $this($serviceLocator, $requestedName);
+        return $this($serviceLocator->getServiceLocator(), $requestedName);
     }
 }

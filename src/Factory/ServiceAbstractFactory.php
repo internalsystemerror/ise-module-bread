@@ -15,9 +15,7 @@ class ServiceAbstractFactory implements AbstractFactoryInterface
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $mapperClass = $this->translateServiceToMapper($container, $requestedName);
-        $mapper      = $container->get($mapperClass);
-
-        return new $requestedName($container, $mapper);
+        return new $requestedName($container, $container->get($mapperClass));
     }
 
     /**

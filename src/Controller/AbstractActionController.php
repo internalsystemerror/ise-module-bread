@@ -100,9 +100,15 @@ abstract class AbstractActionController extends ZendAbstractActionController imp
      */
     public function addAction()
     {
+        // PRG wrapper
+        $prg = $this->prg();
+        if ($prg instanceof ResponseInterface) {
+            return $prg;
+        }
+        
         // Check access
         $this->checkPermission(Bread::ACTION_CREATE);
-        $action = $this->performAction(Bread::ACTION_CREATE);
+        $action = $this->performAction(Bread::ACTION_CREATE, $prg);
         if ($action) {
             return $action;
         }
@@ -120,8 +126,14 @@ abstract class AbstractActionController extends ZendAbstractActionController imp
      */
     public function editAction()
     {
+        // PRG wrapper
+        $prg = $this->prg();
+        if ($prg instanceof ResponseInterface) {
+            return $prg;
+        }
+        
         // Check access
-        $entity = $this->getEntity();
+        $entity = $this->getEntity($prg);
         if (!$entity) {
             return $this->notFoundAction();
         }
@@ -132,7 +144,7 @@ abstract class AbstractActionController extends ZendAbstractActionController imp
         $form->bind($entity);
         
         // Perform action
-        $action = $this->performAction(Bread::ACTION_UPDATE);
+        $action = $this->performAction(Bread::ACTION_UPDATE, $prg);
         if ($action) {
             return $action;
         }
@@ -177,8 +189,14 @@ abstract class AbstractActionController extends ZendAbstractActionController imp
      */
     protected function dialogueAction($actionType, $viewTemplate = null)
     {
+        // PRG wrapper
+        $prg = $this->prg();
+        if ($prg instanceof ResponseInterface) {
+            return $prg;
+        }
+        
         // Check access
-        $entity = $this->getEntity();
+        $entity = $this->getEntity($prg);
         if (!$entity) {
             return $this->notFoundAction();
         }
@@ -189,7 +207,7 @@ abstract class AbstractActionController extends ZendAbstractActionController imp
         $form->bind($entity);
         
         // Perform action
-        $action = $this->performAction($actionType);
+        $action = $this->performAction($actionType, $prg);
         if ($action) {
             return $action;
         }
@@ -205,24 +223,20 @@ abstract class AbstractActionController extends ZendAbstractActionController imp
      * @param  string $actionType
      * @return ResponseInterface|null
      */
-    protected function performAction($actionType)
+    protected function performAction($actionType, $prg)
     {
-        // Create PRG wrapper
-        $prg = $this->prg();
-        if ($prg instanceof ResponseInterface) {
-            return $prg;
-        } elseif ($prg !== false) {
-            // Perform action
-            if ($this->service->$actionType($prg)) {
-                // Set success message
-                $this->flashMessenger()->addSuccessMessage(
-                    ucfirst($actionType) . ' ' . $this->entityType . ' successful.'
-                );
-                return $this->redirect()->toRoute($this->indexRoute);
-            }
-            return false;
+        if ($prg === false) {
+            return null;
         }
-        return null;
+        
+        if ($this->service->$actionType($prg)) {
+            // Set success message
+            $this->flashMessenger()->addSuccessMessage(
+                ucfirst($actionType) . ' ' . $this->entityType . ' successful.'
+            );
+            return $this->redirect()->toRoute($this->indexRoute);
+        }
+        return false;
     }
     
     /**
@@ -292,18 +306,35 @@ abstract class AbstractActionController extends ZendAbstractActionController imp
     /**
      * Get entity
      *
+     * @param array $prg
      * @return AbstractEntity|boolean
      */
-    protected function getEntity()
+    protected function getEntity($prg)
     {
-        $id = (string) $this->params($this->identifier, '');
-        if ($id) {
-            $entity = $this->service->read($id);
-            if ($entity) {
-                return $entity;
-            }
+        // Get entity id
+        $id = $this->getEntityId($prg);
+        if (!$id) {
+            return false;
         }
-        return false;
+        
+        $entity = $this->service->read($id);
+        if (!$entity) {
+            return false;
+        }
+        return $entity;
+    }
+    
+    protected function getEntityId($prg)
+    {
+        // Get entity ID
+        if ($prg === false) {
+            return (string) $this->params($this->identifier, '');
+        }
+        
+        if (!isset($prg[$this->identifier])) {
+            return false;
+        }
+        return (string) $prg[$this->identifier];
     }
     
     /**

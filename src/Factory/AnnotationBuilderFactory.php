@@ -2,6 +2,7 @@
 
 namespace Ise\Bread\Factory;
 
+use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
 use Ise\Bread\Form\Annotation\AnnotationBuilder;
 use Zend\ServiceManager\FactoryInterface;
@@ -15,8 +16,10 @@ class AnnotationBuilderFactory implements FactoryInterface
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $entityManager = $container->get('Doctrine\ORM\EntityManager');
-        return new AnnotationBuilder($entityManager);
+        if (!$requestedName) {
+            $requestedName = AnnotationBuilder::class;
+        }
+        return new $requestedName($container->get(EntityManager::class));
     }
 
     /**

@@ -15,8 +15,7 @@ class RouteCacheListenerFactory implements FactoryInterface
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $cacheService = $container->get(RouteCacheListener::CACHE_SERVICE);
-        return new $requestedName($cacheService);
+        return new $requestedName($container->get(RouteCacheListener::CACHE_SERVICE));
     }
 
     /**

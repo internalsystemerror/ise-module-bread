@@ -19,8 +19,7 @@ class ActionControllerFactory implements FactoryInterface
             $serviceClass = $this->translateControllerToService($requestedName);
         }
         
-        $service = $container->getServiceLocator()->get($serviceClass);
-        return new $requestedName($service);
+        return new $requestedName($container->get($serviceClass));
     }
 
     /**
@@ -28,7 +27,7 @@ class ActionControllerFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
-        return $this($serviceLocator, $requestedName);
+        return $this($serviceLocator->getServiceLocator(), $requestedName);
     }
 
     /**

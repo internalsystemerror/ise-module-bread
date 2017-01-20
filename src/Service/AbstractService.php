@@ -3,18 +3,18 @@
 namespace Ise\Bread\Service;
 
 use DateTime;
+use Interop\Container\ContainerInterface;
 use Ise\Bread\Mapper\MapperInterface;
 use Ise\Bread\Router\Http\Bread;
 use Zend\Form\FormInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
 
 abstract class AbstractService implements ServiceInterface
 {
 
     /**
-     * @var ServiceLocatorInterface
+     * @var ContainerInterface
      */
-    protected $formElementManager;
+    protected $serviceLocator;
 
     /**
      * @var string[]|FormInterface[]
@@ -40,13 +40,13 @@ abstract class AbstractService implements ServiceInterface
     /**
      * Constructor
      *
-     * @param ServiceLocatorInterface $formElementManager
-     * @param MapperInterface         $mapper
+     * @param ContainerInterface $serviceLocator
+     * @param MapperInterface    $mapper
      */
-    public function __construct(ServiceLocatorInterface $formElementManager, MapperInterface $mapper)
+    public function __construct(ContainerInterface $serviceLocator, MapperInterface $mapper)
     {
-        $this->formElementManager = $formElementManager;
-        $this->mapper             = $mapper;
+        $this->serviceLocator = $serviceLocator;
+        $this->mapper         = $mapper;
     }
 
     /**
@@ -135,7 +135,7 @@ abstract class AbstractService implements ServiceInterface
             throw new Exception\InvalidArgumentException('Invalid form name given, "' . $action . '"');
         }
         if (is_string($this->form[$action])) {
-            $form                = $this->formElementManager->get($this->form[$action]);
+            $form                = $this->serviceLocator->get($this->form[$action]);
             $this->form[$action] = $form;
         }
         return $this->form[$action];

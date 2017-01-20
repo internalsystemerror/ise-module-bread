@@ -133,7 +133,7 @@ abstract class AbstractActionController extends ZendAbstractActionController imp
         }
         
         // Check access
-        $entity = $this->getEntity($prg);
+        $entity = $this->getEntity();
         if (!$entity) {
             return $this->notFoundAction();
         }
@@ -196,7 +196,7 @@ abstract class AbstractActionController extends ZendAbstractActionController imp
         }
         
         // Check access
-        $entity = $this->getEntity($prg);
+        $entity = $this->getEntity();
         if (!$entity) {
             return $this->notFoundAction();
         }
@@ -306,13 +306,12 @@ abstract class AbstractActionController extends ZendAbstractActionController imp
     /**
      * Get entity
      *
-     * @param array $prg
      * @return AbstractEntity|boolean
      */
-    protected function getEntity($prg)
+    protected function getEntity()
     {
         // Get entity id
-        $id = $this->getEntityId($prg);
+        $id = (string) $this->params($this->identifier, '');
         if (!$id) {
             return false;
         }
@@ -322,19 +321,6 @@ abstract class AbstractActionController extends ZendAbstractActionController imp
             return false;
         }
         return $entity;
-    }
-    
-    protected function getEntityId($prg)
-    {
-        // Get entity ID
-        if ($prg === false) {
-            return (string) $this->params($this->identifier, '');
-        }
-        
-        if (!isset($prg[$this->identifier])) {
-            return false;
-        }
-        return (string) $prg[$this->identifier];
     }
     
     /**

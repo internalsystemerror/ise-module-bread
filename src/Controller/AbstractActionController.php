@@ -71,19 +71,21 @@ abstract class AbstractActionController extends ZendAbstractActionController imp
     /**
      * {@inheritDoc}
      */
-    public function browseAction()
+    public function browseAction($viewTemplate = null)
     {
         // Check for access permission
         $this->checkPermission();
         
         // Create list view model
-        return $this->createActionViewModel('browse', ['list' => $this->service->browse()]);
+        return $this->createActionViewModel('browse', [
+            'list' => $this->service->browse()
+        ], $viewTemplate);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function readAction()
+    public function readAction($viewTemplate = null)
     {
         // Load entity
         $entity  = $this->getEntity();
@@ -92,13 +94,15 @@ abstract class AbstractActionController extends ZendAbstractActionController imp
         }
         // Check for access permission
         $this->checkPermission(null, $entity);
-        return $this->createActionViewModel('read', ['entity' => $entity]);
+        return $this->createActionViewModel('read', [
+            'entity' => $entity
+        ], $viewTemplate);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function addAction()
+    public function addAction($viewTemplate = null)
     {
         // PRG wrapper
         $prg = $this->prg();
@@ -118,13 +122,15 @@ abstract class AbstractActionController extends ZendAbstractActionController imp
         $this->setupFormForView($form);
         
         // Return view
-        return $this->createActionViewModel(Bread::ACTION_CREATE, ['form' => $form,]);
+        return $this->createActionViewModel(Bread::ACTION_CREATE, [
+            'form' => $form,
+        ], $viewTemplate);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function editAction()
+    public function editAction($viewTemplate = null)
     {
         // PRG wrapper
         $prg = $this->prg();
@@ -154,31 +160,31 @@ abstract class AbstractActionController extends ZendAbstractActionController imp
         return $this->createActionViewModel(Bread::ACTION_UPDATE, [
             'entity' => $entity,
             'form'   => $form,
-        ]);
+        ], $viewTemplate);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function deleteAction()
+    public function deleteAction($viewTemplate = null)
     {
-        return $this->dialogueAction(Bread::ACTION_DELETE);
+        return $this->dialogueAction(Bread::ACTION_DELETE, $viewTemplate);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function enableAction()
+    public function enableAction($viewTemplate = null)
     {
-        return $this->dialogueAction(Bread::ACTION_ENABLE);
+        return $this->dialogueAction(Bread::ACTION_ENABLE, $viewTemplate);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function disableAction()
+    public function disableAction($viewTemplate = null)
     {
-        return $this->dialogueAction(Bread::ACTION_DISABLE);
+        return $this->dialogueAction(Bread::ACTION_DISABLE, $viewTemplate);
     }
     
     /**

@@ -150,6 +150,9 @@ abstract class AbstractActionController extends ZendAbstractActionController imp
         $form->bind($entity);
         
         // Perform action
+        if ($prg) {
+            $prg[Bread::IDENTIFIER] = $entity->getId();
+        }
         $action = $this->performAction(Bread::ACTION_UPDATE, $prg);
         if ($action) {
             return $action;

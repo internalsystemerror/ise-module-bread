@@ -8,7 +8,7 @@ use Zend\Form\Annotation as ZF;
 /**
  * @ORM\MappedSuperclass
  */
-abstract class AbstractBasicEntity extends AbstractEntity
+abstract class AbstractBasicEntity extends AbstractEntity implements BasicEntityInterface
 {
 
     /**
@@ -43,12 +43,11 @@ abstract class AbstractBasicEntity extends AbstractEntity
      * Set name
      *
      * @param string $name
-     * @return Permission
+     * @return self
      */
     public function setName($name)
     {
         $this->name = (string) $name;
-
         return $this;
     }
 
@@ -66,12 +65,11 @@ abstract class AbstractBasicEntity extends AbstractEntity
      * Set description
      *
      * @param string $description
-     * @return Permission
+     * @return self
      */
     public function setDescription($description)
     {
         $this->description = (string) $description;
-
         return $this;
     }
 

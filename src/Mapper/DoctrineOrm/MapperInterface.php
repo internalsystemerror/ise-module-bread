@@ -2,22 +2,16 @@
 
 namespace Ise\Bread\Mapper\DoctrineOrm;
 
+use Doctrine\ORM\EntityManager;
 use Ise\Bread\Mapper\MapperInterface as IseMapperInterface;
 
-/**
- * @SuppressWarnings(PHPMD.ShortVariableName)
- */
 interface MapperInterface extends IseMapperInterface
 {
 
     /**
-     * Browse entities
+     * Constructor
      *
-     * @param  array        $criteria
-     * @param  array|null   $orderBy
-     * @param  integer|null $limit
-     * @param  integer|null $offset
-     * @return array
+     * @param EntityManager $entityManager
      */
-    public function browse($criteria = [], $orderBy = null, $limit = null, $offset = null);
+    public function __construct(EntityManager $entityManager);
 }

@@ -21,7 +21,7 @@ abstract class AbstractActionController extends ZendAbstractActionController imp
     /**
      * @var string
      */
-    protected static $serviceClass = '';
+    protected static $serviceClass;
     
     /**
      * @var ServiceInterface
@@ -36,17 +36,17 @@ abstract class AbstractActionController extends ZendAbstractActionController imp
     /**
      * @var string
      */
-    protected $indexRoute = '';
+    protected $indexRoute;
 
     /**
      * @var string
      */
-    protected $basePermission = '';
+    protected $basePermission;
 
     /**
      * @var string
      */
-    protected $entityType = '';
+    protected $entityType;
     
     /**
      * Get service class
@@ -253,11 +253,11 @@ abstract class AbstractActionController extends ZendAbstractActionController imp
      * 
      * @param string $actionType
      * @param Form $form
-     * @param AbstractEntity $entity
+     * @param EntityInterface $entity
      * @param null|string $viewTemplate
      * @return ViewModel
      */
-    protected function createDialogueViewModelWrapper($actionType, Form $form, AbstractEntity $entity, $viewTemplate = null)
+    protected function createDialogueViewModelWrapper($actionType, Form $form, EntityInterface $entity, $viewTemplate = null)
     {
         // Create titles
         $camelFilter   = new CamelCaseToSeparator;
@@ -315,7 +315,7 @@ abstract class AbstractActionController extends ZendAbstractActionController imp
     /**
      * Get entity
      *
-     * @return AbstractEntity|boolean
+     * @return EntityInterface|boolean
      */
     protected function getEntity()
     {

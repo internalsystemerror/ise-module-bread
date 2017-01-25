@@ -4,6 +4,8 @@ namespace Ise\Bread\Service;
 
 use DateTime;
 use Interop\Container\ContainerInterface;
+use Ise\Bread\Entity\EntityInterface;
+use Ise\Bread\Exception\InvalidArgumentException;
 use Ise\Bread\Mapper\MapperInterface;
 use Ise\Bread\Router\Http\Bread;
 use Zend\Form\FormInterface;
@@ -35,7 +37,7 @@ abstract class AbstractService implements ServiceInterface
     /**
      * @var string
      */
-    protected $entityClass = '';
+    protected $entityClass;
     
     /**
      * Constructor
@@ -52,7 +54,7 @@ abstract class AbstractService implements ServiceInterface
     /**
      * {@inheritDoc}
      */
-    public function browse($criteria = [], $orderBy = null, $limit = null, $offset = null)
+    public function browse(array $criteria = [], array $orderBy = [], $limit = null, $offset = null)
     {
         return $this->mapper->browse($criteria, $orderBy, $limit, $offset);
     }
@@ -64,6 +66,14 @@ abstract class AbstractService implements ServiceInterface
     public function read($id)
     {
         return $this->mapper->read($id);
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public function readBy(array $criteria)
+    {
+        return $this->mapper->readBy($criteria);
     }
 
     /**
@@ -127,12 +137,19 @@ abstract class AbstractService implements ServiceInterface
     }
 
     /**
-     * {@inheritDoc}
+     * Get a form by name
+     * 
+     * @param type $action
+     * @return type
+     * @throws InvalidArgumentException
      */
     public function getForm($action)
     {
         if (!isset($this->form[$action])) {
-            throw new Exception\InvalidArgumentException('Invalid form name given, "' . $action . '"');
+            throw new InvalidArgumentException(sprintf(
+                'Invalid form name given, "%s"',
+                $action
+            ));
         }
         if (is_string($this->form[$action])) {
             $form                = $this->serviceLocator->get($this->form[$action]);
@@ -146,7 +163,7 @@ abstract class AbstractService implements ServiceInterface
      *
      * @param  string $action Action to perform
      * @param  array  $data   Data to act upon
-     * @return boolean|object
+     * @return boolean|EntityInterface
      */
     protected function aed($action, array $data)
     {
@@ -165,7 +182,7 @@ abstract class AbstractService implements ServiceInterface
      *
      * @param  string $action Action to perform
      * @param  array  $data   Data to act upon
-     * @return boolean|object
+     * @return boolean|EntityInterface
      */
     protected function validateForm($action, array $data)
     {

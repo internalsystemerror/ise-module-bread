@@ -3,6 +3,9 @@
 namespace Ise\Bread\Mapper\DoctrineOrm;
 
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityRepository;
+use Exception;
+use Ise\Bread\Entity\EntityInterface;
 use Ise\Bread\Mapper\AbstractMapper as IseAbstractMapper;
 
 /**
@@ -17,71 +20,70 @@ abstract class AbstractMapper extends IseAbstractMapper implements MapperInterfa
     protected $entityManager;
     
     /**
-     * Constructor
-     *
-     * @param EntityManager $entityManager
+     * @var EntityRepository
+     */
+    protected $entityRepository;
+    
+    /**
+     * {@inheritDoc}
      */
     public function __construct(EntityManager $entityManager)
     {
-        $this->entityManager = $entityManager;
+        $this->entityManager  = $entityManager;
+        $this->entityReposity = $entityManager->getRepository(self::$entityClass);
     }
 
     /**
-     * Browse entities
-     *
-     * @return array
+     * {@inheritDoc}
      */
-    public function browse($criteria = [], $orderBy = null, $limit = null, $offset = null)
+    public function browse(array $criteria = [], array $orderBy = [], $limit = null, $offset = null)
     {
-        return $this->entityManager->getRepository($this->entityClass)->findBy($criteria, $orderBy, $limit, $offset);
+        
+        return $this->entityReposity->findBy($criteria, $orderBy, $limit, $offset);
     }
 
     /**
-     * Read entity
-     *
-     * @param  integer $id
-     * @return object
+     * {@inheritDoc}
      */
     public function read($id)
     {
-        return $this->entityManager->getRepository($this->entityClass)->find($id);
+        return $this->entityReposity->find($id);
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public function readBy(array $criteria)
+    {
+        return $this->entityReposity->findOneBy($criteria);
     }
 
     /**
-     * Add entity
-     *
-     * @param  object $entity
-     * @return boolean|object
+     * {@inheritDoc}
      */
-    public function add($entity)
+    public function add(EntityInterface $entity)
     {
         return $this->persist($entity);
     }
 
     /**
-     * Edit entity
-     *
-     * @param  object $entity
-     * @return boolean|object
+     * {@inheritDoc}
      */
-    public function edit($entity)
+    public function edit(EntityInterface $entity)
     {
         return $this->persist($entity);
     }
-
+    
     /**
-     * Delete entity
-     *
-     * @param  object $entity
-     * @return boolean
+     * {@inheritDoc}
      */
-    public function delete($entity)
+    public function delete(EntityInterface $entity)
     {
         try {
             $this->entityManager->remove($entity);
             $this->entityManager->flush($entity);
-            return true;
-        } catch (\Exception $e) {
+            return $entity;
+        } catch (Exception $e) {
             if (APPLICATION_ENV === 'development') {
                 throw $e;
             }
@@ -90,40 +92,31 @@ abstract class AbstractMapper extends IseAbstractMapper implements MapperInterfa
     }
 
     /**
-     * Disable entity
-     *
-     * @param  object $entity
-     * @return boolean|object
+     * {@inheritDoc}
      */
-    public function disable($entity)
+    public function disable(EntityInterface $entity)
     {
         return $this->persist($entity);
     }
 
     /**
-     * Enable entity
-     *
-     * @param  object $entity
-     * @return boolean|object
+     * {@inheritDoc}
      */
-    public function enable($entity)
+    public function enable(EntityInterface $entity)
     {
         return $this->persist($entity);
     }
 
     /**
-     * Persist entity
-     *
-     * @param  object $entity
-     * @return boolean|object
+     * {@inheritDoc}
      */
-    protected function persist($entity)
+    protected function persist(EntityInterface $entity)
     {
         try {
             $this->entityManager->persist($entity);
             $this->entityManager->flush($entity);
             return $entity;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             if (APPLICATION_ENV === 'development') {
                 throw $e;
             }

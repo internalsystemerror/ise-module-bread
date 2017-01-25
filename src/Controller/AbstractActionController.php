@@ -2,7 +2,8 @@
 
 namespace Ise\Bread\Controller;
 
-use Ise\Bread\Entity\AbstractEntity;
+use Exception;
+use Ise\Bread\Entity\EntityInterface;
 use Ise\Bread\Router\Http\Bread;
 use Ise\Bread\Service\ServiceInterface;
 use Zend\Filter\Word\CamelCaseToSeparator;
@@ -10,7 +11,6 @@ use Zend\Form\Form;
 use Zend\Mvc\Controller\AbstractActionController as ZendAbstractActionController;
 use Zend\Stdlib\ResponseInterface;
 use Zend\View\Model\ViewModel;
-use ZfcRbac\Exception\UnauthorizedException;
 
 /**
  * @SuppressWarnings(PHPMD.ShortVariableName)
@@ -78,7 +78,8 @@ abstract class AbstractActionController extends ZendAbstractActionController imp
         
         // Create list view model
         return $this->createActionViewModel('browse', [
-            'list' => $this->service->browse()
+            'identifier' => $this->identifer,
+            'list'       => $this->service->browse(),
         ], $viewTemplate);
     }
 
@@ -337,18 +338,9 @@ abstract class AbstractActionController extends ZendAbstractActionController imp
      * 
      * @param string|null $actionType
      * @param mixed|null $context
-     * @throws UnauthorizedException
+     * @throws Exception
      */
-    protected function checkPermission($actionType = null, $context = null)
-    {
-        $permission = $this->basePermission;
-        if ($actionType) {
-            $permission .= '.' . $actionType;
-        }
-        if (!$this->isGranted($permission, $context)) {
-            throw new UnauthorizedException;
-        }
-    }
+    abstract protected function checkPermission($actionType = null, $context = null);
     
     /**
      * Setup form for view

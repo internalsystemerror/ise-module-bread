@@ -39,7 +39,11 @@ abstract class AbstractService implements ServiceInterface
      */
     protected $mapper;
     
-    
+    /**
+     * Get mapper class
+     * 
+     * @return string
+     */
     public function getMapperClass()
     {
         return static::$mapperClass;

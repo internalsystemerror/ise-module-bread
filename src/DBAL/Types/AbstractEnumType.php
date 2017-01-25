@@ -19,7 +19,7 @@ abstract class AbstractEnumType extends Type
      * @static
      * @var array
      */
-    protected static $validValues = [];
+    protected $validValues = [];
     
     /**
      * Get choices (labels) for this type

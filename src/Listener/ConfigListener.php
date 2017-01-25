@@ -78,21 +78,11 @@ class ConfigListener implements ListenerAggregateInterface
         }
 
         // Set variables
-        $identifier = Bread::IDENTIFIER;
-        if (isset($route['options']['identifier'])) {
-            $identifier = $route['options']['identifier'];
-        }
-
-        $uuidRegex   = trim(Uuid::REGEX_UUID, '/^$');
-        $constraints = [$identifier => $uuidRegex];
-        if (isset($route['options']['constraints'])) {
-            $constraints = $route['options']['constraints'];
-        }
 
         // Create options
         $options = array_merge_recursive($route, [
             'options'      => ['defaults' => ['action' => Bread::ACTION_INDEX]],
-            'child_routes' => $this->createChildRoutes($identifier, $constraints),
+            'child_routes' => $this->createChildRoutes($uuidRegex),
         ]);
         if (!isset($options['may_terminate'])) {
             $options['may_terminate'] = true;
@@ -105,13 +95,12 @@ class ConfigListener implements ListenerAggregateInterface
     /**
      * Create default routes
      *
-     * @param  string $identifier  The default identifier
-     * @param  array  $constraints Constraints for the identifier
      * @return array
      */
-    protected function createChildRoutes($identifier, $constraints)
+    protected function createChildRoutes()
     {
         // Loop through actions
+        $uuidRegex   = trim(Uuid::REGEX_UUID, '/^$');
         $childRoutes = [];
         foreach (Bread::ACTIONS as $action) {
             if ($action === Bread::ACTION_CREATE) {
@@ -119,7 +108,7 @@ class ConfigListener implements ListenerAggregateInterface
                 continue;
             }
             // Add action
-            $childRoutes[$action] = $this->defaultConstrainedAction($action, $identifier, $constraints);
+            $childRoutes[$action] = $this->defaultConstrainedAction($action, $uuidRegex);
         }
 
         // Add special case add action
@@ -131,21 +120,20 @@ class ConfigListener implements ListenerAggregateInterface
     /**
      * Create default constrained action
      *
-     * @param  string $action      Action this is for
-     * @param  string $identifier  The default identifier
-     * @param  array  $constraints Constraints for the identifier
+     * @param  string $action    Action this is for
+     * @param  string $uuidRegex UUID regex
      * @return array
      */
-    protected function defaultConstrainedAction($action, $identifier, array $constraints)
+    protected function defaultConstrainedAction($action, $uuidRegex)
     {
         return [
             'type'    => 'segment',
             'options' => [
-                'route'       => '/' . $action . '/:' . $identifier,
-                'constraints' => $constraints,
+                'route'       => '/' . $action . '/:' . Bread::IDENTIFIER,
+                'constraints' => [Bread::IDENTIFIER => $uuidRegex],
                 'defaults'    => [
                     'action' => $action,
-                ]
+                ],
             ],
         ];
     }

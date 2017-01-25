@@ -22,31 +22,26 @@ abstract class AbstractActionController extends ZendAbstractActionController imp
      * @var string
      */
     protected static $serviceClass;
+
+    /**
+     * @var string
+     */
+    protected static $indexRoute;
+
+    /**
+     * @var string
+     */
+    protected static $basePermission;
+
+    /**
+     * @var string
+     */
+    protected static $entityType;
     
     /**
      * @var ServiceInterface
      */
     protected $service;
-
-    /**
-     * @var string
-     */
-    protected $identifier = 'id';
-
-    /**
-     * @var string
-     */
-    protected $indexRoute;
-
-    /**
-     * @var string
-     */
-    protected $basePermission;
-
-    /**
-     * @var string
-     */
-    protected $entityType;
     
     /**
      * Get service class
@@ -78,8 +73,7 @@ abstract class AbstractActionController extends ZendAbstractActionController imp
         
         // Create list view model
         return $this->createActionViewModel('browse', [
-            'identifier' => $this->identifer,
-            'list'       => $this->service->browse(),
+            'list'       => static::$service->browse(),
         ], $viewTemplate);
     }
 
@@ -242,9 +236,9 @@ abstract class AbstractActionController extends ZendAbstractActionController imp
         if ($this->service->$actionType($prg)) {
             // Set success message
             $this->flashMessenger()->addSuccessMessage(
-                ucfirst($actionType) . ' ' . $this->entityType . ' successful.'
+                ucfirst($actionType) . ' ' . static::$entityType . ' successful.'
             );
-            return $this->redirect()->toRoute($this->indexRoute);
+            return $this->redirect()->toRoute(static::$indexRoute);
         }
         return false;
     }
@@ -263,7 +257,7 @@ abstract class AbstractActionController extends ZendAbstractActionController imp
         // Create titles
         $camelFilter   = new CamelCaseToSeparator;
         $actionTitle   = strtolower($camelFilter->filter($actionType));
-        $entityTitle   = strtolower($camelFilter->filter($this->entityType));
+        $entityTitle   = strtolower($camelFilter->filter(static::$entityType));
         
         // Create body
         $dialogueBody  = $this->createActionViewModel('dialogue', [
@@ -295,12 +289,12 @@ abstract class AbstractActionController extends ZendAbstractActionController imp
     {
         // Create title
         $camelFilter   = new CamelCaseToSeparator;
-        $entityTitle   = strtolower($camelFilter->filter($this->entityType));
+        $entityTitle   = strtolower($camelFilter->filter(static::$entityType));
         
-        // Set parameters$this->entityType
+        // Set parametersstatic::$entityType
         $variables = array_merge([
-            'basePermission' => $this->basePermission,
-            'indexRoute'     => $this->indexRoute,
+            'basePermission' => static::$basePermission,
+            'indexRoute'     => static::$indexRoute,
             'entityTitle'    => ucwords($entityTitle),
         ], $parameters);
         
@@ -321,7 +315,7 @@ abstract class AbstractActionController extends ZendAbstractActionController imp
     protected function getEntity()
     {
         // Get entity id
-        $id = (string) $this->params($this->identifier, '');
+        $id = (string) $this->params(Bread::IDENTIFIER, '');
         if (!$id) {
             return false;
         }
@@ -353,7 +347,7 @@ abstract class AbstractActionController extends ZendAbstractActionController imp
         $form->setAttribute('class', 'form-horizontal');
         $form->get('buttons')->get('cancel')->setAttribute(
             'href',
-            $this->url()->fromRoute($this->indexRoute)
+            $this->url()->fromRoute(static::$indexRoute)
         );
     }
     
@@ -365,7 +359,7 @@ abstract class AbstractActionController extends ZendAbstractActionController imp
     protected function setupFormForDialogue($form)
     {
         $form->get('buttons')->get('cancel')->setAttributes([
-            'data-href'    => $this->url()->fromRoute($this->indexRoute),
+            'data-href'    => $this->url()->fromRoute(static::$indexRoute),
             'data-dismiss' => 'modal',
         ]);
     }
@@ -381,6 +375,6 @@ abstract class AbstractActionController extends ZendAbstractActionController imp
         $this->checkPermission();
         
         // Redirect to index route
-        return $this->redirect()->toRoute($this->indexRoute);
+        return $this->redirect()->toRoute(static::$indexRoute);
     }
 }

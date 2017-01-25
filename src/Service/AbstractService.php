@@ -12,16 +12,16 @@ use Zend\Form\FormInterface;
 
 abstract class AbstractService implements ServiceInterface
 {
-
+    
     /**
-     * @var ContainerInterface
+     * @var string
      */
-    protected $serviceLocator;
+    protected static $mapperClass;
 
     /**
      * @var string[]|FormInterface[]
      */
-    protected $form = [
+    protected static $form = [
         Bread::ACTION_CREATE  => '',
         Bread::ACTION_UPDATE  => '',
         Bread::ACTION_DELETE  => '',
@@ -30,14 +30,20 @@ abstract class AbstractService implements ServiceInterface
     ];
 
     /**
+     * @var ContainerInterface
+     */
+    protected $serviceLocator;
+
+    /**
      * @var MapperInterface
      */
     protected $mapper;
-
-    /**
-     * @var string
-     */
-    protected $entityClass;
+    
+    
+    public function getMapperClass()
+    {
+        return static::$mapperClass;
+    }
     
     /**
      * Constructor
@@ -105,17 +111,7 @@ abstract class AbstractService implements ServiceInterface
      */
     public function disable(array $data)
     {
-        // Validate form
-        $entity = $this->validateForm(Bread::ACTION_DISABLE, $data);
-        if (!$entity) {
-            return false;
-        }
-
-        // Get entity
-        $entity->setDisabled(true);
-
-        // Save entity
-        return $this->mapper->disable($entity);
+        return $this->aed(Bread::ACTION_DISABLE);
     }
 
     /**
@@ -123,17 +119,7 @@ abstract class AbstractService implements ServiceInterface
      */
     public function enable(array $data)
     {
-        // Validate form
-        $entity = $this->validateForm(Bread::ACTION_ENABLE, $data);
-        if (!$entity) {
-            return false;
-        }
-
-        // Set disabled
-        $entity->setDisabled(false);
-
-        // Save entity
-        return $this->mapper->enable($entity);
+        return $this->aed(Bread::ACTION_DISABLE);
     }
 
     /**
@@ -145,17 +131,16 @@ abstract class AbstractService implements ServiceInterface
      */
     public function getForm($action)
     {
-        if (!isset($this->form[$action])) {
+        if (!isset(static::$form[$action])) {
             throw new InvalidArgumentException(sprintf(
                 'Invalid form name given, "%s"',
                 $action
             ));
         }
-        if (is_string($this->form[$action])) {
-            $form                = $this->serviceLocator->get($this->form[$action]);
-            $this->form[$action] = $form;
+        if (is_string(static::$form[$action])) {
+            static::$form[$action] = $this->serviceLocator->get(static::$form[$action]);
         }
-        return $this->form[$action];
+        return static::$form[$action];
     }
 
     /**
@@ -194,7 +179,6 @@ abstract class AbstractService implements ServiceInterface
 
         $entity = $form->getData();
         if ($action !== Bread::ACTION_CREATE) {
-            $entity->setLastModified(new DateTime);
         }
 
         return $entity;

@@ -77,12 +77,10 @@ class ConfigListener implements ListenerAggregateInterface
             return $route;
         }
 
-        // Set variables
-
         // Create options
         $options = array_merge_recursive($route, [
             'options'      => ['defaults' => ['action' => Bread::ACTION_INDEX]],
-            'child_routes' => $this->createChildRoutes($uuidRegex),
+            'child_routes' => $this->createChildRoutes(),
         ]);
         if (!isset($options['may_terminate'])) {
             $options['may_terminate'] = true;

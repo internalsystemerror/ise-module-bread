@@ -13,6 +13,10 @@ use Ise\Bread\Mapper\AbstractMapper as IseAbstractMapper;
  */
 abstract class AbstractMapper extends IseAbstractMapper implements MapperInterface
 {
+    /**
+     * @var string
+     */
+    protected static $entityClass;
     
     /**
      * @var EntityManager
@@ -30,7 +34,7 @@ abstract class AbstractMapper extends IseAbstractMapper implements MapperInterfa
     public function __construct(EntityManager $entityManager)
     {
         $this->entityManager  = $entityManager;
-        $this->entityReposity = $entityManager->getRepository(static::$entityClass);
+        $this->entityRepository = $entityManager->getRepository(static::$entityClass);
     }
 
     /**
@@ -39,7 +43,7 @@ abstract class AbstractMapper extends IseAbstractMapper implements MapperInterfa
     public function browse(array $criteria = [], array $orderBy = [], $limit = null, $offset = null)
     {
         
-        return $this->entityReposity->findBy($criteria, $orderBy, $limit, $offset);
+        return $this->entityRepository->findBy($criteria, $orderBy, $limit, $offset);
     }
 
     /**
@@ -47,7 +51,7 @@ abstract class AbstractMapper extends IseAbstractMapper implements MapperInterfa
      */
     public function read($id)
     {
-        return $this->entityReposity->find($id);
+        return $this->entityRepository->find($id);
     }
     
     /**
@@ -55,7 +59,7 @@ abstract class AbstractMapper extends IseAbstractMapper implements MapperInterfa
      */
     public function readBy(array $criteria)
     {
-        return $this->entityReposity->findOneBy($criteria);
+        return $this->entityRepository->findOneBy($criteria);
     }
 
     /**

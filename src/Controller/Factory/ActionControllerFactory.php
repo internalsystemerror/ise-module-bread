@@ -6,7 +6,7 @@ use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
-class BreadControllerFactory implements FactoryInterface
+class ActionControllerFactory implements FactoryInterface
 {
 
     /**

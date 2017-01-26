@@ -14,11 +14,11 @@ interface ServiceInterface
      * Browse entities
      * 
      * @param array $criteria
-     * @param null|string $orderBy
+     * @param array $orderBy
      * @param null|integer $limit
      * @param null|integer $offset
      */
-    public function browse(array $criteria = [], $orderBy = null, $limit = null, $offset = null);
+    public function browse(array $criteria = [], array $orderBy = [], $limit = null, $offset = null);
 
     /**
      * Read an entity

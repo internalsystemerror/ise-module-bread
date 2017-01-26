@@ -2,13 +2,13 @@
 
 namespace Ise\Bread\Service;
 
-use DateTime;
 use Interop\Container\ContainerInterface;
 use Ise\Bread\Entity\EntityInterface;
 use Ise\Bread\Exception\InvalidArgumentException;
 use Ise\Bread\Mapper\MapperInterface;
 use Ise\Bread\Router\Http\Bread;
 use Zend\Form\FormInterface;
+use ZfcRbac\Service\AuthorizationService;
 
 abstract class AbstractService implements ServiceInterface
 {
@@ -59,6 +59,7 @@ abstract class AbstractService implements ServiceInterface
     {
         $this->serviceLocator = $serviceLocator;
         $this->mapper         = $mapper;
+        $this->authService    = $authService;
     }
 
     /**
@@ -181,11 +182,7 @@ abstract class AbstractService implements ServiceInterface
             return false;
         }
 
-        $entity = $form->getData();
-        if ($action !== Bread::ACTION_CREATE) {
-        }
-
-        return $entity;
+        return $form->getData();
     }
 
     /**

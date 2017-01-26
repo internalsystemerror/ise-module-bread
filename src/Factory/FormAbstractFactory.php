@@ -113,7 +113,7 @@ class FormAbstractFactory implements AbstractFactoryInterface
                 $this->specElementCancel(),
                 $this->specElementSubmit($submitText),
             ],
-        ]);
+        ], ['priority' => -100]);
     }
 
     /**

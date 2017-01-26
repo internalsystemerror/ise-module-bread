@@ -73,7 +73,7 @@ abstract class AbstractActionController extends ZendAbstractActionController imp
         
         // Create list view model
         return $this->createActionViewModel('browse', [
-            'list'       => static::$service->browse(),
+            'list' => $this->service->browse(),
         ], $viewTemplate);
     }
 

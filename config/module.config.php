@@ -58,7 +58,7 @@ return [
             'ise/bread/bread/add'      => __DIR__ . '/../view/ise/bread/bread/add.phtml',
             'ise/bread/bread/edit'     => __DIR__ . '/../view/ise/bread/bread/edit.phtml',
             'ise/bread/bread/dialogue' => __DIR__ . '/../view/ise/bread/bread/dialogue.phtml',
-            'partial/dialogue'         => __DIR__ . '/../view/partial/dialogue.html',
+            'partial/dialogue'         => __DIR__ . '/../view/partial/dialogue.phtml',
         ],
     ],
 ];

@@ -33,7 +33,7 @@ abstract class AbstractMapper extends IseAbstractMapper implements MapperInterfa
      */
     public function __construct(EntityManager $entityManager)
     {
-        $this->entityManager  = $entityManager;
+        $this->entityManager    = $entityManager;
         $this->entityRepository = $entityManager->getRepository(static::$entityClass);
     }
 

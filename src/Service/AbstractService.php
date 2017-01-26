@@ -114,7 +114,7 @@ abstract class AbstractService implements ServiceInterface
      */
     public function disable(array $data)
     {
-        return $this->aed(Bread::ACTION_DISABLE);
+        return $this->aed(Bread::ACTION_DISABLE, $data);
     }
 
     /**
@@ -122,7 +122,7 @@ abstract class AbstractService implements ServiceInterface
      */
     public function enable(array $data)
     {
-        return $this->aed(Bread::ACTION_DISABLE);
+        return $this->aed(Bread::ACTION_ENABLE, $data);
     }
 
     /**

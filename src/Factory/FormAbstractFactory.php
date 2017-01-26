@@ -43,6 +43,12 @@ class FormAbstractFactory implements AbstractFactoryInterface
         // Choose value for submit button
         switch ($actionType) {
             case Bread::ACTION_CREATE:
+                $submit = 'Create';
+                $form   = $builder->createForm($entity);
+                $this->injectEntityManagerIntoElements($form, $entityManager);
+                $form->remove(Bread::IDENTIFIER);
+                $form->getInputFilter()->remove(Bread::IDENTIFIER);
+                break;
             case Bread::ACTION_UPDATE:
                 $submit = 'Save';
                 $form   = $builder->createForm($entity);
@@ -53,15 +59,11 @@ class FormAbstractFactory implements AbstractFactoryInterface
                 $form   = new Form();
                 break;
         }
-
-        // Add hydrator
+        
+        // Assign hydrator
         $hydrator = new DoctrineEntity($entityManager);
         $form->setHydrator($hydrator);
-        if ($actionType === Bread::ACTION_CREATE) {
-            $form->remove(Bread::IDENTIFIER);
-            $form->getInputFilter()->remove(Bread::IDENTIFIER);
-            $form->bind($entity);
-        }
+        $form->bind($entity);
 
         // Add security and submit elements
         $this->addButtonsToForm($form, $submit);

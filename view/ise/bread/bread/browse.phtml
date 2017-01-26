@@ -28,25 +28,25 @@
             <td>
                 <?php if ($entity->isDisabled()): ?>
                 <a class="btn btn-success" role="button" title="Enable"
-                   href="<?php echo $this->url($this->indexRoute . '/' . Bread::ACTION_ENABLE, [Bread::IDENTIFIER => $entity->getId()]) ?>">
+                   href="<?php echo $this->url($indexRoute . '/' . Bread::ACTION_ENABLE, [Bread::IDENTIFIER => $entity->getId()]) ?>">
                     <span class="glyphicon glyphicon-off"></span>
                 </a>
                 <?php else: ?>
                 <div class="btn-group" role="group" aria-label="Actions">
                     <a class="btn btn-primary" role="button" title="View"
-                       href="<?php echo $this->url($this->indexRoute . '/' . Bread::ACTION_READ, [Bread::IDENTIFIER => $entity->getId()]) ?>">
+                       href="<?php echo $this->url($indexRoute . '/' . Bread::ACTION_READ, [Bread::IDENTIFIER => $entity->getId()]) ?>">
                         <span class="glyphicon glyphicon-eye-open"></span>
                     </a>
                         <a class="btn btn-info" role="button" title="Edit"
-                           href="<?php echo $this->url($this->indexRoute . '/' . Bread::ACTION_UPDATE, [Bread::IDENTIFIER => $entity->getId()]) ?>">
+                           href="<?php echo $this->url($indexRoute . '/' . Bread::ACTION_UPDATE, [Bread::IDENTIFIER => $entity->getId()]) ?>">
                             <span class="glyphicon glyphicon-pencil"></span>
                         </a>
                     <a class="btn btn-danger" role="button" title="Delete"
-                       href="<?php echo $this->url($this->indexRoute . '/' . Bread::ACTION_DELETE, [Bread::IDENTIFIER => $entity->getId()]) ?>">
+                       href="<?php echo $this->url($indexRoute . '/' . Bread::ACTION_DELETE, [Bread::IDENTIFIER => $entity->getId()]) ?>">
                         <span class="glyphicon glyphicon-trash"></span>
                     </a>
                     <a class="btn btn-warning" role="button" title="Disable"
-                       href="<?php echo $this->url($this->indexRoute . '/' . Bread::ACTION_DISABLE, [Bread::IDENTIFIER => $entity->getId()]) ?>">
+                       href="<?php echo $this->url($indexRoute . '/' . Bread::ACTION_DISABLE, [Bread::IDENTIFIER => $entity->getId()]) ?>">
                         <span class="glyphicon glyphicon-off"></span>
                     </a>
                 </div>

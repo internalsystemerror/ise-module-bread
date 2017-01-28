@@ -2,6 +2,7 @@
 
 namespace Ise\Bread\Service;
 
+use DateTime;
 use Interop\Container\ContainerInterface;
 use Ise\Bread\Entity\EntityInterface;
 use Ise\Bread\Exception\InvalidArgumentException;
@@ -123,7 +124,7 @@ abstract class AbstractService implements ServiceInterface
         // Save entity
         $entity->setDisabled(true);
         $entity->setLastModified(new DateTime);
-        return $this->mapper->disable($entity);
+        return $this->mapper->edit($entity);
     }
 
     /**
@@ -140,7 +141,7 @@ abstract class AbstractService implements ServiceInterface
         // Save entity
         $entity->setDisabled(false);
         $entity->setLastModified(new DateTime);
-        return $this->mapper->disable($entity);
+        return $this->mapper->edit($entity);
     }
 
     /**

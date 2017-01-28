@@ -28,7 +28,7 @@ interface MapperInterface
      * @return EntityInterface
      */
     public function read($id);
-    
+
     /**
      * Read an entity by criteria
      * 
@@ -60,20 +60,4 @@ interface MapperInterface
      * @return boolean|EntityInterface
      */
     public function delete(EntityInterface $entity);
-
-    /**
-     * Disable entity
-     *
-     * @param  EntityInterface $entity
-     * @return boolean|EntityInterface
-     */
-    public function disable(EntityInterface $entity);
-
-    /**
-     * Enable entity
-     *
-     * @param  EntityInterface $entity
-     * @return boolean|EntityInterface
-     */
-    public function enable(EntityInterface $entity);
 }

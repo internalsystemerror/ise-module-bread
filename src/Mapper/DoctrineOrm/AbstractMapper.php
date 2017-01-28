@@ -99,22 +99,6 @@ abstract class AbstractMapper extends IseAbstractMapper implements MapperInterfa
     /**
      * {@inheritDoc}
      */
-    public function disable(EntityInterface $entity)
-    {
-        return $this->persist($entity);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function enable(EntityInterface $entity)
-    {
-        return $this->persist($entity);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     protected function persist(EntityInterface $entity)
     {
         try {

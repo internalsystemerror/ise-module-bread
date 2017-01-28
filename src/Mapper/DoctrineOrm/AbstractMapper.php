@@ -76,7 +76,6 @@ abstract class AbstractMapper extends IseAbstractMapper implements MapperInterfa
      */
     public function edit(EntityInterface $entity)
     {
-        $entity->setLastModified(new DateTime);
         return $this->persist($entity);
     }
     
@@ -102,8 +101,6 @@ abstract class AbstractMapper extends IseAbstractMapper implements MapperInterfa
      */
     public function disable(EntityInterface $entity)
     {
-        $entity->setDisabled(true);
-        $entity->setLastModified(new DateTime);
         return $this->persist($entity);
     }
 
@@ -112,8 +109,6 @@ abstract class AbstractMapper extends IseAbstractMapper implements MapperInterfa
      */
     public function enable(EntityInterface $entity)
     {
-        $entity->setDisabled(false);
-        $entity->setLastModified(new DateTime);
         return $this->persist($entity);
     }
 

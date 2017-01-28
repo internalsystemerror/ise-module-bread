@@ -114,7 +114,16 @@ abstract class AbstractService implements ServiceInterface
      */
     public function disable(array $data)
     {
-        return $this->aed(Bread::ACTION_DISABLE, $data);
+        // Validate form
+        $entity = $this->validateForm(Bread::ACTION_DISABLE, $data);
+        if (!$entity) {
+            return false;
+        }
+
+        // Save entity
+        $entity->setDisabled(true);
+        $entity->setLastModified(new DateTime);
+        return $this->mapper->disable($entity);
     }
 
     /**
@@ -122,7 +131,16 @@ abstract class AbstractService implements ServiceInterface
      */
     public function enable(array $data)
     {
-        return $this->aed(Bread::ACTION_ENABLE, $data);
+        // Validate form
+        $entity = $this->validateForm(Bread::ACTION_ENABLE, $data);
+        if (!$entity) {
+            return false;
+        }
+
+        // Save entity
+        $entity->setDisabled(false);
+        $entity->setLastModified(new DateTime);
+        return $this->mapper->disable($entity);
     }
 
     /**
@@ -162,6 +180,7 @@ abstract class AbstractService implements ServiceInterface
         }
 
         // Save entity
+        $entity->setLastModified(new DateTime);
         return $this->mapper->$action($entity);
     }
 

@@ -343,7 +343,6 @@ abstract class AbstractActionController extends ZendAbstractActionController imp
      */
     protected function setupFormForView($form)
     {
-        $form->setAttribute('action', $this->url()->fromRoute(null, [], null, true));
         $form->setAttribute('class', 'form-horizontal');
         $form->get('buttons')->get('cancel')->setAttribute(
             'href',

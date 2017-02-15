@@ -234,10 +234,16 @@ abstract class AbstractActionController extends ZendAbstractActionController imp
         }
         
         if ($this->service->$actionType($prg)) {
+            // Create titles
+            $camelFilter   = new CamelCaseToSeparator;
+            $actionTitle   = strtolower($camelFilter->filter($actionType));
+            $entityTitle   = strtolower($camelFilter->filter(static::$entityType));
             // Set success message
-            $this->flashMessenger()->addSuccessMessage(
-                ucfirst($actionType) . ' ' . static::$entityType . ' successful.'
-            );
+            $this->flashMessenger()->addSuccessMessage(sprintf(
+                '%s %s successful.',
+                ucfirst($actionType),
+                $entityTitle
+            ));
             return $this->redirect()->toRoute(static::$indexRoute);
         }
         return false;
@@ -269,7 +275,7 @@ abstract class AbstractActionController extends ZendAbstractActionController imp
         // Create view model wrapper
         $viewModel = new ViewModel([
             'form'          => $form,
-            'dialogueTitle' => ucwords($actionTitle . ' ' . $entityTitle),
+            'dialogueTitle' => sprintf('%s %s', ucwords($actionTitle), ucwords($entityTitle)),
         ]);
         $viewModel->setTemplate('partial/dialogue');
         $viewModel->addChild($dialogueBody, 'dialogueBody');

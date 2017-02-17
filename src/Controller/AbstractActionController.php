@@ -174,44 +174,7 @@ abstract class AbstractActionController extends ZendAbstractActionController imp
      */
     public function enableAction($viewTemplate = null)
     {
-        // PRG wrapper
-        $prg = $this->prg();
-        if ($prg instanceof ResponseInterface) {
-            return $prg;
-        }
-        
-        // Check access
-        $entity = $this->getEntity();
-        if (!$entity) {
-            return $this->notFoundAction();
-        }
-        $this->checkPermission(Bread::ACTION_ENABLE, $entity);
-        
-        // Check if the entity is already enabled
-        if (!$entity->isDisabled()) {
-            $camelFilter = new CamelCaseToSeparator;
-            $entityTitle = strtolower($camelFilter->filter(static::$entityType));
-            // Set warning message
-            $this->flashMessenger()->addWarningMessage(sprintf(
-                'That %s is already enabled',
-                $entityTitle
-            ));
-            return $this->redirect()->toRoute(static::$indexRoute);
-        }
-        
-        // Setup form
-        $form = $this->service->getForm(Bread::ACTION_ENABLE);
-        $form->bind($entity);
-        
-        // Perform action
-        $action = $this->performAction(Bread::ACTION_ENABLE, $prg);
-        if ($action) {
-            return $action;
-        }
-        
-        // Return view
-        $this->setupFormForDialogue($form);
-        return $this->createDialogueViewModelWrapper(Bread::ACTION_ENABLE, $form, $entity, $viewTemplate);
+        return $this->dialogueAction(Bread::ACTION_ENABLE, $viewTemplate);
     }
 
     /**
@@ -219,44 +182,7 @@ abstract class AbstractActionController extends ZendAbstractActionController imp
      */
     public function disableAction($viewTemplate = null)
     {
-        // PRG wrapper
-        $prg = $this->prg();
-        if ($prg instanceof ResponseInterface) {
-            return $prg;
-        }
-        
-        // Check access
-        $entity = $this->getEntity();
-        if (!$entity) {
-            return $this->notFoundAction();
-        }
-        $this->checkPermission(Bread::ACTION_DISABLE, $entity);
-        
-        // Check if the entity is already disabled
-        if ($entity->isDisabled()) {
-            $camelFilter = new CamelCaseToSeparator;
-            $entityTitle = strtolower($camelFilter->filter(static::$entityType));
-            // Set warning message
-            $this->flashMessenger()->addWarningMessage(sprintf(
-                'That %s is already disabled',
-                $entityTitle
-            ));
-            return $this->redirect()->toRoute(static::$indexRoute);
-        }
-        
-        // Setup form
-        $form = $this->service->getForm(Bread::ACTION_DISABLE);
-        $form->bind($entity);
-        
-        // Perform action
-        $action = $this->performAction(Bread::ACTION_DISABLE, $prg);
-        if ($action) {
-            return $action;
-        }
-        
-        // Return view
-        $this->setupFormForDialogue($form);
-        return $this->createDialogueViewModelWrapper(Bread::ACTION_DISABLE, $form, $entity, $viewTemplate);
+        return $this->dialogueAction(Bread::ACTION_DISABLE, $viewTemplate);
     }
     
     /**
@@ -279,6 +205,10 @@ abstract class AbstractActionController extends ZendAbstractActionController imp
             return $this->notFoundAction();
         }
         $this->checkPermission($actionType, $entity);
+        $notAllowed = $this->checkDialogueNotAllowed($actionType, $entity);
+        if ($notAllowed) {
+            return $notAllowed;
+        }
         
         // Setup form
         $form = $this->service->getForm($actionType);
@@ -293,6 +223,43 @@ abstract class AbstractActionController extends ZendAbstractActionController imp
         // Return view
         $this->setupFormForDialogue($form);
         return $this->createDialogueViewModelWrapper($actionType, $form, $entity, $viewTemplate);
+    }
+    
+    /**
+     * Check if dialogue is not allowed
+     * 
+     * @param string $actionType
+     * @param EntityInterface $entity
+     * @return null|ReponseInterface
+     */
+    protected function checkDialogueNotAllowed($actionType, EntityInterface $entity)
+    {
+        switch ($actionType) {
+            case Bread::ACTION_DISABLE:
+                if (!$entity->isDisabled()) {
+                    return;
+                }
+                $camelFilter = new CamelCaseToSeparator;
+                $entityTitle = strtolower($camelFilter->filter(static::$entityType));
+                // Set warning message
+                $this->flashMessenger()->addWarningMessage(sprintf(
+                    'That %s is already disabled',
+                    $entityTitle
+                ));
+                return $this->redirect()->toRoute(static::$indexRoute);
+            case Bread::ACTION_ENABLE: 
+                if ($entity->isDisabled()) {
+                    return;
+                }
+                $camelFilter = new CamelCaseToSeparator;
+                $entityTitle = strtolower($camelFilter->filter(static::$entityType));
+                // Set warning message
+                $this->flashMessenger()->addWarningMessage(sprintf(
+                    'That %s is already enabled',
+                    $entityTitle
+                ));
+                return $this->redirect()->toRoute(static::$indexRoute);
+        }
     }
 
     /**

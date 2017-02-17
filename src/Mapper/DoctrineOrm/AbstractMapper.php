@@ -43,7 +43,6 @@ abstract class AbstractMapper extends IseAbstractMapper implements MapperInterfa
      */
     public function browse(array $criteria = [], array $orderBy = [], $limit = null, $offset = null)
     {
-        
         return $this->entityRepository->findBy($criteria, $orderBy, $limit, $offset);
     }
 

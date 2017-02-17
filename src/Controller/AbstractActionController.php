@@ -174,7 +174,44 @@ abstract class AbstractActionController extends ZendAbstractActionController imp
      */
     public function enableAction($viewTemplate = null)
     {
-        return $this->dialogueAction(Bread::ACTION_ENABLE, $viewTemplate);
+        // PRG wrapper
+        $prg = $this->prg();
+        if ($prg instanceof ResponseInterface) {
+            return $prg;
+        }
+        
+        // Check access
+        $entity = $this->getEntity();
+        if (!$entity) {
+            return $this->notFoundAction();
+        }
+        $this->checkPermission(Bread::ACTION_ENABLE, $entity);
+        
+        // Check if the entity is already enabled
+        if (!$entity->isDisabled()) {
+            $camelFilter = new CamelCaseToSeparator;
+            $entityTitle = strtolower($camelFilter->filter(static::$entityType));
+            // Set warning message
+            $this->flashMessenger()->addWarningMessage(sprintf(
+                'That %s is already enabled',
+                $entityTitle
+            ));
+            return $this->redirect()->toRoute(static::$indexRoute);
+        }
+        
+        // Setup form
+        $form = $this->service->getForm(Bread::ACTION_ENABLE);
+        $form->bind($entity);
+        
+        // Perform action
+        $action = $this->performAction(Bread::ACTION_ENABLE, $prg);
+        if ($action) {
+            return $action;
+        }
+        
+        // Return view
+        $this->setupFormForDialogue($form);
+        return $this->createDialogueViewModelWrapper(Bread::ACTION_ENABLE, $form, $entity, $viewTemplate);
     }
 
     /**
@@ -182,7 +219,44 @@ abstract class AbstractActionController extends ZendAbstractActionController imp
      */
     public function disableAction($viewTemplate = null)
     {
-        return $this->dialogueAction(Bread::ACTION_DISABLE, $viewTemplate);
+        // PRG wrapper
+        $prg = $this->prg();
+        if ($prg instanceof ResponseInterface) {
+            return $prg;
+        }
+        
+        // Check access
+        $entity = $this->getEntity();
+        if (!$entity) {
+            return $this->notFoundAction();
+        }
+        $this->checkPermission(Bread::ACTION_DISABLE, $entity);
+        
+        // Check if the entity is already disabled
+        if ($entity->isDisabled()) {
+            $camelFilter = new CamelCaseToSeparator;
+            $entityTitle = strtolower($camelFilter->filter(static::$entityType));
+            // Set warning message
+            $this->flashMessenger()->addWarningMessage(sprintf(
+                'That %s is already disabled',
+                $entityTitle
+            ));
+            return $this->redirect()->toRoute(static::$indexRoute);
+        }
+        
+        // Setup form
+        $form = $this->service->getForm(Bread::ACTION_DISABLE);
+        $form->bind($entity);
+        
+        // Perform action
+        $action = $this->performAction(Bread::ACTION_DISABLE, $prg);
+        if ($action) {
+            return $action;
+        }
+        
+        // Return view
+        $this->setupFormForDialogue($form);
+        return $this->createDialogueViewModelWrapper(Bread::ACTION_DISABLE, $form, $entity, $viewTemplate);
     }
     
     /**
@@ -235,9 +309,9 @@ abstract class AbstractActionController extends ZendAbstractActionController imp
         
         if ($this->service->$actionType($prg)) {
             // Create titles
-            $camelFilter   = new CamelCaseToSeparator;
-            $actionTitle   = strtolower($camelFilter->filter($actionType));
-            $entityTitle   = strtolower($camelFilter->filter(static::$entityType));
+            $camelFilter = new CamelCaseToSeparator;
+            $actionTitle = strtolower($camelFilter->filter($actionType));
+            $entityTitle = strtolower($camelFilter->filter(static::$entityType));
             // Set success message
             $this->flashMessenger()->addSuccessMessage(sprintf(
                 '%s %s successful.',

@@ -185,14 +185,15 @@ class FormAbstractFactory implements AbstractFactoryInterface
     {
         return [
             'spec' => [
-                'type'       => 'submit',
+                'type'       => 'button',
                 'name'       => 'submit',
                 'options'    => [
-                    'icon' => 'tick',
+                    'icon' => 'ok',
+                    'type' => 'primary',
                 ],
                 'attributes' => [
+                    'type'  => 'submit',
                     'value' => $submitText,
-                    'class' => 'btn btn-primary',
                 ],
             ],
         ];

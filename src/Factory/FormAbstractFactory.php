@@ -1,11 +1,4 @@
 <?php
-/**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/zf2 for the canonical source repository
- * @copyright Copyright (c) 2005-2014 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
- */
 
 namespace Ise\Bread\Factory;
 
@@ -23,43 +16,44 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 
 class FormAbstractFactory implements AbstractFactoryInterface
 {
-    
+
     /**
      * {@inheritDoc}
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         // Create entity
-        $actionType  = $this->translateFormToType($requestedName);
+        $formType    = $this->translateFormToType($requestedName);
         $entityClass = $this->translateFormToEntity($requestedName);
         $entity      = new $entityClass;
 
         // Create builder
-        $entityManager      = $container->get('Doctrine\ORM\EntityManager');
-        $builder            = $container->get('doctrine.formannotationbuilder.orm_default');
-        $elementListener    = new ElementAnnotationsListener($entityManager, $actionType);
+        $entityManager   = $container->get('Doctrine\ORM\EntityManager');
+        $builder         = $container->get('doctrine.formannotationbuilder.orm_default');
+        $elementListener = new ElementAnnotationsListener($entityManager, $formType);
         $elementListener->attach($builder->getEventManager());
 
         // Choose value for submit button
-        switch ($actionType) {
-            case Bread::ACTION_CREATE:
+        switch ($formType) {
+            case Bread::FORM_CREATE:
                 $submit = 'Create';
                 $form   = $builder->createForm($entity);
                 $this->injectEntityManagerIntoElements($form, $entityManager);
                 $form->remove(Bread::IDENTIFIER);
                 $form->getInputFilter()->remove(Bread::IDENTIFIER);
                 break;
-            case Bread::ACTION_UPDATE:
+            case Bread::FORM_UPDATE:
                 $submit = 'Save';
                 $form   = $builder->createForm($entity);
                 $this->injectEntityManagerIntoElements($form, $entityManager);
                 break;
+            case Bread::FORM_DIALOG:
             default:
                 $submit = 'Confirm';
                 $form   = new Form();
                 break;
         }
-        
+
         // Assign hydrator
         $hydrator = new DoctrineEntity($entityManager);
         $form->setHydrator($hydrator);
@@ -70,7 +64,7 @@ class FormAbstractFactory implements AbstractFactoryInterface
 
         return $form;
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -79,13 +73,13 @@ class FormAbstractFactory implements AbstractFactoryInterface
         // Does entity class exist
         return (bool) $this->translateFormToEntity($requestedName);
     }
-    
+
     /**
      * {@inheritDoc}
      */
     public function canCreateServiceWithName(ServiceLocatorInterface $serviceLocator, $name, $requestedName)
     {
-        return $this->canCreate($serviceLocator, $requestedName);
+        return $this->canCreate($serviceLocator->getServiceLocator(), $requestedName);
     }
 
     /**
@@ -93,7 +87,7 @@ class FormAbstractFactory implements AbstractFactoryInterface
      */
     public function createServiceWithName(ServiceLocatorInterface $serviceLocator, $name, $requestedName)
     {
-        return $this($serviceLocator, $requestedName);
+        return $this($serviceLocator->getServiceLocator(), $requestedName);
     }
 
     /**
@@ -115,7 +109,7 @@ class FormAbstractFactory implements AbstractFactoryInterface
                 $this->specElementCancel(),
                 $this->specElementSubmit($submitText),
             ],
-        ], ['priority' => -100]);
+            ], ['priority' => -100]);
     }
 
     /**

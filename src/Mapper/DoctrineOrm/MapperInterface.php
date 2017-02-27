@@ -3,6 +3,7 @@
 namespace Ise\Bread\Mapper\DoctrineOrm;
 
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityRepository;
 use Ise\Bread\Mapper\MapperInterface as IseMapperInterface;
 
 interface MapperInterface extends IseMapperInterface
@@ -13,5 +14,5 @@ interface MapperInterface extends IseMapperInterface
      *
      * @param EntityManager $entityManager
      */
-    public function __construct(EntityManager $entityManager);
+    public function __construct(EntityManager $entityManager, EntityRepository $entityRepository);
 }

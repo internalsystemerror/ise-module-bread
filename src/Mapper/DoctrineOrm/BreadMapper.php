@@ -2,22 +2,16 @@
 
 namespace Ise\Bread\Mapper\DoctrineOrm;
 
-use DateTime;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Exception;
 use Ise\Bread\Entity\EntityInterface;
-use Ise\Bread\Mapper\AbstractMapper as IseAbstractMapper;
 
 /**
  * @SuppressWarnings(PHPMD.ShortVariableName)
  */
-abstract class AbstractMapper extends IseAbstractMapper implements MapperInterface
+class BreadMapper implements MapperInterface
 {
-    /**
-     * @var string
-     */
-    protected static $entityClass;
     
     /**
      * @var EntityManager
@@ -32,10 +26,10 @@ abstract class AbstractMapper extends IseAbstractMapper implements MapperInterfa
     /**
      * {@inheritDoc}
      */
-    public function __construct(EntityManager $entityManager)
+    public function __construct(EntityManager $entityManager, EntityRepository $entityRepository)
     {
         $this->entityManager    = $entityManager;
-        $this->entityRepository = $entityManager->getRepository(static::$entityClass);
+        $this->entityRepository = $entityRepository;
     }
 
     /**

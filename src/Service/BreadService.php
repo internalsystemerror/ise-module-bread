@@ -3,62 +3,43 @@
 namespace Ise\Bread\Service;
 
 use DateTime;
-use Interop\Container\ContainerInterface;
 use Ise\Bread\Entity\EntityInterface;
 use Ise\Bread\Exception\InvalidArgumentException;
 use Ise\Bread\Mapper\MapperInterface;
 use Ise\Bread\Router\Http\Bread;
+use Ise\Bread\ServiceManager\BreadManager;
 use Zend\Form\FormInterface;
 
-abstract class AbstractService implements ServiceInterface
+class BreadService implements ServiceInterface
 {
-    
-    /**
-     * @var string
-     */
-    protected static $mapperClass;
 
     /**
-     * @var string[]|FormInterface[]
+     * @var BreadManager
      */
-    protected static $form = [
-        Bread::ACTION_CREATE  => '',
-        Bread::ACTION_UPDATE  => '',
-        Bread::ACTION_DELETE  => '',
-        Bread::ACTION_ENABLE  => '',
-        Bread::ACTION_DISABLE => '',
-    ];
-
-    /**
-     * @var ContainerInterface
-     */
-    protected $serviceLocator;
+    protected $breadManager;
 
     /**
      * @var MapperInterface
      */
     protected $mapper;
-    
+
     /**
-     * Get mapper class
-     * 
-     * @return string
+     * @var string[]|FormInterface[]
      */
-    public function getMapperClass()
-    {
-        return static::$mapperClass;
-    }
-    
+    protected $forms;
+
     /**
      * Constructor
      *
-     * @param ContainerInterface $serviceLocator
-     * @param MapperInterface    $mapper
+     * @param BreadManager $breadManager
+     * @param MapperInterface $mapper
+     * @param string[]|FormInterface[] $forms
      */
-    public function __construct(ContainerInterface $serviceLocator, MapperInterface $mapper)
+    public function __construct(BreadManager $breadManager, MapperInterface $mapper, array $forms)
     {
-        $this->serviceLocator = $serviceLocator;
-        $this->mapper         = $mapper;
+        $this->breadManager = $breadManager;
+        $this->mapper       = $mapper;
+        $this->forms        = $forms;
     }
 
     /**
@@ -77,7 +58,7 @@ abstract class AbstractService implements ServiceInterface
     {
         return $this->mapper->read($id);
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -91,7 +72,14 @@ abstract class AbstractService implements ServiceInterface
      */
     public function add(array $data)
     {
-        return $this->aed(Bread::ACTION_CREATE, $data);
+        // Validate form
+        $entity = $this->validateForm(Bread::FORM_CREATE, $data);
+        if (!$entity) {
+            return false;
+        }
+
+        // Save entity
+        return $this->mapper->add($entity);
     }
 
     /**
@@ -99,7 +87,15 @@ abstract class AbstractService implements ServiceInterface
      */
     public function edit(array $data)
     {
-        return $this->aed(Bread::ACTION_UPDATE, $data);
+        // Validate form
+        $entity = $this->validateForm(Bread::FORM_UPDATE, $data);
+        if (!$entity) {
+            return false;
+        }
+
+        // Save entity
+        $entity->setLastModified(new DateTime);
+        return $this->mapper->edit($entity);
     }
 
     /**
@@ -107,7 +103,14 @@ abstract class AbstractService implements ServiceInterface
      */
     public function delete(array $data)
     {
-        return $this->aed(Bread::ACTION_DELETE, $data);
+        // Validate form
+        $entity = $this->validateForm(Bread::FORM_DIALOG, $data);
+        if (!$entity) {
+            return false;
+        }
+
+        // Save entity
+        return $this->mapper->delete($entity);
     }
 
     /**
@@ -116,7 +119,7 @@ abstract class AbstractService implements ServiceInterface
     public function disable(array $data)
     {
         // Validate form
-        $entity = $this->validateForm(Bread::ACTION_DISABLE, $data);
+        $entity = $this->validateForm(Bread::FORM_DIALOG, $data);
         if (!$entity) {
             return false;
         }
@@ -133,7 +136,7 @@ abstract class AbstractService implements ServiceInterface
     public function enable(array $data)
     {
         // Validate form
-        $entity = $this->validateForm(Bread::ACTION_ENABLE, $data);
+        $entity = $this->validateForm(Bread::FORM_DIALOG, $data);
         if (!$entity) {
             return false;
         }
@@ -153,36 +156,15 @@ abstract class AbstractService implements ServiceInterface
      */
     public function getForm($action)
     {
-        if (!isset(static::$form[$action])) {
+        if (!isset($this->forms[$action])) {
             throw new InvalidArgumentException(sprintf(
-                'Invalid form name given, "%s"',
-                $action
+                'Invalid form name given, "%s"', $action
             ));
         }
-        if (is_string(static::$form[$action])) {
-            static::$form[$action] = $this->serviceLocator->get(static::$form[$action]);
+        if (is_string($this->forms[$action])) {
+            $this->forms[$action] = $this->breadManager->getForm($this->forms[$action]);
         }
-        return static::$form[$action];
-    }
-
-    /**
-     * Add/edit/delete method
-     *
-     * @param  string $action Action to perform
-     * @param  array  $data   Data to act upon
-     * @return boolean|EntityInterface
-     */
-    protected function aed($action, array $data)
-    {
-        // Validate form
-        $entity = $this->validateForm($action, $data);
-        if (!$entity) {
-            return false;
-        }
-
-        // Save entity
-        $entity->setLastModified(new DateTime);
-        return $this->mapper->$action($entity);
+        return $this->forms[$action];
     }
 
     /**

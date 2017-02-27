@@ -3,10 +3,11 @@
 namespace Ise\Bread\Controller\Factory;
 
 use Interop\Container\ContainerInterface;
+use Ise\Bread\ServiceManager\BreadManager;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
-class ActionControllerFactory implements FactoryInterface
+class BreadActionControllerFactory implements FactoryInterface
 {
 
     /**
@@ -14,7 +15,13 @@ class ActionControllerFactory implements FactoryInterface
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        return new $requestedName($container->get($requestedName::getServiceClass()));
+        $breadManager    = $container->get(BreadManager::class);
+        $controllerClass = $breadManager->getControllerBaseClass($requestedName);
+        
+        return new $controllerClass(
+            $breadManager->getService($breadManager->getServiceClassFromControllerClass($requestedName)),
+            $breadManager->getControllerOptionsFromControllerClass($requestedName)
+        );
     }
 
     /**

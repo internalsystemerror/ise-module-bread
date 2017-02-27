@@ -4,6 +4,7 @@ namespace Ise\Bread\Controller;
 
 use Exception;
 use Ise\Bread\Entity\EntityInterface;
+use Ise\Bread\Options\ControllerOptions;
 use Ise\Bread\Router\Http\Bread;
 use Ise\Bread\Service\ServiceInterface;
 use Zend\Filter\Word\CamelCaseToSeparator;
@@ -15,135 +16,129 @@ use Zend\View\Model\ViewModel;
 /**
  * @SuppressWarnings(PHPMD.ShortVariableName)
  */
-abstract class AbstractActionController extends ZendAbstractActionController implements ActionControllerInterface
+class BreadActionController extends ZendAbstractActionController implements ActionControllerInterface
 {
-    
-    /**
-     * @var string
-     */
-    protected static $serviceClass;
 
-    /**
-     * @var string
-     */
-    protected static $indexRoute;
-
-    /**
-     * @var string
-     */
-    protected static $basePermission;
-
-    /**
-     * @var string
-     */
-    protected static $entityType;
-    
     /**
      * @var ServiceInterface
      */
     protected $service;
-    
+
     /**
-     * Get service class
-     *
-     * @return string
+     * @var string
      */
-    public static function getServiceClass()
-    {
-        return static::$serviceClass;
-    }
+    protected $indexRoute;
+
+    /**
+     * @var string
+     */
+    protected $basePermission;
+
+    /**
+     * @var string
+     */
+    protected $entityTitle;
+
+    /**
+     * @var array
+     */
+    protected $templates;
 
     /**
      * Constructor
      *
      * @param ServiceInterface $service
      */
-    public function __construct(ServiceInterface $service)
+    public function __construct(ServiceInterface $service, ControllerOptions $options)
     {
-        $this->service = $service;
+        $this->service        = $service;
+        $this->indexRoute     = $options->getIndexRoute();
+        $this->basePermission = $options->getBasePermission();
+        $this->entityTitle    = $options->getEntityTitle();
+        $this->templates      = $options->getTemplates();
     }
 
     /**
      * {@inheritDoc}
      */
-    public function browseAction($viewTemplate = null)
+    public function browseAction()
     {
         // Check for access permission
         $this->checkPermission();
-        
+
         // Create list view model
-        return $this->createActionViewModel('browse', [
+        return $this->createActionViewModel(Bread::ACTION_INDEX, [
             'list' => $this->service->browse(),
-        ], $viewTemplate);
+        ]);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function readAction($viewTemplate = null)
+    public function readAction()
     {
         // Load entity
-        $entity  = $this->getEntity();
+        $entity = $this->getEntity();
         if (!$entity) {
             return $this->notFoundAction();
         }
         // Check for access permission
         $this->checkPermission(null, $entity);
-        return $this->createActionViewModel('read', [
+        return $this->createActionViewModel(Bread::ACTION_READ, [
             'entity' => $entity
-        ], $viewTemplate);
+        ]);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function addAction($viewTemplate = null)
+    public function addAction()
     {
         // PRG wrapper
         $prg = $this->prg();
         if ($prg instanceof ResponseInterface) {
             return $prg;
         }
-        
+
         // Check access
         $this->checkPermission(Bread::ACTION_CREATE);
         $action = $this->performAction(Bread::ACTION_CREATE, $prg);
         if ($action) {
             return $action;
         }
-        
+
         // Setup form
-        $form = $this->service->getForm(Bread::ACTION_CREATE);
+        $form = $this->service->getForm(Bread::FORM_CREATE);
         $this->setupFormForView($form);
-        
+
         // Return view
         return $this->createActionViewModel(Bread::ACTION_CREATE, [
             'form' => $form,
-        ], $viewTemplate);
+        ]);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function editAction($viewTemplate = null)
+    public function editAction()
     {
         // PRG wrapper
         $prg = $this->prg();
         if ($prg instanceof ResponseInterface) {
             return $prg;
         }
-        
+
         // Check access
         $entity = $this->getEntity();
         if (!$entity) {
             return $this->notFoundAction();
         }
         $this->checkPermission(Bread::ACTION_UPDATE, $entity);
-        
+
         // Setup form
-        $form = $this->service->getForm(Bread::ACTION_UPDATE);
+        $form = $this->service->getForm(Bread::FORM_UPDATE);
         $form->bind($entity);
-        
+
         // Perform action
         if ($prg) {
             $prg[Bread::IDENTIFIER] = $entity->getId();
@@ -152,53 +147,53 @@ abstract class AbstractActionController extends ZendAbstractActionController imp
         if ($action) {
             return $action;
         }
-        
+
         // Return view
         $this->setupFormForView($form);
         return $this->createActionViewModel(Bread::ACTION_UPDATE, [
             'entity' => $entity,
             'form'   => $form,
-        ], $viewTemplate);
+        ]);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function deleteAction($viewTemplate = null)
+    public function deleteAction()
     {
-        return $this->dialogueAction(Bread::ACTION_DELETE, $viewTemplate);
+        return $this->dialogAction(Bread::ACTION_DELETE);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function enableAction($viewTemplate = null)
+    public function enableAction()
     {
-        return $this->dialogueAction(Bread::ACTION_ENABLE, $viewTemplate);
+        return $this->dialogAction(Bread::ACTION_ENABLE);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function disableAction($viewTemplate = null)
+    public function disableAction()
     {
-        return $this->dialogueAction(Bread::ACTION_DISABLE, $viewTemplate);
+        return $this->dialogAction(Bread::ACTION_DISABLE);
     }
-    
+
     /**
-     * Perform dialogue action
+     * Perform dialog action
      * 
      * @param string $actionType
      * @return ResponseInterface|ViewModel
      */
-    protected function dialogueAction($actionType, $viewTemplate = null)
+    protected function dialogAction($actionType)
     {
         // PRG wrapper
         $prg = $this->prg();
         if ($prg instanceof ResponseInterface) {
             return $prg;
         }
-        
+
         // Check access
         $entity = $this->getEntity();
         if (!$entity) {
@@ -209,24 +204,24 @@ abstract class AbstractActionController extends ZendAbstractActionController imp
         if ($notAllowed) {
             return $notAllowed;
         }
-        
+
         // Setup form
-        $form = $this->service->getForm($actionType);
+        $form = $this->service->getForm(Bread::FORM_DIALOG);
         $form->bind($entity);
-        
+
         // Perform action
         $action = $this->performAction($actionType, $prg);
         if ($action) {
             return $action;
         }
-        
+
         // Return view
         $this->setupFormForDialogue($form);
-        return $this->createDialogueViewModelWrapper($actionType, $form, $entity, $viewTemplate);
+        return $this->createDialogueViewModelWrapper($actionType, $form, $entity);
     }
-    
+
     /**
-     * Check if dialogue is not allowed
+     * Check if dialog is not allowed
      * 
      * @param string $actionType
      * @param EntityInterface $entity
@@ -239,26 +234,20 @@ abstract class AbstractActionController extends ZendAbstractActionController imp
                 if (!$entity->isDisabled()) {
                     return;
                 }
-                $camelFilter = new CamelCaseToSeparator;
-                $entityTitle = strtolower($camelFilter->filter(static::$entityType));
                 // Set warning message
                 $this->flashMessenger()->addWarningMessage(sprintf(
-                    'That %s is already disabled',
-                    $entityTitle
+                        'That %s is already disabled', $this->entityTitle
                 ));
-                return $this->redirect()->toRoute(static::$indexRoute);
-            case Bread::ACTION_ENABLE: 
+                return $this->redirect()->toRoute($this->indexRoute);
+            case Bread::ACTION_ENABLE:
                 if ($entity->isDisabled()) {
                     return;
                 }
-                $camelFilter = new CamelCaseToSeparator;
-                $entityTitle = strtolower($camelFilter->filter(static::$entityType));
                 // Set warning message
                 $this->flashMessenger()->addWarningMessage(sprintf(
-                    'That %s is already enabled',
-                    $entityTitle
+                    'That %s is already enabled', $this->entityTitle
                 ));
-                return $this->redirect()->toRoute(static::$indexRoute);
+                return $this->redirect()->toRoute($this->indexRoute);
         }
     }
 
@@ -273,25 +262,22 @@ abstract class AbstractActionController extends ZendAbstractActionController imp
         if ($prg === false) {
             return null;
         }
-        
+
         if ($this->service->$actionType($prg)) {
             // Create titles
             $camelFilter = new CamelCaseToSeparator;
             $actionTitle = strtolower($camelFilter->filter($actionType));
-            $entityTitle = strtolower($camelFilter->filter(static::$entityType));
             // Set success message
             $this->flashMessenger()->addSuccessMessage(sprintf(
-                '%s %s successful.',
-                ucfirst($actionType),
-                $entityTitle
+                    '%s %s successful.', ucfirst($actionType), $this->entityTitle
             ));
-            return $this->redirect()->toRoute(static::$indexRoute);
+            return $this->redirect()->toRoute($this->indexRoute);
         }
         return false;
     }
-    
+
     /**
-     * Create dialogue view model wrapper
+     * Create dialog view model wrapper
      * 
      * @param string $actionType
      * @param Form $form
@@ -299,28 +285,27 @@ abstract class AbstractActionController extends ZendAbstractActionController imp
      * @param null|string $viewTemplate
      * @return ViewModel
      */
-    protected function createDialogueViewModelWrapper($actionType, Form $form, EntityInterface $entity, $viewTemplate = null)
+    protected function createDialogueViewModelWrapper($actionType, Form $form, EntityInterface $entity)
     {
         // Create titles
-        $camelFilter   = new CamelCaseToSeparator;
-        $actionTitle   = strtolower($camelFilter->filter($actionType));
-        $entityTitle   = strtolower($camelFilter->filter(static::$entityType));
-        
+        $camelFilter = new CamelCaseToSeparator;
+        $actionTitle = strtolower($camelFilter->filter($actionType));
+
         // Create body
-        $dialogueBody  = $this->createActionViewModel('dialogue', [
+        $dialogBody = $this->createActionViewModel(Bread::FORM_DIALOG, [
             'actionTitle' => $actionTitle,
-            'entityTitle' => $entityTitle,
+            'entityTitle' => $this->entityTitle,
             'entity'      => $entity,
-        ], $viewTemplate);
-        
+        ]);
+
         // Create view model wrapper
         $viewModel = new ViewModel([
-            'form'          => $form,
-            'dialogueTitle' => sprintf('%s %s', ucwords($actionTitle), ucwords($entityTitle)),
+            'form'        => $form,
+            'dialogTitle' => sprintf('%s %s', ucwords($actionTitle), ucwords($this->entityTitle)),
         ]);
-        $viewModel->setTemplate('partial/dialogue');
-        $viewModel->addChild($dialogueBody, 'dialogueBody');
-        
+        $viewModel->setTemplate('partial/dialog');
+        $viewModel->addChild($dialogBody, 'dialogBody');
+
         return $viewModel;
     }
 
@@ -332,25 +317,20 @@ abstract class AbstractActionController extends ZendAbstractActionController imp
      * @param string|null $viewTemplate
      * @return ViewModel
      */
-    protected function createActionViewModel($actionTemplate, array $parameters = [], $viewTemplate = null)
+    protected function createActionViewModel($actionType, array $parameters = [])
     {
-        // Create title
-        $camelFilter   = new CamelCaseToSeparator;
-        $entityTitle   = strtolower($camelFilter->filter(static::$entityType));
-        
-        // Set parametersstatic::$entityType
+        // Set parameters$this->entityTitle
         $variables = array_merge([
-            'basePermission' => static::$basePermission,
-            'indexRoute'     => static::$indexRoute,
-            'entityTitle'    => ucwords($entityTitle),
-        ], $parameters);
-        
+            'basePermission' => $this->basePermission,
+            'indexRoute'     => $this->indexRoute,
+            'entityTitle'    => ucwords($this->entityTitle),
+            ], $parameters);
+
         // Set up view model
         $viewModel = new ViewModel($variables);
-        if (!$viewTemplate) {
-            $viewTemplate = 'ise/bread/bread/' . $actionTemplate;
+        if (isset($this->templates[$actionType])) {
+            $viewModel->setTemplate($this->templates[$actionType]);
         }
-        $viewModel->setTemplate($viewTemplate);
         return $viewModel;
     }
 
@@ -366,14 +346,14 @@ abstract class AbstractActionController extends ZendAbstractActionController imp
         if (!$id) {
             return false;
         }
-        
+
         $entity = $this->service->read($id);
         if (!$entity) {
             return false;
         }
         return $entity;
     }
-    
+
     /**
      * Check for permission
      * 
@@ -381,8 +361,11 @@ abstract class AbstractActionController extends ZendAbstractActionController imp
      * @param mixed|null $context
      * @throws Exception
      */
-    abstract protected function checkPermission($actionType = null, $context = null);
-    
+    protected function checkPermission($actionType = null, $context = null)
+    {
+        
+    }
+
     /**
      * Setup form for view
      * 
@@ -392,24 +375,23 @@ abstract class AbstractActionController extends ZendAbstractActionController imp
     {
         $form->setAttribute('class', 'form-horizontal');
         $form->get('buttons')->get('cancel')->setAttribute(
-            'href',
-            $this->url()->fromRoute(static::$indexRoute)
+            'href', $this->url()->fromRoute($this->indexRoute)
         );
     }
-    
+
     /**
-     * Setup form for dialogue
+     * Setup form for dialog
      * 
      * @param Form $form
      */
     protected function setupFormForDialogue(Form $form)
     {
         $form->get('buttons')->get('cancel')->setAttributes([
-            'data-href'    => $this->url()->fromRoute(static::$indexRoute),
+            'data-href'    => $this->url()->fromRoute($this->indexRoute),
             'data-dismiss' => 'modal',
         ]);
     }
-    
+
     /**
      * Redirect browse to index route
      * 
@@ -419,8 +401,8 @@ abstract class AbstractActionController extends ZendAbstractActionController imp
     {
         // Check for access permission
         $this->checkPermission();
-        
+
         // Redirect to index route
-        return $this->redirect()->toRoute(static::$indexRoute);
+        return $this->redirect()->toRoute($this->indexRoute);
     }
 }

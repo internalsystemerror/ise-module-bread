@@ -2,16 +2,37 @@
 
 namespace Ise\Bread\Listener;
 
+use Ise\Bread\Exception\InvalidArgumentException;
+use Ise\Bread\Options\AbstractClassOptions;
+use Ise\Bread\Options\BreadOptions;
+use Ise\Bread\Options\ControllerOptions;
+use Ise\Bread\Options\EntityOptions;
+use Ise\Bread\Options\MapperOptions;
+use Ise\Bread\Options\ServiceOptions;
 use Ise\Bread\Router\Http\Bread;
+use ReflectionClass;
 use Zend\EventManager\EventManagerInterface;
 use Zend\EventManager\ListenerAggregateInterface;
 use Zend\EventManager\ListenerAggregateTrait;
+use Zend\Filter\Word\CamelCaseToSeparator;
 use Zend\ModuleManager\ModuleEvent;
+use Zend\Stdlib\ArrayUtils;
 use Zend\Validator\Uuid;
 
 class ConfigListener implements ListenerAggregateInterface
 {
+
     use ListenerAggregateTrait;
+
+    /**
+     * @var array 
+     */
+    protected $config;
+
+    /**
+     * @var array
+     */
+    protected $breadConfig;
 
     /**
      * {@inheritDoc}
@@ -19,24 +40,310 @@ class ConfigListener implements ListenerAggregateInterface
     public function attach(EventManagerInterface $events, $priority = 1)
     {
         $this->listeners[] = $events->attach(
-            ModuleEvent::EVENT_MERGE_CONFIG,
-            [$this, 'onMergeConfig'],
-            $priority
+            ModuleEvent::EVENT_MERGE_CONFIG, [$this, 'onMergeConfig'], $priority
         );
     }
-    
+
     /**
-     * On merge config event
+     * On merge configuration event
      * 
      * @param ModuleEvent $event
      */
     public function onMergeConfig(ModuleEvent $event)
     {
-        $configListener = $event->getConfigListener();
-        $config         = $configListener->getMergedConfig(false);
+        // Get current config
+        $configListener    = $event->getConfigListener();
+        $this->config      = $configListener->getMergedConfig(false);
+        $this->breadConfig = new BreadOptions($this->config['ise']['bread']);
+
+        // Loop through entities
+        foreach ($this->breadConfig->getEntities() as $entity) {
+            $this->addEntityConfig($entity);
+        }
         
-        $config['router']['routes'] = $this->parseRoutes($config['router']['routes']);
-        $configListener->setMergedConfig($config);
+        // Loop through controllers
+        foreach ($this->breadConfig->getControllers() as $controller) {
+            $this->addControllerConfig($controller);
+        }
+        
+        // Loop through services
+        foreach ($this->breadConfig->getServices() as $service) {
+            $this->addServiceConfig($service);
+        }
+        
+        // Loop through mappers
+        foreach ($this->breadConfig->getMappers() as $mapper) {
+            $this->addMapperConfig($mapper);
+        }
+
+        // Parse routes
+        $this->config['router']['routes'] = $this->parseRoutes($this->config['router']['routes']);
+        
+//        echo '<h1>Controllers</h1>';
+//        var_dump($this->breadConfig->getControllers());
+//        echo '<br><br><h1>Services</h1>';
+//        var_dump($this->breadConfig->getServices());
+//        echo '<br><br><h1>Mappers</h1>';
+//        var_dump($this->breadConfig->getMappers());
+//        echo '<br><br><h1>Entities</h1>';
+//        var_dump($this->breadConfig->getEntities());
+//        echo '<br><br><h1>Routes</h1>';
+//        var_dump($this->config['router']['routes']);
+//        exit;
+
+        // Set new config
+        $this->config['ise']['bread'] = $this->breadConfig;
+//        var_dump($this->config['ise']['bread']);
+//        exit;
+        $configListener->setMergedConfig($this->config);
+    }
+
+    /**
+     * Add entity configuration
+     * 
+     * @param EntityOptions $options
+     * @throws InvalidArgumentException
+     */
+    protected function addEntityConfig(EntityOptions $options)
+    {
+        // Check class
+        if (!$options->getClass()) {
+            throw new InvalidArgumentException('EntityOptions must have the entity class set.');
+        }
+        
+        // Get entity details
+        $reflection = new ReflectionClass($options->getClass());
+        $namespace  = $reflection->getNamespaceName();
+        $baseName   = substr($namespace, 0, strrpos($namespace, '\\'));
+        $entityName = $reflection->getShortName();
+        
+        // Check alias
+        if (!$options->getAlias()) {
+            $options->setAlias($entityName);
+        }
+        
+        // Setup config
+        $this->setupController($options, $baseName, $entityName);
+        $this->setupService($options, $baseName, $entityName);
+        $this->setupMapper($options, $baseName, $entityName);
+    }
+    
+    /**
+     * Add controller configuration
+     * 
+     * @param ControllerOptions $options
+     * @throws InvalidArgumentException
+     */
+    protected function addControllerConfig(ControllerOptions $options)
+    {
+        // Check class
+        if (!$options->getClass()) {
+            throw new InvalidArgumentException('ControllerOptions must have the controller class set.');
+        }
+        
+        // Check alias
+        if (!$options->getAlias()) {
+            $options->setAlias(preg_replace('/Controller$/', '', $options->getClass()));
+        }
+        
+        // Save entity title
+        $entityName = $this->breadConfig->getEntity($options->getEntityClass())->getAlias();
+        if (!$options->getEntityTitle()) {
+            $camelFilter            = new CamelCaseToSeparator;
+            $options->setEntityTitle(strtolower($camelFilter->filter($entityName)));
+        }
+        
+        // Add controllers
+        if (!isset($this->config['controllers']['aliases'][$options->getAlias()])) {
+            $this->config['controllers']['aliases'][$options->getAlias()] = $options->getClass();
+        }
+        if (!isset($this->config['controllers']['factories'][$options->getClass()])) {
+            $this->config['controllers']['factories'][$options->getClass()] = $options->getFactory();
+        }
+    }
+    
+    protected function addServiceConfig(ServiceOptions $options)
+    {
+        // Setup manager
+        $this->breadConfig->setServiceManager(
+            $this->setManagerOptions(
+                $this->breadConfig->getServiceManager(),
+                $options
+            )
+        );
+    }
+    
+    protected function addMapperConfig(MapperOptions $options)
+    {
+        // Setup manager
+        $this->breadConfig->setMapperManager(
+            $this->setManagerOptions(
+                $this->breadConfig->getMapperManager(),
+                $options
+            )
+        );
+    }
+    
+    /**
+     * Setup controller configuration for entity
+     * 
+     * @param EntityOptions $options
+     * @param type $namespace
+     * @param type $entityName
+     */
+    protected function setupController(EntityOptions $options, $namespace, $entityName)
+    {
+        // Get controller options, return if null/false
+        $controller = $options->getController();
+        if (is_string($controller)) {
+            $controller = ['class' => $controller];
+        }
+        if (!$controller) {
+            return;
+        }
+                
+        // Create alias
+        if (!isset($controller['alias']) || !$controller['alias']) {
+            if (!isset($controller['class']) || !$controller['class']) {
+                $controller['alias'] = $namespace . '\Controller\\' . $entityName;
+            } else {
+                $controller['alias'] = preg_replace('/Controller$/', '', $controller['class']);
+            }
+        }
+        
+        // Create class
+        if (!isset($controller['class']) || !$controller['class']) {
+            $controller['class'] = $controller['alias'] . 'Controller';
+        }
+        
+        // Add entity class
+        if (!isset($controller['entityClass'])) {
+            $controller['entityClass'] = $options->getClass();
+        }
+        
+        // Save
+        $options->setController($controller['class']);
+        $this->breadConfig->setController($controller['class'], $controller);
+    }
+
+    /**
+     * Setup service configuration for entity
+     * 
+     * @param EntityOptions $options
+     * @param string $namespace
+     * @param string $entityName
+     */
+    public function setupService(EntityOptions $options, $namespace, $entityName)
+    {
+        // Get mapper options
+        $service = $options->getService();
+        if (is_string($service)) {
+            $service = ['class' => $service];
+        }
+        
+        // Create alias
+        if (!isset($service['alias']) || !$service['alias']) {
+            if (!isset($service['class']) || !$service['class']) {
+                $service['alias'] = $namespace . '\Service\\' . $entityName;
+            } else {
+                $service['alias'] = preg_replace('/Service$/', '', $service['class']);
+            }
+        }
+        
+        // Create class
+        if (!isset($service['class']) || !$service['class']) {
+            $service['class'] = $service['alias'] . 'Service';
+        }
+        
+        // Save
+        $options->setService($service['class']);
+        $this->breadConfig->setService($service['class'], $service);
+        
+        // Setup forms
+        $this->setupForms(
+            $this->breadConfig->getService($service['class']),
+            $namespace,
+            $entityName
+        );
+    }
+
+    /**
+     * Setup mapper configuration for entity
+     * 
+     * @param EntityOptions $options
+     * @param string $namespace
+     * @param string $entityName
+     */
+    protected function setupMapper(EntityOptions $options, $namespace, $entityName)
+    {
+        // Get mapper options
+        $mapper = $options->getMapper();
+        if (is_string($mapper)) {
+            $mapper = ['class' => $mapper];
+        }
+        
+        // Create alias
+        if (!isset($mapper['alias']) || !$mapper['alias']) {
+            if (!isset($mapper['class']) || !$mapper['class']) {
+                $mapper['alias'] = $namespace . '\Mapper\\' . $entityName;
+            } else {
+                $mapper['alias'] = preg_replace('/Mapper/', '', $mapper['class']);
+            }
+            $mapper['alias'] = $namespace . '\Mapper\\' . $entityName;
+        }
+        
+        // Create class
+        if (!isset($mapper['class']) || !$mapper['class']) {
+            $mapper['class'] = $mapper['alias'] . 'Mapper';
+        }
+        
+        // Save
+        $options->setMapper($mapper['class']);
+        $this->breadConfig->setMapper($mapper['class'], $mapper);
+    }
+    
+    /**
+     * Set manager options from options
+     * 
+     * @param array $manager
+     * @param AbstractClassOptions $options
+     */
+    protected function setManagerOptions(array $manager, AbstractClassOptions $options)
+    {
+        // Add alias
+        if (!isset($manager['aliases'][$options->getAlias()])) {
+            $manager['aliases'][$options->getAlias()] = $options->getClass();
+        }
+        
+        // Add factory
+        if (!isset($manager['factories'][$options->getClass()])) {
+            $manager['factories'][$options->getClass()] = $options->getFactory();
+        }
+        
+        return $manager;
+    }
+
+    /**
+     * Setup forms configuration
+     * 
+     * @param ServiceOptions $options
+     * @param string $namespace
+     * @param string $entityName
+     */
+    protected function setupForms(ServiceOptions $options, $namespace, $entityName)
+    {
+        // Get forms and namespace
+        $forms         = $options->getForms();
+        $formNamespace = $namespace . '\Form\\' . $entityName . '\\';
+        
+        // Loop through Bread available forms
+        foreach (Bread::FORMS as $action) {
+            if (!isset($forms[$action]) || !$forms[$action]) {
+                $forms[$action] = $formNamespace . ucfirst($action);
+            }
+        }
+        
+        $options->setForms($forms);
     }
 
     /**
@@ -78,10 +385,32 @@ class ConfigListener implements ListenerAggregateInterface
         }
 
         // Create options
-        $options = array_merge_recursive($route, [
+        $defaults = [
             'options'      => ['defaults' => ['action' => Bread::ACTION_INDEX]],
             'child_routes' => $this->createChildRoutes(),
-        ]);
+        ];
+        if (isset($route['options']['entity'])) {
+            $entityOptions = $this->breadConfig->getEntity($route['options']['entity']);
+            if (!$entityOptions) {
+                throw new InvalidArgumentException(sprintf(
+                    'Unable to find the entity: %s',
+                    $route['options']['entity']
+                ));
+            }
+            if (!isset($route['options']['defaults']['controller'])) {
+                $controllerOptions = $this->breadConfig->getController($entityOptions->getController());
+                if (!$controllerOptions) {
+                    throw new InvalidArgumentException(sprintf(
+                        'Unable to find a controller for the entity: %s',
+                        $route['options']['entity']
+                    ));
+                }
+                $defaults['options']['defaults']['controller'] = $controllerOptions->getAlias();
+            }
+            unset($route['options']['entity']);
+        }
+        
+        $options = ArrayUtils::merge($defaults, $route);
         if (!isset($options['may_terminate'])) {
             $options['may_terminate'] = true;
         }

@@ -31,7 +31,7 @@ interface MapperInterface
 
     /**
      * Read an entity by criteria
-     * 
+     *
      * @param array $criteria
      * @return EntityInterface
      */

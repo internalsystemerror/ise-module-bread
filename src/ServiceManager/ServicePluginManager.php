@@ -11,5 +11,4 @@ class ServicePluginManager extends AbstractPluginManager
      * @var string
      */
     protected $instanceOf = ServiceInterface::class;
-
 }

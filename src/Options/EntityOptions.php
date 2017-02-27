@@ -30,7 +30,7 @@ class EntityOptions extends AbstractClassOptions
     
     /**
      * Set class
-     * 
+     *
      * @param string $class
      * @return self
      */
@@ -42,7 +42,7 @@ class EntityOptions extends AbstractClassOptions
     
     /**
      * Set hydrator class
-     * 
+     *
      * @param string $hydrator
      * @return self
      */
@@ -54,7 +54,7 @@ class EntityOptions extends AbstractClassOptions
 
     /**
      * Get hydrator class
-     * 
+     *
      * @return string
      */
     public function getHydrator()
@@ -64,7 +64,7 @@ class EntityOptions extends AbstractClassOptions
     
     /**
      * Set controller
-     * 
+     *
      * @param string|array $controller
      */
     public function setController($controller)
@@ -75,7 +75,7 @@ class EntityOptions extends AbstractClassOptions
     
     /**
      * Get mapper
-     * 
+     *
      * @return string|array
      */
     public function getController()
@@ -85,7 +85,7 @@ class EntityOptions extends AbstractClassOptions
 
     /**
      * Set mapper
-     * 
+     *
      * @param string|array $mapper
      * @return self
      */
@@ -97,7 +97,7 @@ class EntityOptions extends AbstractClassOptions
 
     /**
      * Get mapper
-     * 
+     *
      * @return string|array
      */
     public function getMapper()
@@ -107,7 +107,7 @@ class EntityOptions extends AbstractClassOptions
 
     /**
      * Set service
-     * 
+     *
      * @param string|array $service
      * @return self
      */
@@ -119,7 +119,7 @@ class EntityOptions extends AbstractClassOptions
     
     /**
      * Get service
-     * 
+     *
      * @return string|array
      */
     public function getService()

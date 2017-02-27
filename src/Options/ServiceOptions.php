@@ -41,13 +41,13 @@ class ServiceOptions extends AbstractFactoryClassOptions
 
     /**
      * Set forms
-     * 
+     *
      * An array of forms: [
      *     Bread::FORM_CREATE => 'Module\Form\Create\Alias',
      *     Bread::FORM_UPDATE => 'Module\Form\Update\Alias',
      *     Bread::FORM_DIALOG => 'Module\Form\Dialog\Alias',
      * ];
-     * 
+     *
      * @param string[] $forms
      * @return self
      */
@@ -59,7 +59,7 @@ class ServiceOptions extends AbstractFactoryClassOptions
 
     /**
      * Get forms
-     * 
+     *
      * @return string[]
      */
     public function getForms()

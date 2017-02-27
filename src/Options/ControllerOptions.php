@@ -64,7 +64,7 @@ class ControllerOptions extends AbstractFactoryClassOptions
 
     /**
      * Set entity class
-     * 
+     *
      * @param string $entityClass
      * @return self
      */
@@ -77,7 +77,7 @@ class ControllerOptions extends AbstractFactoryClassOptions
     
     /**
      * Get entity class
-     * 
+     *
      * @return string
      */
     public function getEntityClass()
@@ -87,7 +87,7 @@ class ControllerOptions extends AbstractFactoryClassOptions
     
     /**
      * Set entity title
-     * 
+     *
      * @param string $entityTitle
      * @return self
      */
@@ -99,7 +99,7 @@ class ControllerOptions extends AbstractFactoryClassOptions
     
     /**
      * Get entity title
-     * 
+     *
      * @return string
      */
     public function getEntityTitle()
@@ -109,7 +109,7 @@ class ControllerOptions extends AbstractFactoryClassOptions
     
     /**
      * Set index route
-     * 
+     *
      * @param string $indexRoute
      * @return self
      */
@@ -121,7 +121,7 @@ class ControllerOptions extends AbstractFactoryClassOptions
     
     /**
      * Get index route
-     * 
+     *
      * @return string
      */
     public function getIndexRoute()
@@ -131,7 +131,7 @@ class ControllerOptions extends AbstractFactoryClassOptions
     
     /**
      * Set base permission
-     * 
+     *
      * @params string $permission
      * @return self
      */
@@ -143,7 +143,7 @@ class ControllerOptions extends AbstractFactoryClassOptions
     
     /**
      * Get base permission
-     * 
+     *
      * @return string
      */
     public function getBasePermission()
@@ -153,9 +153,9 @@ class ControllerOptions extends AbstractFactoryClassOptions
 
     /**
      * Set templates
-     * 
+     *
      * An array of template names, indexed by the action name.
-     * 
+     *
      * @param string[] $templates
      * @return self
      */
@@ -167,7 +167,7 @@ class ControllerOptions extends AbstractFactoryClassOptions
 
     /**
      * Get templates
-     * 
+     *
      * @return string[]
      */
     public function getTemplates()

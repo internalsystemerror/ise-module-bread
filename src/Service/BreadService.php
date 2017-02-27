@@ -149,7 +149,7 @@ class BreadService implements ServiceInterface
 
     /**
      * Get a form by name
-     * 
+     *
      * @param type $action
      * @return type
      * @throws InvalidArgumentException
@@ -158,7 +158,8 @@ class BreadService implements ServiceInterface
     {
         if (!isset($this->forms[$action])) {
             throw new InvalidArgumentException(sprintf(
-                'Invalid form name given, "%s"', $action
+                'Invalid form name given, "%s"',
+                $action
             ));
         }
         if (is_string($this->forms[$action])) {

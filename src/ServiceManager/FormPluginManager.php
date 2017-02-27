@@ -11,5 +11,4 @@ class FormPluginManager extends AbstractPluginManager
      * @var string
      */
     protected $instanceOf = FormInterface::class;
-
 }

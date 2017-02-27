@@ -67,7 +67,7 @@ class BreadOptions extends AbstractOptions
     
     /**
      * Set service manager options
-     * 
+     *
      * @param array[] $serviceManager
      * @return self
      */
@@ -79,7 +79,7 @@ class BreadOptions extends AbstractOptions
     
     /**
      * Get service manager options
-     * 
+     *
      * @return array[]
      */
     public function getServiceManager()
@@ -89,7 +89,7 @@ class BreadOptions extends AbstractOptions
     
     /**
      * Set mapper manager options
-     * 
+     *
      * @param array[] $mapperManager
      * @return self
      */
@@ -101,7 +101,7 @@ class BreadOptions extends AbstractOptions
     
     /**
      * Get mapper manager options
-     * 
+     *
      * @return array[]
      */
     public function getMapperManager()
@@ -111,7 +111,7 @@ class BreadOptions extends AbstractOptions
     
     /**
      * Set form manager options
-     * 
+     *
      * @param array[] $formManager
      * @return self
      */
@@ -123,7 +123,7 @@ class BreadOptions extends AbstractOptions
     
     /**
      * Get form manager options
-     * 
+     *
      * @return array[]
      */
     public function getFormManager()
@@ -133,7 +133,7 @@ class BreadOptions extends AbstractOptions
     
     /**
      * Set entity defaults
-     * 
+     *
      * @param array $defaults
      * @return self
      */
@@ -145,7 +145,7 @@ class BreadOptions extends AbstractOptions
     
     /**
      * Get entity defaults
-     * 
+     *
      * @return array
      */
     public function getEntityDefaults()
@@ -155,7 +155,7 @@ class BreadOptions extends AbstractOptions
     
     /**
      * Set controller options
-     * 
+     *
      * @param string $class
      * @param array $options
      * @return self
@@ -183,7 +183,7 @@ class BreadOptions extends AbstractOptions
     
     /**
      * Set multiple controller options
-     * 
+     *
      * @param array[] $controllers
      * @return self
      */
@@ -197,7 +197,7 @@ class BreadOptions extends AbstractOptions
     
     /**
      * Get controller options for entity class
-     * 
+     *
      * @param string $entityClass
      * @return ControllerOptions
      */
@@ -212,7 +212,7 @@ class BreadOptions extends AbstractOptions
     
     /**
      * Get controller options
-     * 
+     *
      * @param string $class
      * @return ControllerOptions
      */
@@ -226,7 +226,7 @@ class BreadOptions extends AbstractOptions
     
     /**
      * Get all controller options
-     * 
+     *
      * @return ControllerOptions[]
      */
     public function getControllers()
@@ -236,7 +236,7 @@ class BreadOptions extends AbstractOptions
     
     /**
      * Set multiple service options
-     * 
+     *
      * @param array[] $services
      * @return self
      */
@@ -250,7 +250,7 @@ class BreadOptions extends AbstractOptions
     
     /**
      * Set service options
-     * 
+     *
      * @param string $class
      * @param string|array $options
      * @return self
@@ -275,7 +275,7 @@ class BreadOptions extends AbstractOptions
     
     /**
      * Get service options
-     * 
+     *
      * @param string $class
      * @return ServiceOptions
      */
@@ -289,7 +289,7 @@ class BreadOptions extends AbstractOptions
     
     /**
      * Get all service options
-     * 
+     *
      * @return ServiceOptions[]
      */
     public function getServices()
@@ -299,7 +299,7 @@ class BreadOptions extends AbstractOptions
     
     /**
      * Set multiple mapper options
-     * 
+     *
      * @param array[] $mappers
      * @return self
      */
@@ -313,7 +313,7 @@ class BreadOptions extends AbstractOptions
     
     /**
      * Set mapper options
-     * 
+     *
      * @param string $class
      * @param string|array $options
      * @return self
@@ -327,7 +327,7 @@ class BreadOptions extends AbstractOptions
         }
         
         // Create mapper options
-        if (!isset($this->mappers[$class])) { 
+        if (!isset($this->mappers[$class])) {
             $this->mappers[$class] = new MapperOptions;
         }
         
@@ -338,7 +338,7 @@ class BreadOptions extends AbstractOptions
     
     /**
      * Get mapper options
-     * 
+     *
      * @param string $class
      * @return MapperOptions
      */
@@ -352,7 +352,7 @@ class BreadOptions extends AbstractOptions
     
     /**
      * Get all mapper options
-     * 
+     *
      * @return MapperOptions[]
      */
     public function getMappers()
@@ -362,7 +362,7 @@ class BreadOptions extends AbstractOptions
     
     /**
      * Set entity options
-     * 
+     *
      * @param string $class
      * @param string|array $options
      * @return self
@@ -392,7 +392,7 @@ class BreadOptions extends AbstractOptions
     
     /**
      * Set multiple entity options
-     * 
+     *
      * @param array[] $entities
      * @return self
      */
@@ -406,7 +406,7 @@ class BreadOptions extends AbstractOptions
     
     /**
      * Get entity options
-     * 
+     *
      * @param string $class
      * @return EntityOptions
      */
@@ -417,7 +417,7 @@ class BreadOptions extends AbstractOptions
     
     /**
      * Get all entity options
-     * 
+     *
      * @return EntityOptions[]
      */
     public function getEntities()

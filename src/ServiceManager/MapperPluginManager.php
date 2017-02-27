@@ -11,5 +11,4 @@ class MapperPluginManager extends AbstractPluginManager
      * @var string
      */
     protected $instanceOf = MapperInterface::class;
-
 }

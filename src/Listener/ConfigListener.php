@@ -25,7 +25,7 @@ class ConfigListener implements ListenerAggregateInterface
     use ListenerAggregateTrait;
 
     /**
-     * @var array 
+     * @var array
      */
     protected $config;
 
@@ -40,13 +40,15 @@ class ConfigListener implements ListenerAggregateInterface
     public function attach(EventManagerInterface $events, $priority = 1)
     {
         $this->listeners[] = $events->attach(
-            ModuleEvent::EVENT_MERGE_CONFIG, [$this, 'onMergeConfig'], $priority
+            ModuleEvent::EVENT_MERGE_CONFIG,
+            [$this, 'onMergeConfig'],
+            $priority
         );
     }
 
     /**
      * On merge configuration event
-     * 
+     *
      * @param ModuleEvent $event
      */
     public function onMergeConfig(ModuleEvent $event)
@@ -100,7 +102,7 @@ class ConfigListener implements ListenerAggregateInterface
 
     /**
      * Add entity configuration
-     * 
+     *
      * @param EntityOptions $options
      * @throws InvalidArgumentException
      */
@@ -130,7 +132,7 @@ class ConfigListener implements ListenerAggregateInterface
     
     /**
      * Add controller configuration
-     * 
+     *
      * @param ControllerOptions $options
      * @throws InvalidArgumentException
      */
@@ -186,7 +188,7 @@ class ConfigListener implements ListenerAggregateInterface
     
     /**
      * Setup controller configuration for entity
-     * 
+     *
      * @param EntityOptions $options
      * @param type $namespace
      * @param type $entityName
@@ -228,7 +230,7 @@ class ConfigListener implements ListenerAggregateInterface
 
     /**
      * Setup service configuration for entity
-     * 
+     *
      * @param EntityOptions $options
      * @param string $namespace
      * @param string $entityName
@@ -269,7 +271,7 @@ class ConfigListener implements ListenerAggregateInterface
 
     /**
      * Setup mapper configuration for entity
-     * 
+     *
      * @param EntityOptions $options
      * @param string $namespace
      * @param string $entityName
@@ -304,7 +306,7 @@ class ConfigListener implements ListenerAggregateInterface
     
     /**
      * Set manager options from options
-     * 
+     *
      * @param array $manager
      * @param AbstractClassOptions $options
      */
@@ -325,7 +327,7 @@ class ConfigListener implements ListenerAggregateInterface
 
     /**
      * Setup forms configuration
-     * 
+     *
      * @param ServiceOptions $options
      * @param string $namespace
      * @param string $entityName

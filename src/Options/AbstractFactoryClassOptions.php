@@ -17,7 +17,7 @@ abstract class AbstractFactoryClassOptions extends AbstractClassOptions
     
     /**
      * Set class
-     * 
+     *
      * @param string $class
      * @return self
      */
@@ -32,7 +32,7 @@ abstract class AbstractFactoryClassOptions extends AbstractClassOptions
     
     /**
      * Set base class
-     * 
+     *
      * @param string $class
      * @return self
      */
@@ -44,7 +44,7 @@ abstract class AbstractFactoryClassOptions extends AbstractClassOptions
 
     /**
      * Get base class
-     * 
+     *
      * @return string
      */
     public function getBaseClass()
@@ -54,7 +54,7 @@ abstract class AbstractFactoryClassOptions extends AbstractClassOptions
 
     /**
      * Set factory
-     * 
+     *
      * @param string $factory
      * @return self
      */
@@ -66,7 +66,7 @@ abstract class AbstractFactoryClassOptions extends AbstractClassOptions
 
     /**
      * Get factory
-     * 
+     *
      * @return string
      */
     public function getFactory()

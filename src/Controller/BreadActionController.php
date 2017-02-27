@@ -182,7 +182,7 @@ class BreadActionController extends ZendAbstractActionController implements Acti
 
     /**
      * Perform dialog action
-     * 
+     *
      * @param string $actionType
      * @return ResponseInterface|ViewModel
      */
@@ -222,7 +222,7 @@ class BreadActionController extends ZendAbstractActionController implements Acti
 
     /**
      * Check if dialog is not allowed
-     * 
+     *
      * @param string $actionType
      * @param EntityInterface $entity
      * @return null|ReponseInterface
@@ -236,7 +236,8 @@ class BreadActionController extends ZendAbstractActionController implements Acti
                 }
                 // Set warning message
                 $this->flashMessenger()->addWarningMessage(sprintf(
-                        'That %s is already disabled', $this->entityTitle
+                    'That %s is already disabled',
+                    $this->entityTitle
                 ));
                 return $this->redirect()->toRoute($this->indexRoute);
             case Bread::ACTION_ENABLE:
@@ -245,7 +246,8 @@ class BreadActionController extends ZendAbstractActionController implements Acti
                 }
                 // Set warning message
                 $this->flashMessenger()->addWarningMessage(sprintf(
-                    'That %s is already enabled', $this->entityTitle
+                    'That %s is already enabled',
+                    $this->entityTitle
                 ));
                 return $this->redirect()->toRoute($this->indexRoute);
         }
@@ -269,7 +271,9 @@ class BreadActionController extends ZendAbstractActionController implements Acti
             $actionTitle = strtolower($camelFilter->filter($actionType));
             // Set success message
             $this->flashMessenger()->addSuccessMessage(sprintf(
-                    '%s %s successful.', ucfirst($actionType), $this->entityTitle
+                '%s %s successful.',
+                ucfirst($actionType),
+                $this->entityTitle
             ));
             return $this->redirect()->toRoute($this->indexRoute);
         }
@@ -278,7 +282,7 @@ class BreadActionController extends ZendAbstractActionController implements Acti
 
     /**
      * Create dialog view model wrapper
-     * 
+     *
      * @param string $actionType
      * @param Form $form
      * @param EntityInterface $entity
@@ -356,32 +360,32 @@ class BreadActionController extends ZendAbstractActionController implements Acti
 
     /**
      * Check for permission
-     * 
+     *
      * @param string|null $actionType
      * @param mixed|null $context
      * @throws Exception
      */
     protected function checkPermission($actionType = null, $context = null)
     {
-        
     }
 
     /**
      * Setup form for view
-     * 
+     *
      * @param Form $form
      */
     protected function setupFormForView(Form $form)
     {
         $form->setAttribute('class', 'form-horizontal');
         $form->get('buttons')->get('cancel')->setAttribute(
-            'href', $this->url()->fromRoute($this->indexRoute)
+            'href',
+            $this->url()->fromRoute($this->indexRoute)
         );
     }
 
     /**
      * Setup form for dialog
-     * 
+     *
      * @param Form $form
      */
     protected function setupFormForDialogue(Form $form)
@@ -394,7 +398,7 @@ class BreadActionController extends ZendAbstractActionController implements Acti
 
     /**
      * Redirect browse to index route
-     * 
+     *
      * @return ResponseInterface
      */
     protected function redirectBrowse()

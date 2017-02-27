@@ -44,7 +44,7 @@ class FormSessionService
     public function saveForm(Form $form)
     {
         $name = $form->getName();
-        if (!isset($this->sessionContainer[$name])){ 
+        if (!isset($this->sessionContainer[$name])) {
             $this->sessionContainer[$name] = [];
         }
         $this->sessionContainer[$name][self::KEY_MESSAGES] = (array) $form->getMessages();

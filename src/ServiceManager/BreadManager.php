@@ -59,7 +59,7 @@ class BreadManager
 
     /**
      * Constructor
-     * 
+     *
      * @param ServicePluginManager $serviceManager
      * @param MapperPluginManager $mapperManager
      * @param FormPluginManager $formManager
@@ -94,7 +94,7 @@ class BreadManager
     
     /**
      * Get entity
-     * 
+     *
      * @param string $entityClass
      * @return array[]
      */
@@ -105,7 +105,7 @@ class BreadManager
     
     /**
      * Get controller base class
-     * 
+     *
      * @param string $requestedName
      * @return string
      */
@@ -116,7 +116,7 @@ class BreadManager
     
     /**
      * Get service base class
-     * 
+     *
      * @param string $requestedName
      * @return string
      */
@@ -127,7 +127,7 @@ class BreadManager
     
     /**
      * Get mapper base class
-     * 
+     *
      * @param string $requestedName
      * @return string
      */
@@ -138,7 +138,7 @@ class BreadManager
 
     /**
      * Get service
-     * 
+     *
      * @param string $serviceClass
      * @return ServiceInterface
      */
@@ -149,7 +149,7 @@ class BreadManager
 
     /**
      * Get mapper
-     * 
+     *
      * @param string $mapperClass
      * @return MapperInterface
      */
@@ -160,7 +160,7 @@ class BreadManager
 
     /**
      * Get form
-     * 
+     *
      * @param string $formClass
      * @return FormInterface
      */
@@ -171,7 +171,7 @@ class BreadManager
 
     /**
      * Get service from entity class
-     * 
+     *
      * @param string $entityClass
      * @return ServiceInterface
      */
@@ -182,7 +182,7 @@ class BreadManager
 
     /**
      * Get service class from entity class
-     * 
+     *
      * @param string $entityClass
      * @return string
      */
@@ -193,7 +193,7 @@ class BreadManager
 
     /**
      * Get service class from controller class
-     * 
+     *
      * @param string $controllerClass
      * @return string
      */
@@ -204,7 +204,7 @@ class BreadManager
 
     /**
      * Get controller options from controller class
-     * 
+     *
      * @param string $controllerClass
      * @return string
      */
@@ -215,7 +215,7 @@ class BreadManager
 
     /**
      * Get entity class from mapper class
-     * 
+     *
      * @param string $mapperClass
      * @return string
      */
@@ -226,7 +226,7 @@ class BreadManager
 
     /**
      * Get mapper class from service class
-     * 
+     *
      * @param string $serviceClass
      * @return string
      */
@@ -237,7 +237,7 @@ class BreadManager
 
     /**
      * Get forms from service class
-     * 
+     *
      * @param string $serviceClass
      * @return string
      */

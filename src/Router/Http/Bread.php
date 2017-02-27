@@ -33,5 +33,4 @@ class Bread extends Literal
         self::FORM_UPDATE,
         self::FORM_DIALOG
     ];
-    
 }

@@ -12,7 +12,7 @@ interface ServiceInterface
 
     /**
      * Browse entities
-     * 
+     *
      * @param array $criteria
      * @param array $orderBy
      * @param null|integer $limit
@@ -30,7 +30,7 @@ interface ServiceInterface
     
     /**
      * Read an entity by criteria
-     * 
+     *
      * @param array $criteria
      * @return EntityInterface
      */

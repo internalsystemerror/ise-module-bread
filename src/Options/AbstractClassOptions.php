@@ -21,7 +21,7 @@ abstract class AbstractClassOptions extends AbstractOptions
 
     /**
      * Set alias
-     * 
+     *
      * @param string $alias
      */
     public function setAlias($alias)
@@ -32,7 +32,7 @@ abstract class AbstractClassOptions extends AbstractOptions
 
     /**
      * Get alias
-     * 
+     *
      * @return string
      */
     public function getAlias()
@@ -42,7 +42,7 @@ abstract class AbstractClassOptions extends AbstractOptions
 
     /**
      * Set class
-     * 
+     *
      * @param string $class
      * @return self
      */
@@ -54,7 +54,7 @@ abstract class AbstractClassOptions extends AbstractOptions
 
     /**
      * Get class
-     * 
+     *
      * @return string
      */
     public function getClass()
@@ -64,7 +64,7 @@ abstract class AbstractClassOptions extends AbstractOptions
 
     /**
      * Check that class implements interface
-     * 
+     *
      * @param string $class
      * @param string $interface
      * @throws InvalidArgumentException
@@ -85,7 +85,7 @@ abstract class AbstractClassOptions extends AbstractOptions
         $interfaceString = (string) $interface;
         if (!$reflection->implementsInterface($interfaceString)) {
             throw new InvalidArgumentException(sprintf(
-                'Class "%s" does not implement the interface "%s".', 
+                'Class "%s" does not implement the interface "%s".',
                 $classString,
                 $interfaceString
             ));

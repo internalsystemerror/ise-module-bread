@@ -1,6 +1,6 @@
 <?php
 
-namespace IseBread\Exception;
+namespace Ise\Bread\Exception;
 
 class InvalidArgumentException extends \InvalidArgumentException implements ExceptionInterface
 {

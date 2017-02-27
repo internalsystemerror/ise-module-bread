@@ -1,6 +1,6 @@
 <?php
 
-namespace IseBread\Entity;
+namespace Ise\Bread\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Zend\Form\Annotation as ZF;
@@ -8,20 +8,22 @@ use Zend\Form\Annotation as ZF;
 /**
  * @ORM\MappedSuperclass
  */
-abstract class AbstractBasicEntity extends AbstractEntity
+abstract class AbstractBasicEntity extends AbstractEntity implements BasicEntityInterface
 {
 
     /**
-     * @ORM\Column(type="string", unique=true, length=128, nullable=false)
-     * @ZF\Flags({"priority": 100})
+     * @ORM\Column(type="string", length=128, nullable=false)
+     * @ZF\Flags({"priority": 11})
      * @ZF\Options({"label": "Name"})
+     * @ZF\Filter({"name": "StripNewlines"})
+     * @ZF\Validator({"name": "StringLength", "options": {"min": 3}})
      * @var string
      */
     protected $name;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @ZF\Flags({"priority": 100})
+     * @ZF\Flags({"priority": 10})
      * @ZF\Options({"label": "Description"})
      * @var string
      */
@@ -41,12 +43,11 @@ abstract class AbstractBasicEntity extends AbstractEntity
      * Set name
      *
      * @param string $name
-     * @return Permission
+     * @return self
      */
     public function setName($name)
     {
         $this->name = (string) $name;
-
         return $this;
     }
 
@@ -64,12 +65,11 @@ abstract class AbstractBasicEntity extends AbstractEntity
      * Set description
      *
      * @param string $description
-     * @return Permission
+     * @return self
      */
     public function setDescription($description)
     {
         $this->description = (string) $description;
-
         return $this;
     }
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace IseBread\DBAL\Types;
+namespace Ise\Bread\DBAL\Types;
 
 use DateInterval;
 use Doctrine\DBAL\Types\StringType;

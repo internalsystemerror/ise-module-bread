@@ -1,6 +1,6 @@
 <?php
 
-namespace IseBread\DBAL\Types;
+namespace Ise\Bread\DBAL\Types;
 
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
@@ -18,7 +18,7 @@ abstract class AbstractSetType extends AbstractEnumType
             return $platform->getClobTypeDeclarationSQL($fieldDeclaration);
         }
         
-        $values = implode(', ', array_map(array($this, 'mapValue'), $this->getValues()));
+        $values = implode(', ', array_map([$this, 'mapValue'], $this->getValues()));
         return sprintf('SET(%s)', $values);
     }
     

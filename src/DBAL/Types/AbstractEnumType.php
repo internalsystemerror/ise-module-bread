@@ -1,6 +1,6 @@
 <?php
 
-namespace IseBread\DBAL\Types;
+namespace Ise\Bread\DBAL\Types;
 
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
@@ -19,7 +19,7 @@ abstract class AbstractEnumType extends Type
      * @static
      * @var array
      */
-    protected static $validValues = [];
+    protected $validValues = [];
     
     /**
      * Get choices (labels) for this type
@@ -58,7 +58,7 @@ abstract class AbstractEnumType extends Type
             return $platform->getVarcharTypeDeclarationSQL($fieldDeclaration);
         }
         
-        $values = implode(', ', array_map(array($this, 'mapValue'), $this->getValues()));
+        $values = implode(', ', array_map([$this, 'mapValue'], $this->getValues()));
         return sprintf('ENUM(%s)', $values);
     }
     

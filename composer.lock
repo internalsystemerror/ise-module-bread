@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "948c8f13922b1a47c2773fa084f16d56",
+    "content-hash": "914b9b95454f88a694591d3dcfda969b",
     "packages": [
         {
             "name": "container-interop/container-interop",
@@ -819,16 +819,16 @@
         },
         {
             "name": "ise/ise-module-bootstrap",
-            "version": "dev-feature/zf3",
+            "version": "dev-develop",
             "source": {
                 "type": "git",
                 "url": "https://github.com/internalsystemerror/ise-module-bootstrap.git",
-                "reference": "8b390d26d6776bff1a3d07c2eb34280dad9a7896"
+                "reference": "3c026cacdbf389a1538c01cd5fc80b810a9d6295"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/internalsystemerror/ise-module-bootstrap/zipball/8b390d26d6776bff1a3d07c2eb34280dad9a7896",
-                "reference": "8b390d26d6776bff1a3d07c2eb34280dad9a7896",
+                "url": "https://api.github.com/repos/internalsystemerror/ise-module-bootstrap/zipball/3c026cacdbf389a1538c01cd5fc80b810a9d6295",
+                "reference": "3c026cacdbf389a1538c01cd5fc80b810a9d6295",
                 "shasum": ""
             },
             "require": {
@@ -862,7 +862,7 @@
             ],
             "description": "Twitter Bootstrap module for Zend Framework used by Internalsystemerror Limited",
             "homepage": "https://github.com/internalsystemerror/ise-module-bootstrap",
-            "time": "2017-02-21 22:28:53"
+            "time": "2017-02-27 09:15:07"
         },
         {
             "name": "kriswallsmith/assetic",

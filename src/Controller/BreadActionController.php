@@ -23,6 +23,11 @@ class BreadActionController extends ZendAbstractActionController implements Acti
      * @var ServiceInterface
      */
     protected $service;
+    
+    /**
+     * @var string
+     */
+    protected $entityClass;
 
     /**
      * @var string
@@ -52,6 +57,7 @@ class BreadActionController extends ZendAbstractActionController implements Acti
     public function __construct(ServiceInterface $service, ControllerOptions $options)
     {
         $this->service        = $service;
+        $this->entityClass    = $options->getEntityClass();
         $this->indexRoute     = $options->getIndexRoute();
         $this->basePermission = $options->getBasePermission();
         $this->entityTitle    = $options->getEntityTitle();

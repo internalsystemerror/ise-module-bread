@@ -3,6 +3,7 @@
 namespace Ise\Bread\Mapper;
 
 use Ise\Bread\Entity\EntityInterface;
+use Traversable;
 
 /**
  * @SuppressWarnings(PHPMD.ShortVariableName)
@@ -44,6 +45,14 @@ interface MapperInterface
      * @return boolean|EntityInterface
      */
     public function add(EntityInterface $entity);
+    
+    /**
+     * Add many entities
+     * 
+     * @param EntityInterface[] $entities
+     * @return boolean|EntityInterface[]
+     */
+    public function addMany(Traversable $entities);
 
     /**
      * Edit entity
@@ -52,6 +61,14 @@ interface MapperInterface
      * @return boolean|EntityInterface
      */
     public function edit(EntityInterface $entity);
+    
+    /**
+     * Edit many entities
+     * 
+     * @param EntityInterface[] $entities
+     * @return boolean|EntityInterface[]
+     */
+    public function editMany(Traversable $entities);
 
     /**
      * Delete entity
@@ -60,4 +77,26 @@ interface MapperInterface
      * @return boolean|EntityInterface
      */
     public function delete(EntityInterface $entity);
+    
+    /**
+     * Delete many entities
+     * 
+     * @param Traversable $entities
+     */
+    public function deleteMany(Traversable $entities);
+    
+    /**
+     * Begin transaction
+     */
+    public function beginTransaction();
+    
+    /**
+     * Commit transaction
+     */
+    public function commit();
+    
+    /**
+     * Rollback transaction
+     */
+    public function rollback();
 }

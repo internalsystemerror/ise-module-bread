@@ -80,23 +80,9 @@ class ConfigListener implements ListenerAggregateInterface
 
         // Parse routes
         $this->config['router']['routes'] = $this->parseRoutes($this->config['router']['routes']);
-        
-//        echo '<h1>Controllers</h1>';
-//        var_dump($this->breadConfig->getControllers());
-//        echo '<br><br><h1>Services</h1>';
-//        var_dump($this->breadConfig->getServices());
-//        echo '<br><br><h1>Mappers</h1>';
-//        var_dump($this->breadConfig->getMappers());
-//        echo '<br><br><h1>Entities</h1>';
-//        var_dump($this->breadConfig->getEntities());
-//        echo '<br><br><h1>Routes</h1>';
-//        var_dump($this->config['router']['routes']);
-//        exit;
 
         // Set new config
         $this->config['ise']['bread'] = $this->breadConfig;
-//        var_dump($this->config['ise']['bread']);
-//        exit;
         $configListener->setMergedConfig($this->config);
     }
 

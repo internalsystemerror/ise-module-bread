@@ -216,6 +216,9 @@ class BreadActionController extends ZendAbstractActionController implements Acti
         $form->bind($entity);
 
         // Perform action
+        if ($prg) {
+            $prg[Bread::IDENTIFIER] = $entity->getId();
+        }
         $action = $this->performAction($actionType, $prg);
         if ($action) {
             return $action;

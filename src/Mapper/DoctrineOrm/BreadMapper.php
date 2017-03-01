@@ -104,7 +104,6 @@ class BreadMapper implements MapperInterface
         try {
             $this->entityManager->remove($entity);
             $this->entityManager->flush();
-            $this->entityManager->clear();
             return $entity;
         } catch (Exception $e) {
             if (APPLICATION_ENV === 'development') {
@@ -124,7 +123,6 @@ class BreadMapper implements MapperInterface
                 $this->entityManager->remove($entity);
             }
             $this->entityManager->flush();
-            $this->entityManager->clear();
             return $entities;
         } catch (Exception $e) {
             if (APPLICATION_ENV === 'development') {
@@ -170,7 +168,6 @@ class BreadMapper implements MapperInterface
         try {
             $this->entityManager->persist($entity);
             $this->entityManager->flush();
-            $this->entityManager->clear();
             return $entity;
         } catch (Exception $e) {
             if (APPLICATION_ENV === 'development') {
@@ -193,7 +190,6 @@ class BreadMapper implements MapperInterface
                 $this->entityManager->persist($entity);
             }
             $this->entityManager->flush();
-            $this->entityManager->clear();
             return $entities;
         } catch (Exception $e) {
             if (APPLICATION_ENV === 'development') {

@@ -8,7 +8,7 @@ use DoctrineORMModule\Form\Element\EntityRadio;
 use DoctrineORMModule\Form\Element\EntitySelect;
 use DoctrineORMModule\Stdlib\Hydrator\DoctrineEntity;
 use Ise\Bread\Form\Annotation\ElementAnnotationsListener;
-use Ise\Bread\Router\Http\Bread;
+use Ise\Bread\EventManager\BreadEvent;
 use Interop\Container\ContainerInterface;
 use Zend\Form\Form;
 use Zend\ServiceManager\AbstractFactoryInterface;
@@ -35,19 +35,19 @@ class FormAbstractFactory implements AbstractFactoryInterface
 
         // Choose value for submit button
         switch ($formType) {
-            case Bread::FORM_CREATE:
+            case BreadEvent::FORM_CREATE:
                 $submit = 'Create';
                 $form   = $builder->createForm($entity);
                 $this->injectEntityManagerIntoElements($form, $entityManager);
-                $form->remove(Bread::IDENTIFIER);
-                $form->getInputFilter()->remove(Bread::IDENTIFIER);
+                $form->remove(BreadEvent::IDENTIFIER);
+                $form->getInputFilter()->remove(BreadEvent::IDENTIFIER);
                 break;
-            case Bread::FORM_UPDATE:
+            case BreadEvent::FORM_UPDATE:
                 $submit = 'Save';
                 $form   = $builder->createForm($entity);
                 $this->injectEntityManagerIntoElements($form, $entityManager);
                 break;
-            case Bread::FORM_DIALOG:
+            case BreadEvent::FORM_DIALOG:
             default:
                 $submit = 'Confirm';
                 $form   = new Form();

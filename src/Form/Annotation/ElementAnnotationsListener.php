@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping\ClassMetadata;
 use DoctrineModule\Validator\NoObjectExists;
 use DoctrineModule\Validator\UniqueObject;
 use DoctrineORMModule\Form\Annotation\AnnotationBuilder;
-use Ise\Bread\Router\Http\Bread;
+use Ise\Bread\EventManager\BreadEvent;
 use Zend\EventManager\AbstractListenerAggregate;
 use Zend\EventManager\EventInterface;
 use Zend\EventManager\EventManagerInterface;
@@ -98,7 +98,7 @@ class ElementAnnotationsListener extends AbstractListenerAggregate
         }
 
         switch ($this->actionType) {
-            case Bread::ACTION_CREATE:
+            case BreadEvent::ACTION_CREATE:
                 return $this->addNoObjectExistsValidator($event, $metadata, $mapping);
             default:
                 return $this->addUniqueObjectValidator($event, $metadata, $mapping);

@@ -2,10 +2,10 @@
 
 namespace Ise\Bread\Options;
 
+use Ise\Bread\EventManager\BreadEvent;
 use Ise\Bread\Factory\BreadServiceFactory;
 use Ise\Bread\Service\BreadService;
 use Ise\Bread\Service\ServiceInterface;
-use Ise\Bread\Router\Http\Bread;
 use Zend\Stdlib\ArrayUtils;
 
 class ServiceOptions extends AbstractFactoryClassOptions
@@ -25,9 +25,9 @@ class ServiceOptions extends AbstractFactoryClassOptions
      * @var string[]
      */
     protected $forms = [
-        Bread::FORM_CREATE => '',
-        Bread::FORM_UPDATE => '',
-        Bread::FORM_DIALOG => '',
+        BreadEvent::FORM_CREATE => '',
+        BreadEvent::FORM_UPDATE => '',
+        BreadEvent::FORM_DIALOG => '',
     ];
 
     /**
@@ -43,9 +43,9 @@ class ServiceOptions extends AbstractFactoryClassOptions
      * Set forms
      *
      * An array of forms: [
-     *     Bread::FORM_CREATE => 'Module\Form\Create\Alias',
-     *     Bread::FORM_UPDATE => 'Module\Form\Update\Alias',
-     *     Bread::FORM_DIALOG => 'Module\Form\Dialog\Alias',
+     *     BreadEvent::FORM_CREATE => 'Module\Form\Create\Alias',
+     *     BreadEvent::FORM_UPDATE => 'Module\Form\Update\Alias',
+     *     BreadEvent::FORM_DIALOG => 'Module\Form\Dialog\Alias',
      * ];
      *
      * @param string[] $forms

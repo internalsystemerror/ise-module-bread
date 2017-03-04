@@ -3,6 +3,7 @@
 namespace Ise\Bread\Controller\Factory;
 
 use Interop\Container\ContainerInterface;
+use Ise\Bread\EventManager\BreadEventManager;
 use Ise\Bread\ServiceManager\BreadManager;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -19,6 +20,7 @@ class BreadActionControllerFactory implements FactoryInterface
         $controllerClass = $breadManager->getControllerBaseClass($requestedName);
         
         return new $controllerClass(
+            $container->get(BreadEventManager::class),
             $breadManager->getService($breadManager->getServiceClassFromControllerClass($requestedName)),
             $breadManager->getControllerOptionsFromControllerClass($requestedName)
         );

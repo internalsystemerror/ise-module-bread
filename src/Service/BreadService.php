@@ -6,7 +6,7 @@ use DateTime;
 use Ise\Bread\Entity\EntityInterface;
 use Ise\Bread\Exception\InvalidArgumentException;
 use Ise\Bread\Mapper\MapperInterface;
-use Ise\Bread\Router\Http\Bread;
+use Ise\Bread\EventManager\BreadEvent;
 use Ise\Bread\ServiceManager\BreadManager;
 use Zend\Form\FormInterface;
 
@@ -73,7 +73,7 @@ class BreadService implements ServiceInterface
     public function add(array $data)
     {
         // Validate form
-        $entity = $this->validateForm(Bread::FORM_CREATE, $data);
+        $entity = $this->validateForm(BreadEvent::FORM_CREATE, $data);
         if (!$entity) {
             return false;
         }
@@ -88,7 +88,7 @@ class BreadService implements ServiceInterface
     public function edit(array $data)
     {
         // Validate form
-        $entity = $this->validateForm(Bread::FORM_UPDATE, $data);
+        $entity = $this->validateForm(BreadEvent::FORM_UPDATE, $data);
         if (!$entity) {
             return false;
         }
@@ -104,7 +104,7 @@ class BreadService implements ServiceInterface
     public function delete(array $data)
     {
         // Validate form
-        $entity = $this->validateForm(Bread::FORM_DIALOG, $data);
+        $entity = $this->validateForm(BreadEvent::FORM_DIALOG, $data);
         if (!$entity) {
             return false;
         }
@@ -119,7 +119,7 @@ class BreadService implements ServiceInterface
     public function disable(array $data)
     {
         // Validate form
-        $entity = $this->validateForm(Bread::FORM_DIALOG, $data);
+        $entity = $this->validateForm(BreadEvent::FORM_DIALOG, $data);
         if (!$entity) {
             return false;
         }
@@ -136,7 +136,7 @@ class BreadService implements ServiceInterface
     public function enable(array $data)
     {
         // Validate form
-        $entity = $this->validateForm(Bread::FORM_DIALOG, $data);
+        $entity = $this->validateForm(BreadEvent::FORM_DIALOG, $data);
         if (!$entity) {
             return false;
         }

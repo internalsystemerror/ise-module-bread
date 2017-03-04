@@ -2,13 +2,12 @@
 
 namespace Ise\Bread\Controller;
 
-use Exception;
 use Ise\Bread\Entity\EntityInterface;
+use Ise\Bread\EventManager\BreadEvent;
+use Ise\Bread\EventManager\BreadEventManager;
 use Ise\Bread\Options\ControllerOptions;
-use Ise\Bread\Router\Http\Bread;
 use Ise\Bread\Service\ServiceInterface;
 use Zend\Filter\Word\CamelCaseToSeparator;
-use Zend\Form\Form;
 use Zend\Mvc\Controller\AbstractActionController as ZendAbstractActionController;
 use Zend\Stdlib\ResponseInterface;
 use Zend\View\Model\ViewModel;
@@ -18,6 +17,11 @@ use Zend\View\Model\ViewModel;
  */
 class BreadActionController extends ZendAbstractActionController implements ActionControllerInterface
 {
+    
+    /**
+     * @var BreadEventManager
+     */
+    protected $breadEventManger;
 
     /**
      * @var ServiceInterface
@@ -37,11 +41,6 @@ class BreadActionController extends ZendAbstractActionController implements Acti
     /**
      * @var string
      */
-    protected $basePermission;
-
-    /**
-     * @var string
-     */
     protected $entityTitle;
 
     /**
@@ -54,14 +53,15 @@ class BreadActionController extends ZendAbstractActionController implements Acti
      *
      * @param ServiceInterface $service
      */
-    public function __construct(ServiceInterface $service, ControllerOptions $options)
+    public function __construct(BreadEventManager $breadEventManager, ServiceInterface $service, ControllerOptions $options)
     {
-        $this->service        = $service;
-        $this->entityClass    = $options->getEntityClass();
-        $this->indexRoute     = $options->getIndexRoute();
-        $this->basePermission = $options->getBasePermission();
-        $this->entityTitle    = $options->getEntityTitle();
-        $this->templates      = $options->getTemplates();
+        $this->breadEventManager = $breadEventManager;
+        $this->service           = $service;
+        $this->entityClass       = $options->getEntityClass();
+        $this->indexRoute        = $options->getIndexRoute();
+        $this->entityTitle       = $options->getEntityTitle();
+        $this->templates         = $options->getTemplates();
+        $this->attachDefaultBreadListeners();
     }
 
     /**
@@ -69,13 +69,7 @@ class BreadActionController extends ZendAbstractActionController implements Acti
      */
     public function browseAction()
     {
-        // Check for access permission
-        $this->checkPermission();
-
-        // Create list view model
-        return $this->createActionViewModel(Bread::ACTION_INDEX, [
-            'list' => $this->service->browse(),
-        ]);
+        return $this->triggerActionEvent(BreadEvent::ACTION_INDEX);
     }
 
     /**
@@ -83,16 +77,7 @@ class BreadActionController extends ZendAbstractActionController implements Acti
      */
     public function readAction()
     {
-        // Load entity
-        $entity = $this->getEntity();
-        if (!$entity) {
-            return $this->notFoundAction();
-        }
-        // Check for access permission
-        $this->checkPermission(null, $entity);
-        return $this->createActionViewModel(Bread::ACTION_READ, [
-            'entity' => $entity
-        ]);
+        return $this->triggerActionEvent(BreadEvent::ACTION_READ);
     }
 
     /**
@@ -100,27 +85,7 @@ class BreadActionController extends ZendAbstractActionController implements Acti
      */
     public function addAction()
     {
-        // PRG wrapper
-        $prg = $this->prg();
-        if ($prg instanceof ResponseInterface) {
-            return $prg;
-        }
-
-        // Check access
-        $this->checkPermission(Bread::ACTION_CREATE);
-        $action = $this->performAction(Bread::ACTION_CREATE, $prg);
-        if ($action) {
-            return $action;
-        }
-
-        // Setup form
-        $form = $this->service->getForm(Bread::FORM_CREATE);
-        $this->setupFormForView($form);
-
-        // Return view
-        return $this->createActionViewModel(Bread::ACTION_CREATE, [
-            'form' => $form,
-        ]);
+        return $this->triggerActionEvent(BreadEvent::ACTION_CREATE, BreadEvent::FORM_CREATE);
     }
 
     /**
@@ -128,38 +93,7 @@ class BreadActionController extends ZendAbstractActionController implements Acti
      */
     public function editAction()
     {
-        // PRG wrapper
-        $prg = $this->prg();
-        if ($prg instanceof ResponseInterface) {
-            return $prg;
-        }
-
-        // Check access
-        $entity = $this->getEntity();
-        if (!$entity) {
-            return $this->notFoundAction();
-        }
-        $this->checkPermission(Bread::ACTION_UPDATE, $entity);
-
-        // Setup form
-        $form = $this->service->getForm(Bread::FORM_UPDATE);
-        $form->bind($entity);
-
-        // Perform action
-        if ($prg) {
-            $prg[Bread::IDENTIFIER] = $entity->getId();
-        }
-        $action = $this->performAction(Bread::ACTION_UPDATE, $prg);
-        if ($action) {
-            return $action;
-        }
-
-        // Return view
-        $this->setupFormForView($form);
-        return $this->createActionViewModel(Bread::ACTION_UPDATE, [
-            'entity' => $entity,
-            'form'   => $form,
-        ]);
+        return $this->triggerActionEvent(BreadEvent::ACTION_UPDATE, BreadEvent::FORM_UPDATE);
     }
 
     /**
@@ -167,7 +101,7 @@ class BreadActionController extends ZendAbstractActionController implements Acti
      */
     public function deleteAction()
     {
-        return $this->dialogAction(Bread::ACTION_DELETE);
+        return $this->triggerActionEvent(BreadEvent::ACTION_DELETE, BreadEvent::FORM_DIALOG);
     }
 
     /**
@@ -175,7 +109,7 @@ class BreadActionController extends ZendAbstractActionController implements Acti
      */
     public function enableAction()
     {
-        return $this->dialogAction(Bread::ACTION_ENABLE);
+        return $this->triggerActionEvent(BreadEvent::ACTION_ENABLE, BreadEvent::FORM_DIALOG);
     }
 
     /**
@@ -183,64 +117,202 @@ class BreadActionController extends ZendAbstractActionController implements Acti
      */
     public function disableAction()
     {
-        return $this->dialogAction(Bread::ACTION_DISABLE);
+        return $this->triggerActionEvent(BreadEvent::ACTION_DISABLE, BreadEvent::FORM_DIALOG);
+    }
+    
+    /**
+     * Browse action event
+     * 
+     * @param BreadEvent $event
+     */
+    public function onActionBrowse(BreadEvent $event)
+    {
+        $viewModel = $event->getViewModel();
+        $viewModel->setVariable('list', $this->service->browse());
+        
+        return $viewModel;
+    }
+    
+    /**
+     * Read action event
+     * 
+     * @param BreadEvent $event
+     */
+    public function onActionRead(BreadEvent $event)
+    {
+        $viewModel = $event->getViewModel();
+        $viewModel->setVariable('entity', $event->getEntity());
+        
+        return $viewModel;
+    }
+    
+    /**
+     * Create action event
+     * 
+     * @param BreadEvent $event
+     */
+    public function onActionCreate(BreadEvent $event)
+    {
+        $viewModel = $event->getViewModel();
+        $viewModel->setVariable('form', $event->getForm());
+        
+        return $viewModel;
+    }
+    
+    /**
+     * Update action event
+     * 
+     * @param BreadEvent $event
+     */
+    public function onActionUpdate(BreadEvent $event)
+    {
+        $viewModel = $event->getViewModel();
+        $viewModel->setVariables([
+            'entity' => $event->getEntity(),
+            'form'   => $event->getForm(),
+        ]);
+        
+        return $viewModel;
     }
 
     /**
      * Perform dialog action
      *
-     * @param string $actionType
+     * @param BreadEvent $bread
      * @return ResponseInterface|ViewModel
      */
-    protected function dialogAction($actionType)
+    public function onActionDialog(BreadEvent $event)
     {
-        // PRG wrapper
+        $camelFilter = new CamelCaseToSeparator;
+        $viewModel   = $event->getViewModel();
+        $viewModel->setVariables([
+            'actionTitle' => strtolower($camelFilter->filter($event->getAction())),
+            'entity'      => $event->getEntity(),
+        ]);
+        
+        return $viewModel;
+    }
+    
+    /**
+     * Load PRG
+     * 
+     * @param BreadEvent $event
+     * @return null|ResponseInterface
+     */
+    public function loadPrg(BreadEvent $event)
+    {
         $prg = $this->prg();
         if ($prg instanceof ResponseInterface) {
             return $prg;
         }
-
-        // Check access
+        
+        $event->setPrgData($prg);
+    }
+    
+    /**
+     * Load entity
+     * 
+     * @param BreadEvent $event
+     * @return type
+     */
+    public function loadEntity(BreadEvent $event)
+    {
+        // Load entity
         $entity = $this->getEntity();
         if (!$entity) {
             return $this->notFoundAction();
         }
-        $this->checkPermission($actionType, $entity);
-        $notAllowed = $this->checkDialogueNotAllowed($actionType, $entity);
-        if ($notAllowed) {
-            return $notAllowed;
+        
+        $event->setEntity($entity);
+    }
+    
+    /**
+     * Load form
+     * 
+     * @param BreadEvent $event
+     */
+    public function loadForm(BreadEvent $event)
+    {
+        $event->setForm($this->service->getForm($event->getForm()));
+    }
+    
+    /**
+     * Bind entity to form
+     * 
+     * @param BreadEvent $event
+     */
+    public function bindEntityToForm(BreadEvent $event)
+    {
+        $event->getForm()->bind($event->getEntity());
+    }
+    
+    /**
+     * POST data to service
+     * 
+     * @return type
+     */
+    public function postToService(BreadEvent $event)
+    {
+        $action = $event->getAction();
+        $data   = $event->getPrgData();
+        if ($data) {
+            // Trigger service action
+            $action = $this->service->$action($data);
+            if ($action) {
+                // Create titles
+                $camelFilter = new CamelCaseToSeparator;
+                $actionTitle = strtolower($camelFilter->filter($action));
+                // Set success message
+                $this->flashMessenger()->addSuccessMessage(sprintf(
+                    '%s %s successful.',
+                    ucfirst($actionTitle),
+                    $this->entityTitle
+                ));
+                return $this->redirect()->toRoute($this->indexRoute);
+            }
         }
+    }
 
-        // Setup form
-        $form = $this->service->getForm(Bread::FORM_DIALOG);
-        $form->bind($entity);
-
-        // Perform action
-        if ($prg) {
-            $prg[Bread::IDENTIFIER] = $entity->getId();
-        }
-        $action = $this->performAction($actionType, $prg);
-        if ($action) {
-            return $action;
-        }
-
-        // Return view
-        $this->setupFormForDialogue($form);
-        return $this->createDialogueViewModelWrapper($actionType, $form, $entity);
+    /**
+     * Setup form for view
+     * 
+     * @param BreadEvent $event
+     */
+    public function setupFormForView(BreadEvent $event)
+    {
+        $form = $event->getForm();
+        $form->setAttribute('class', 'form-horizontal');
+        $form->get('buttons')->get('cancel')->setAttribute(
+            'href',
+            $this->url()->fromRoute($this->indexRoute)
+        );
+    }
+    
+    /**
+     * Setup form for dialog
+     * 
+     * @param BreadEvent $event
+     */
+    public function setupFormForDialog(BreadEvent $event)
+    {
+        $form = $event->getForm();
+        $form->get('buttons')->get('cancel')->setAttributes([
+            'data-href'    => $this->url()->fromRoute($this->indexRoute),
+            'data-dismiss' => 'modal',
+        ]);
     }
 
     /**
      * Check if dialog is not allowed
      *
-     * @param string $actionType
-     * @param EntityInterface $entity
+     * @param BreadEvent $event
      * @return null|ReponseInterface
      */
-    protected function checkDialogueNotAllowed($actionType, EntityInterface $entity)
+    public function checkDialogueNotAllowed(BreadEvent $event)
     {
-        switch ($actionType) {
-            case Bread::ACTION_DISABLE:
-                if (!$entity->isDisabled()) {
+        switch ($event->getAction()) {
+            case BreadEvent::ACTION_DISABLE:
+                if (!$event->getEntity()->isDisabled()) {
                     return;
                 }
                 // Set warning message
@@ -249,8 +321,8 @@ class BreadActionController extends ZendAbstractActionController implements Acti
                     $this->entityTitle
                 ));
                 return $this->redirect()->toRoute($this->indexRoute);
-            case Bread::ACTION_ENABLE:
-                if ($entity->isDisabled()) {
+            case BreadEvent::ACTION_ENABLE:
+                if ($event->getEntity()->isDisabled()) {
                     return;
                 }
                 // Set warning message
@@ -261,92 +333,123 @@ class BreadActionController extends ZendAbstractActionController implements Acti
                 return $this->redirect()->toRoute($this->indexRoute);
         }
     }
-
+    
     /**
-     * Perform action
-     *
-     * @param  string $actionType
-     * @return ResponseInterface|null
+     * Setup view model
+     * 
+     * @param BreadEvent $event
      */
-    protected function performAction($actionType, $prg)
+    public function setupViewModel(BreadEvent $event)
     {
-        if ($prg === false) {
-            return null;
+        $viewModel = $event->getViewModel();
+        $viewModel->setVariables([
+            'basePermission' => ($this->basePermission),
+            'indexRoute'     => ($this->indexRoute),
+            'entityTitle'    => ucwords($this->entityTitle),
+        ]);
+        
+        // Set up view model
+        if (isset($this->templates[$event->getName()])) {
+            $viewModel->setTemplate($this->templates[$event->getName()]);
         }
-
-        if ($this->service->$actionType($prg)) {
-            // Create titles
-            $camelFilter = new CamelCaseToSeparator;
-            $actionTitle = strtolower($camelFilter->filter($actionType));
-            // Set success message
-            $this->flashMessenger()->addSuccessMessage(sprintf(
-                '%s %s successful.',
-                ucfirst($actionType),
-                $this->entityTitle
-            ));
-            return $this->redirect()->toRoute($this->indexRoute);
-        }
-        return false;
+        
+        return $viewModel;
     }
-
+    
     /**
-     * Create dialog view model wrapper
-     *
-     * @param string $actionType
-     * @param Form $form
-     * @param EntityInterface $entity
-     * @param null|string $viewTemplate
+     * Wrap dialog view model
+     * 
+     * @param BreadEvent $event
      * @return ViewModel
      */
-    protected function createDialogueViewModelWrapper($actionType, Form $form, EntityInterface $entity)
+    public function wrapDialogViewModel(BreadEvent $event)
     {
-        // Create titles
-        $camelFilter = new CamelCaseToSeparator;
-        $actionTitle = strtolower($camelFilter->filter($actionType));
-
-        // Create body
-        $dialogBody = $this->createActionViewModel(Bread::FORM_DIALOG, [
-            'actionTitle' => $actionTitle,
-            'entityTitle' => $this->entityTitle,
-            'entity'      => $entity,
-        ]);
-
         // Create view model wrapper
-        $viewModel = new ViewModel([
-            'form'        => $form,
-            'dialogTitle' => sprintf('%s %s', ucwords($actionTitle), ucwords($this->entityTitle)),
+        $dialogBody = $event->getViewModel();
+        $viewModel  = new ViewModel([
+            'form'        => $event->getForm(),
+            'dialogTitle' => ucwords(sprintf(
+                '%s %s',
+                $dialogBody->getVariable('actionTitle'),
+                $this->entityTitle
+            )),
         ]);
         $viewModel->setTemplate('partial/dialog');
         $viewModel->addChild($dialogBody, 'dialogBody');
+        $event->setViewModel($viewModel);
 
         return $viewModel;
     }
 
     /**
-     * Create view model
-     *
-     * @param string      $actionTemplate
-     * @param array       $parameters
-     * @param string|null $viewTemplate
-     * @return ViewModel
+     * Attach default bread listeners
      */
-    protected function createActionViewModel($actionType, array $parameters = [])
+    protected function attachDefaultBreadListeners()
     {
-        // Set parameters$this->entityTitle
-        $variables = array_merge([
-            'basePermission' => $this->basePermission,
-            'indexRoute'     => $this->indexRoute,
-            'entityTitle'    => ucwords($this->entityTitle),
-            ], $parameters);
-
-        // Set up view model
-        $viewModel = new ViewModel($variables);
-        if (isset($this->templates[$actionType])) {
-            $viewModel->setTemplate($this->templates[$actionType]);
-        }
-        return $viewModel;
+        $this->breadEventManager->attach(BreadEvent::EVENT_INDEX, [$this, 'onActionBrowse']);
+        $this->breadEventManager->attach(BreadEvent::EVENT_INDEX, [$this, 'setupViewModel'], -100);
+        
+        $this->breadEventManager->attach(BreadEvent::EVENT_READ, [$this, 'loadEntity'], 900);
+        $this->breadEventManager->attach(BreadEvent::EVENT_READ, [$this, 'onActionRead']);
+        $this->breadEventManager->attach(BreadEvent::EVENT_READ, [$this, 'setupViewModel'], -100);
+        
+        $this->breadEventManager->attach(BreadEvent::EVENT_CREATE, [$this, 'loadPrg'], 1000);
+        $this->breadEventManager->attach(BreadEvent::EVENT_CREATE, [$this, 'postToService'], 500);
+        $this->breadEventManager->attach(BreadEvent::EVENT_CREATE, [$this, 'loadForm'], 20);
+        $this->breadEventManager->attach(BreadEvent::EVENT_CREATE, [$this, 'setupFormForView'], 10);
+        $this->breadEventManager->attach(BreadEvent::EVENT_CREATE, [$this, 'onActionCreate']);
+        $this->breadEventManager->attach(BreadEvent::EVENT_CREATE, [$this, 'setupViewModel'], -100);
+        
+        $this->breadEventManager->attach(BreadEvent::EVENT_UPDATE, [$this, 'loadPrg'], 1000);
+        $this->breadEventManager->attach(BreadEvent::EVENT_UPDATE, [$this, 'loadEntity'], 900);
+        $this->breadEventManager->attach(BreadEvent::EVENT_UPDATE, [$this, 'loadForm'], 600);
+        $this->breadEventManager->attach(BreadEvent::EVENT_UPDATE, [$this, 'bindEntityToForm'], 550);
+        $this->breadEventManager->attach(BreadEvent::EVENT_UPDATE, [$this, 'postToService'], 500);
+        $this->breadEventManager->attach(BreadEvent::EVENT_UPDATE, [$this, 'setupFormForView'], 10);
+        $this->breadEventManager->attach(BreadEvent::EVENT_UPDATE, [$this, 'onActionUpdate']);
+        $this->breadEventManager->attach(BreadEvent::EVENT_UPDATE, [$this, 'setupViewModel'], -100);
+        
+        $this->breadEventManager->attach(BreadEvent::EVENT_DIALOG, [$this, 'loadPrg'], 1000);
+        $this->breadEventManager->attach(BreadEvent::EVENT_DIALOG, [$this, 'loadEntity'], 900);
+        $this->breadEventManager->attach(BreadEvent::EVENT_DIALOG, [$this, 'checkDialogueNotAllowed'], 800);
+        $this->breadEventManager->attach(BreadEvent::EVENT_DIALOG, [$this, 'loadForm'], 600);
+        $this->breadEventManager->attach(BreadEvent::EVENT_DIALOG, [$this, 'bindEntityToForm'], 550);
+        $this->breadEventManager->attach(BreadEvent::EVENT_DIALOG, [$this, 'postToService'], 500);
+        $this->breadEventManager->attach(BreadEvent::EVENT_DIALOG, [$this, 'setupFormForDialog'], 10);
+        $this->breadEventManager->attach(BreadEvent::EVENT_DIALOG, [$this, 'onActionDialog']);
+        $this->breadEventManager->attach(BreadEvent::EVENT_DIALOG, [$this, 'setupViewModel'], -100);
+        $this->breadEventManager->attach(BreadEvent::EVENT_DIALOG, [$this, 'wrapDialogViewModel'], -200);
+        
     }
-
+    
+    /**
+     * Trigger a bread action event
+     * 
+     * @param string $action
+     * @param null|string $form
+     * @return ViewModel|ReponseInterface
+     */
+    protected function triggerActionEvent($action, $form = null)
+    {
+        // Setup new event
+        $event = new BreadEvent;
+        $event->setName($form ?: $action);
+        $event->setAction($action);
+        $event->setForm($form);
+        $event->setViewModel(new ViewModel);
+        
+        // Get result from action
+        $result = $this->breadEventManager->triggerEventUntil(function ($test) {
+            return ($test instanceof ResponseInterface);
+        }, $event);
+        
+        if ($result->stopped()) {
+            return $result->last();
+        }
+        
+        return $result->last();
+    }
+    
     /**
      * Get entity
      *
@@ -355,7 +458,7 @@ class BreadActionController extends ZendAbstractActionController implements Acti
     protected function getEntity()
     {
         // Get entity id
-        $id = (string) $this->params(Bread::IDENTIFIER, '');
+        $id = (string) $this->params(BreadEvent::IDENTIFIER, '');
         if (!$id) {
             return false;
         }
@@ -368,53 +471,12 @@ class BreadActionController extends ZendAbstractActionController implements Acti
     }
 
     /**
-     * Check for permission
-     *
-     * @param string|null $actionType
-     * @param mixed|null $context
-     * @throws Exception
-     */
-    protected function checkPermission($actionType = null, $context = null)
-    {
-    }
-
-    /**
-     * Setup form for view
-     *
-     * @param Form $form
-     */
-    protected function setupFormForView(Form $form)
-    {
-        $form->setAttribute('class', 'form-horizontal');
-        $form->get('buttons')->get('cancel')->setAttribute(
-            'href',
-            $this->url()->fromRoute($this->indexRoute)
-        );
-    }
-
-    /**
-     * Setup form for dialog
-     *
-     * @param Form $form
-     */
-    protected function setupFormForDialogue(Form $form)
-    {
-        $form->get('buttons')->get('cancel')->setAttributes([
-            'data-href'    => $this->url()->fromRoute($this->indexRoute),
-            'data-dismiss' => 'modal',
-        ]);
-    }
-
-    /**
      * Redirect browse to index route
      *
      * @return ResponseInterface
      */
     protected function redirectBrowse()
     {
-        // Check for access permission
-        $this->checkPermission();
-
         // Redirect to index route
         return $this->redirect()->toRoute($this->indexRoute);
     }

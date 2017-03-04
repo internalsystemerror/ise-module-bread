@@ -6,7 +6,7 @@ use Ise\Bread\Controller\Factory\BreadActionControllerFactory;
 use Ise\Bread\Controller\BreadActionController;
 use Ise\Bread\Controller\ControllerInterface;
 use Ise\Bread\Entity\EntityInterface;
-use Ise\Bread\Router\Http\Bread;
+use Ise\Bread\EventManager\BreadEvent;
 use Zend\Stdlib\ArrayUtils;
 
 class ControllerOptions extends AbstractFactoryClassOptions
@@ -46,11 +46,11 @@ class ControllerOptions extends AbstractFactoryClassOptions
      * @var string[]
      */
     protected $templates = [
-        Bread::ACTION_INDEX  => 'ise/bread/bread/browse',
-        Bread::ACTION_CREATE => 'ise/bread/bread/add',
-        Bread::ACTION_READ   => 'ise/bread/bread/read',
-        Bread::ACTION_UPDATE => 'ise/bread/bread/edit',
-        Bread::FORM_DIALOG   => 'ise/bread/bread/dialog',
+        BreadEvent::EVENT_INDEX  => 'ise/bread/bread/browse',
+        BreadEvent::EVENT_CREATE => 'ise/bread/bread/add',
+        BreadEvent::EVENT_READ   => 'ise/bread/bread/read',
+        BreadEvent::EVENT_UPDATE => 'ise/bread/bread/edit',
+        BreadEvent::EVENT_DIALOG   => 'ise/bread/bread/dialog',
     ];
     
     /**

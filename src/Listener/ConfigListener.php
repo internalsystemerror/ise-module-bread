@@ -2,6 +2,7 @@
 
 namespace Ise\Bread\Listener;
 
+use Ise\Bread\EventManager\BreadEvent;
 use Ise\Bread\Exception\InvalidArgumentException;
 use Ise\Bread\Options\AbstractClassOptions;
 use Ise\Bread\Options\BreadOptions;
@@ -9,7 +10,6 @@ use Ise\Bread\Options\ControllerOptions;
 use Ise\Bread\Options\EntityOptions;
 use Ise\Bread\Options\MapperOptions;
 use Ise\Bread\Options\ServiceOptions;
-use Ise\Bread\Router\Http\Bread;
 use ReflectionClass;
 use Zend\EventManager\EventManagerInterface;
 use Zend\EventManager\ListenerAggregateInterface;
@@ -325,7 +325,7 @@ class ConfigListener implements ListenerAggregateInterface
         $formNamespace = $namespace . '\Form\\' . $entityName . '\\';
         
         // Loop through Bread available forms
-        foreach (Bread::FORMS as $action) {
+        foreach (BreadEvent::getAvailableForms() as $action) {
             if (!isset($forms[$action]) || !$forms[$action]) {
                 $forms[$action] = $formNamespace . ucfirst($action);
             }
@@ -374,7 +374,7 @@ class ConfigListener implements ListenerAggregateInterface
 
         // Create options
         $defaults = [
-            'options'      => ['defaults' => ['action' => Bread::ACTION_INDEX]],
+            'options'      => ['defaults' => ['action' => BreadEvent::ACTION_INDEX]],
             'child_routes' => $this->createChildRoutes(),
         ];
         if (isset($route['options']['entity'])) {
@@ -417,8 +417,8 @@ class ConfigListener implements ListenerAggregateInterface
         // Loop through actions
         $uuidRegex   = trim(Uuid::REGEX_UUID, '/^$');
         $childRoutes = [];
-        foreach (Bread::ACTIONS as $action) {
-            if ($action === Bread::ACTION_CREATE) {
+        foreach (BreadEvent::getAvailableActions() as $action) {
+            if ($action === BreadEvent::ACTION_CREATE) {
                 // Handle add as special case
                 continue;
             }
@@ -427,7 +427,7 @@ class ConfigListener implements ListenerAggregateInterface
         }
 
         // Add special case add action
-        $childRoutes[Bread::ACTION_CREATE] = $this->defaultCreateAction();
+        $childRoutes[BreadEvent::ACTION_CREATE] = $this->defaultCreateAction();
 
         return $childRoutes;
     }
@@ -444,8 +444,8 @@ class ConfigListener implements ListenerAggregateInterface
         return [
             'type'    => 'segment',
             'options' => [
-                'route'       => '/' . $action . '/:' . Bread::IDENTIFIER,
-                'constraints' => [Bread::IDENTIFIER => $uuidRegex],
+                'route'       => '/:' . BreadEvent::IDENTIFIER . '/' . $action,
+                'constraints' => [BreadEvent::IDENTIFIER => $uuidRegex],
                 'defaults'    => [
                     'action' => $action,
                 ],
@@ -463,9 +463,9 @@ class ConfigListener implements ListenerAggregateInterface
         return [
             'type'    => 'literal',
             'options' => [
-                'route'    => '/' . Bread::ACTION_CREATE,
+                'route'    => '/' . BreadEvent::ACTION_CREATE,
                 'defaults' => [
-                    'action' => Bread::ACTION_CREATE,
+                    'action' => BreadEvent::ACTION_CREATE,
                 ]
             ],
         ];

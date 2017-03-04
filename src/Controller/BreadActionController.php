@@ -257,8 +257,8 @@ class BreadActionController extends ZendAbstractActionController implements Acti
         $data   = $event->getPrgData();
         if ($data) {
             // Trigger service action
-            $action = $this->service->$action($data);
-            if ($action) {
+            $result = $this->service->$action($data);
+            if ($result) {
                 // Create titles
                 $camelFilter = new CamelCaseToSeparator;
                 $actionTitle = strtolower($camelFilter->filter($action));
@@ -266,7 +266,7 @@ class BreadActionController extends ZendAbstractActionController implements Acti
                 $this->flashMessenger()->addSuccessMessage(sprintf(
                     '%s %s successful.',
                     ucfirst($actionTitle),
-                    $this->entityTitle
+                    strtolower($this->entityTitle)
                 ));
                 return $this->redirect()->toRoute($this->indexRoute);
             }

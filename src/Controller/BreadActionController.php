@@ -21,7 +21,7 @@ class BreadActionController extends ZendAbstractActionController implements Acti
     /**
      * @var BreadEventManager
      */
-    protected $breadEventManger;
+    protected $breadEventManager;
 
     /**
      * @var ServiceInterface
@@ -69,7 +69,7 @@ class BreadActionController extends ZendAbstractActionController implements Acti
      */
     public function browseAction()
     {
-        return $this->triggerActionEvent(BreadEvent::ACTION_INDEX);
+        return $this->triggerActionEvent(BreadEvent::EVENT_INDEX, BreadEvent::ACTION_INDEX);
     }
 
     /**
@@ -77,7 +77,7 @@ class BreadActionController extends ZendAbstractActionController implements Acti
      */
     public function readAction()
     {
-        return $this->triggerActionEvent(BreadEvent::ACTION_READ);
+        return $this->triggerActionEvent(BreadEvent::EVENT_READ, BreadEvent::ACTION_READ);
     }
 
     /**
@@ -85,7 +85,7 @@ class BreadActionController extends ZendAbstractActionController implements Acti
      */
     public function addAction()
     {
-        return $this->triggerActionEvent(BreadEvent::ACTION_CREATE, BreadEvent::FORM_CREATE);
+        return $this->triggerActionEvent(BreadEvent::EVENT_CREATE, BreadEvent::ACTION_CREATE, BreadEvent::FORM_CREATE);
     }
 
     /**
@@ -93,7 +93,7 @@ class BreadActionController extends ZendAbstractActionController implements Acti
      */
     public function editAction()
     {
-        return $this->triggerActionEvent(BreadEvent::ACTION_UPDATE, BreadEvent::FORM_UPDATE);
+        return $this->triggerActionEvent(BreadEvent::EVENT_UPDATE, BreadEvent::ACTION_UPDATE, BreadEvent::FORM_UPDATE);
     }
 
     /**
@@ -101,7 +101,7 @@ class BreadActionController extends ZendAbstractActionController implements Acti
      */
     public function deleteAction()
     {
-        return $this->triggerActionEvent(BreadEvent::ACTION_DELETE, BreadEvent::FORM_DIALOG);
+        return $this->triggerActionEvent(BreadEvent::EVENT_DIALOG, BreadEvent::ACTION_DELETE, BreadEvent::FORM_DIALOG);
     }
 
     /**
@@ -109,7 +109,7 @@ class BreadActionController extends ZendAbstractActionController implements Acti
      */
     public function enableAction()
     {
-        return $this->triggerActionEvent(BreadEvent::ACTION_ENABLE, BreadEvent::FORM_DIALOG);
+        return $this->triggerActionEvent(BreadEvent::EVENT_DIALOG, BreadEvent::ACTION_ENABLE, BreadEvent::FORM_DIALOG);
     }
 
     /**
@@ -117,7 +117,7 @@ class BreadActionController extends ZendAbstractActionController implements Acti
      */
     public function disableAction()
     {
-        return $this->triggerActionEvent(BreadEvent::ACTION_DISABLE, BreadEvent::FORM_DIALOG);
+        return $this->triggerActionEvent(BreadEvent::EVENT_DIALOG, BreadEvent::ACTION_DISABLE, BreadEvent::FORM_DIALOG);
     }
     
     /**
@@ -255,22 +255,26 @@ class BreadActionController extends ZendAbstractActionController implements Acti
     {
         $action = $event->getAction();
         $data   = $event->getPrgData();
-        if ($data) {
-            // Trigger service action
-            $result = $this->service->$action($data);
-            if ($result) {
-                // Create titles
-                $camelFilter = new CamelCaseToSeparator;
-                $actionTitle = strtolower($camelFilter->filter($action));
-                // Set success message
-                $this->flashMessenger()->addSuccessMessage(sprintf(
-                    '%s %s successful.',
-                    ucfirst($actionTitle),
-                    strtolower($this->entityTitle)
-                ));
-                return $this->redirect()->toRoute($this->indexRoute);
-            }
+        if (!$data) {
+            return;
         }
+        
+        // Trigger service action
+        $result = $this->service->$action($data);
+        if (!$result) {
+            return;
+        }
+        
+        // Create titles
+        $camelFilter = new CamelCaseToSeparator;
+        $actionTitle = strtolower($camelFilter->filter($action));
+        // Set success message
+        $this->flashMessenger()->addSuccessMessage(sprintf(
+            '%s %s successful.',
+            ucfirst($actionTitle),
+            strtolower($this->entityTitle)
+        ));
+        return $this->redirect()->toRoute($this->indexRoute);
     }
 
     /**
@@ -308,14 +312,13 @@ class BreadActionController extends ZendAbstractActionController implements Acti
      * @param BreadEvent $event
      * @return null|ReponseInterface
      */
-    public function checkDialogueNotAllowed(BreadEvent $event)
+    public function checkDialogNotAllowed(BreadEvent $event)
     {
         switch ($event->getAction()) {
             case BreadEvent::ACTION_DISABLE:
                 if (!$event->getEntity()->isDisabled()) {
                     return;
                 }
-                // Set warning message
                 $this->flashMessenger()->addWarningMessage(sprintf(
                     'That %s is already disabled',
                     $this->entityTitle
@@ -325,7 +328,6 @@ class BreadActionController extends ZendAbstractActionController implements Acti
                 if ($event->getEntity()->isDisabled()) {
                     return;
                 }
-                // Set warning message
                 $this->flashMessenger()->addWarningMessage(sprintf(
                     'That %s is already enabled',
                     $this->entityTitle
@@ -386,20 +388,50 @@ class BreadActionController extends ZendAbstractActionController implements Acti
      */
     protected function attachDefaultBreadListeners()
     {
+        $this->attachDefaultIndexListeners();
+        $this->attachDefaultReadListeners();
+        $this->attachDefaultCreateListeners();
+        $this->attachDefaultUpdateListeners();
+        $this->attachDefaultDialogListeners();
+    }
+    
+    /**
+     * Attach default index listeners
+     */
+    protected function attachDefaultIndexListeners()
+    {
         $this->breadEventManager->attach(BreadEvent::EVENT_INDEX, [$this, 'onActionBrowse']);
         $this->breadEventManager->attach(BreadEvent::EVENT_INDEX, [$this, 'setupViewModel'], -100);
-        
+    }
+    
+    /**
+     * Attach default read listeners
+     */
+    protected function attachDefaultReadListeners()
+    {
         $this->breadEventManager->attach(BreadEvent::EVENT_READ, [$this, 'loadEntity'], 900);
         $this->breadEventManager->attach(BreadEvent::EVENT_READ, [$this, 'onActionRead']);
         $this->breadEventManager->attach(BreadEvent::EVENT_READ, [$this, 'setupViewModel'], -100);
-        
+    }
+    
+    /**
+     * Attach default create listeners
+     */
+    protected function attachDefaultCreateListeners()
+    {
         $this->breadEventManager->attach(BreadEvent::EVENT_CREATE, [$this, 'loadPrg'], 1000);
         $this->breadEventManager->attach(BreadEvent::EVENT_CREATE, [$this, 'postToService'], 500);
         $this->breadEventManager->attach(BreadEvent::EVENT_CREATE, [$this, 'loadForm'], 20);
         $this->breadEventManager->attach(BreadEvent::EVENT_CREATE, [$this, 'setupFormForView'], 10);
         $this->breadEventManager->attach(BreadEvent::EVENT_CREATE, [$this, 'onActionCreate']);
         $this->breadEventManager->attach(BreadEvent::EVENT_CREATE, [$this, 'setupViewModel'], -100);
-        
+    }
+    
+    /**
+     * Attach default update listeners
+     */
+    protected function attachDefaultUpdateListeners()
+    {
         $this->breadEventManager->attach(BreadEvent::EVENT_UPDATE, [$this, 'loadPrg'], 1000);
         $this->breadEventManager->attach(BreadEvent::EVENT_UPDATE, [$this, 'loadEntity'], 900);
         $this->breadEventManager->attach(BreadEvent::EVENT_UPDATE, [$this, 'loadForm'], 600);
@@ -408,10 +440,16 @@ class BreadActionController extends ZendAbstractActionController implements Acti
         $this->breadEventManager->attach(BreadEvent::EVENT_UPDATE, [$this, 'setupFormForView'], 10);
         $this->breadEventManager->attach(BreadEvent::EVENT_UPDATE, [$this, 'onActionUpdate']);
         $this->breadEventManager->attach(BreadEvent::EVENT_UPDATE, [$this, 'setupViewModel'], -100);
-        
+    }
+    
+    /**
+     * Attach default dialog listeners
+     */
+    protected function attachDefaultDialogListeners()
+    {
         $this->breadEventManager->attach(BreadEvent::EVENT_DIALOG, [$this, 'loadPrg'], 1000);
         $this->breadEventManager->attach(BreadEvent::EVENT_DIALOG, [$this, 'loadEntity'], 900);
-        $this->breadEventManager->attach(BreadEvent::EVENT_DIALOG, [$this, 'checkDialogueNotAllowed'], 800);
+        $this->breadEventManager->attach(BreadEvent::EVENT_DIALOG, [$this, 'checkDialogNotAllowed'], 800);
         $this->breadEventManager->attach(BreadEvent::EVENT_DIALOG, [$this, 'loadForm'], 600);
         $this->breadEventManager->attach(BreadEvent::EVENT_DIALOG, [$this, 'bindEntityToForm'], 550);
         $this->breadEventManager->attach(BreadEvent::EVENT_DIALOG, [$this, 'postToService'], 500);
@@ -419,21 +457,25 @@ class BreadActionController extends ZendAbstractActionController implements Acti
         $this->breadEventManager->attach(BreadEvent::EVENT_DIALOG, [$this, 'onActionDialog']);
         $this->breadEventManager->attach(BreadEvent::EVENT_DIALOG, [$this, 'setupViewModel'], -100);
         $this->breadEventManager->attach(BreadEvent::EVENT_DIALOG, [$this, 'wrapDialogViewModel'], -200);
-        
     }
     
     /**
      * Trigger a bread action event
      * 
-     * @param string $action
+     * @param string $name
+     * @param null|string $action
      * @param null|string $form
      * @return ViewModel|ReponseInterface
      */
-    protected function triggerActionEvent($action, $form = null)
+    protected function triggerActionEvent($name, $action = null, $form = null)
     {
+        if (!$action) {
+            $action = $name;
+        }
+        
         // Setup new event
         $event = new BreadEvent;
-        $event->setName($form ?: $action);
+        $event->setName($name);
         $event->setAction($action);
         $event->setForm($form);
         $event->setViewModel(new ViewModel);

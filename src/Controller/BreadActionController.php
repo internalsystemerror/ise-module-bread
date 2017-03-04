@@ -9,6 +9,8 @@ use Ise\Bread\Options\ControllerOptions;
 use Ise\Bread\Service\ServiceInterface;
 use Zend\Filter\Word\CamelCaseToSeparator;
 use Zend\Mvc\Controller\AbstractActionController as ZendAbstractActionController;
+use Zend\Http\Request;
+use Zend\Stdlib\RequestInterface;
 use Zend\Stdlib\ResponseInterface;
 use Zend\View\Model\ViewModel;
 
@@ -201,7 +203,7 @@ class BreadActionController extends ZendAbstractActionController implements Acti
      */
     public function loadPrg(BreadEvent $event)
     {
-        $prg = $this->prg();
+        $prg = $this->getPrgDataFromRequest();
         if ($prg instanceof ResponseInterface) {
             return $prg;
         }
@@ -521,5 +523,27 @@ class BreadActionController extends ZendAbstractActionController implements Acti
     {
         // Redirect to index route
         return $this->redirect()->toRoute($this->indexRoute);
+    }
+    
+    /**
+     * Get PRG data from request
+     * 
+     * @return null|boolean|array|ResponseInterface
+     */
+    protected function getPrgDataFromRequest()
+    {
+        $request = $this->getRequest();
+        if (!$request instanceof Request) {
+            return;
+        }
+        
+        if ($request->isXmlHttpRequest()) {
+            if ($request->isPost()) {
+                return $request->getPost()->toArray();
+            }
+            return;
+        }
+        
+        return $this->prg();
     }
 }

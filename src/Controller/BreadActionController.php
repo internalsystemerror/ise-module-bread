@@ -528,20 +528,20 @@ class BreadActionController extends ZendAbstractActionController implements Acti
     /**
      * Get PRG data from request
      * 
-     * @return null|boolean|array|ResponseInterface
+     * @return boolean|array|ResponseInterface
      */
     protected function getPrgDataFromRequest()
     {
         $request = $this->getRequest();
         if (!$request instanceof Request) {
-            return;
+            return false;
         }
         
         if ($request->isXmlHttpRequest()) {
             if ($request->isPost()) {
                 return $request->getPost()->toArray();
             }
-            return;
+            return false;
         }
         
         return $this->prg();

@@ -82,7 +82,7 @@ class ConfigListener implements ListenerAggregateInterface
         $this->config['router']['routes'] = $this->parseRoutes($this->config['router']['routes']);
 
         // Set new config
-        $this->config['ise']['bread'] = $this->breadConfig;
+        $this->config['ise']['bread'] = $this->breadConfig->toArray();
         $configListener->setMergedConfig($this->config);
     }
 

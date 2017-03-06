@@ -17,7 +17,7 @@ class ServicePluginManagerFactory implements FactoryInterface
         $config = $container->get('Config');
         return new $requestedName(
             $container,
-            $config['ise']['bread']->getServiceManager()
+            $config['ise']['bread']['service_manager']
         );
     }
 

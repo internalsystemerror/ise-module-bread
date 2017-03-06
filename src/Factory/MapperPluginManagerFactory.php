@@ -17,7 +17,7 @@ class MapperPluginManagerFactory implements FactoryInterface
         $config = $container->get('Config');
         return new $requestedName(
             $container,
-            $config['ise']['bread']->getMapperManager()
+            $config['ise']['bread']['mapper_manager']
         );
     }
 

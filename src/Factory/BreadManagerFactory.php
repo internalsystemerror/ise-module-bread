@@ -3,6 +3,7 @@
 namespace Ise\Bread\Factory;
 
 use Interop\Container\ContainerInterface;
+use Ise\Bread\Options\BreadOptions;
 use Ise\Bread\ServiceManager\FormPluginManager;
 use Ise\Bread\ServiceManager\MapperPluginManager;
 use Ise\Bread\ServiceManager\ServicePluginManager;
@@ -22,7 +23,7 @@ class BreadManagerFactory implements FactoryInterface
             $container->get(ServicePluginManager::class),
             $container->get(MapperPluginManager::class),
             $container->get(FormPluginManager::class),
-            $config['ise']['bread']
+            new BreadOptions($config['ise']['bread'])
         );
     }
 

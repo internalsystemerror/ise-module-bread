@@ -66,6 +66,22 @@ class BreadOptions extends AbstractOptions
     protected $entities = [];
     
     /**
+     * {@inheritDoc}
+     */
+    public function toArray()
+    {
+        $array      = parent::toArray();
+        $properties = ['controllers', 'services', 'mappers', 'entities'];
+        foreach ($properties as $property) {
+            foreach ($array[$property] as $key => $value) {
+                $array[$property][$key] = $value->toArray();
+            }
+        }
+        
+        return $array;
+    }
+    
+    /**
      * Set service manager options
      *
      * @param array[] $serviceManager

@@ -17,7 +17,7 @@ class FormPluginManagerFactory implements FactoryInterface
         $config = $container->get('Config');
         return new $requestedName(
             $container,
-            $config['ise']['bread']->getFormManager()
+            $config['ise']['bread']['form_manager']
         );
     }
 

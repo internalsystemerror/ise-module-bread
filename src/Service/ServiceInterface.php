@@ -1,6 +1,8 @@
 <?php
 
-namespace IseBread\Service;
+namespace Ise\Bread\Service;
+
+use Ise\Bread\Entity\EntityInterface;
 
 /**
  * @SuppressWarnings(PHPMD.ShortVariableName)
@@ -11,23 +13,34 @@ interface ServiceInterface
     /**
      * Browse entities
      *
-     * @return object[]
+     * @param array $criteria
+     * @param array $orderBy
+     * @param null|integer $limit
+     * @param null|integer $offset
      */
-    public function browse();
+    public function browse(array $criteria = [], array $orderBy = [], $limit = null, $offset = null);
 
     /**
-     * Read entity
+     * Read an entity
      *
      * @param  integer $id Entity id
-     * @return object
+     * @return EntityInterface
      */
     public function read($id);
+    
+    /**
+     * Read an entity by criteria
+     *
+     * @param array $criteria
+     * @return EntityInterface
+     */
+    public function readBy(array $criteria);
 
     /**
      * Add entity
      *
      * @param  array $data Entity data
-     * @return boolean|object
+     * @return boolean|EntityInterface
      */
     public function add(array $data);
 
@@ -35,7 +48,7 @@ interface ServiceInterface
      * Edit entity
      *
      * @param  array $data Entity data
-     * @return boolean|object
+     * @return boolean|EntityInterface
      */
     public function edit(array $data);
 
@@ -43,7 +56,7 @@ interface ServiceInterface
      * Delete entity
      *
      * @param  array $data Entity data
-     * @return boolean|object
+     * @return boolean|EntityInterface
      */
     public function delete(array $data);
 
@@ -51,7 +64,7 @@ interface ServiceInterface
      * Disable entity
      *
      * @param  array $data Entity data
-     * @return boolean|object
+     * @return boolean|EntityInterface
      */
     public function disable(array $data);
 
@@ -59,7 +72,7 @@ interface ServiceInterface
      * Enable entity
      *
      * @param  array $data Entity data
-     * @return boolean|object
+     * @return boolean|EntityInterface
      */
     public function enable(array $data);
 }

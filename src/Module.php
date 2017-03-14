@@ -1,27 +1,27 @@
 <?php
 
-namespace IseBread;
+namespace Ise\Bread;
 
-use Zend\EventManager\EventInterface;
-use Zend\ModuleManager\Feature\BootstrapListenerInterface;
 use Zend\ModuleManager\Feature\ConfigProviderInterface;
 use Zend\ModuleManager\Feature\DependencyIndicatorInterface;
-use Zend\ModuleManager\Feature\ServiceProviderInterface;
+use Zend\ModuleManager\Feature\InitProviderInterface;
+use Zend\ModuleManager\ModuleManagerInterface ;
 
 class Module implements
-    BootstrapListenerInterface,
     ConfigProviderInterface,
     DependencyIndicatorInterface,
-    ServiceProviderInterface
+    InitProviderInterface
 {
 
     /**
      * {@inheritDoc}
      */
-    public function onBootstrap(EventInterface $event)
+    public function init(ModuleManagerInterface  $moduleManager)
     {
-        // Attach listeners
-        $event->getTarget()->getEventManager()->attachAggregate(new Listener\RouteCacheListener);
+        $eventManager = $moduleManager->getEventManager();
+        
+        $configListener = new Listener\ConfigListener();
+        $configListener->attach($eventManager);
     }
 
 
@@ -30,15 +30,7 @@ class Module implements
      */
     public function getConfig()
     {
-        return include __DIR__ . '/../config/module.config.php';
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getServiceConfig()
-    {
-        return include __DIR__ . '/../config/services.config.php';
+        return include realpath(__DIR__ . '/../config/module.config.php');
     }
 
     /**

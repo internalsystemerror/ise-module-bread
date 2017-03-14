@@ -1,6 +1,6 @@
 <?php
 
-namespace IseBread\Entity;
+namespace Ise\Bread\Entity;
 
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
@@ -10,11 +10,10 @@ use Zend\Form\Annotation as ZF;
  * @ORM\MappedSuperclass
  * @SuppressWarnings(PHPMD.ShortVariable)
  */
-abstract class AbstractEntity
+abstract class AbstractEntity implements EntityInterface
 {
 
     /**
-     * @ZF\Exclude()
      * @var string
      */
     protected $id;
@@ -41,25 +40,16 @@ abstract class AbstractEntity
     protected $created;
 
     /**
-     * Constructor method
+     * {@inheritDoc}
      */
     public function __construct()
     {
         $this->lastModified = new DateTime;
         $this->created      = new DateTime;
     }
-    
-    /**
-     * Cast object to a string
-     *
-     * @return string
-     */
-    abstract public function __toString();
 
     /**
-     * Get id
-     *
-     * @return string
+     * {@inheritDoc}
      */
     public function getId()
     {
@@ -67,10 +57,7 @@ abstract class AbstractEntity
     }
 
     /**
-     * Set disabled
-     *
-     * @param boolean $disabled
-     * @return self
+     * {@inheritDoc}
      */
     public function setDisabled($disabled)
     {
@@ -79,9 +66,7 @@ abstract class AbstractEntity
     }
 
     /**
-     * Is disabled
-     *
-     * @return boolean
+     * {@inheritDoc}
      */
     public function isDisabled()
     {
@@ -89,10 +74,7 @@ abstract class AbstractEntity
     }
 
     /**
-     * Set last modified
-     *
-     * @param DateTime $lastModifed Last modified date
-     * @return self
+     * {@inheritDoc}
      */
     public function setLastModified(DateTime $lastModifed)
     {
@@ -101,9 +83,7 @@ abstract class AbstractEntity
     }
 
     /**
-     * Get last modified
-     *
-     * @return DateTime
+     * {@inheritDoc}
      */
     public function getLastModified()
     {
@@ -111,10 +91,7 @@ abstract class AbstractEntity
     }
 
     /**
-     * Set created
-     *
-     * @param DateTime $created Created date
-     * @return self
+     * {@inheritDoc}
      */
     public function setCreated(DateTime $created)
     {
@@ -123,9 +100,7 @@ abstract class AbstractEntity
     }
 
     /**
-     * Get created
-     *
-     * @return DateTime
+     * {@inheritDoc}
      */
     public function getCreated()
     {

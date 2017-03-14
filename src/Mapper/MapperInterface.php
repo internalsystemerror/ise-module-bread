@@ -1,6 +1,9 @@
 <?php
 
-namespace IseBread\Mapper;
+namespace Ise\Bread\Mapper;
+
+use Ise\Bread\Entity\EntityInterface;
+use Traversable;
 
 /**
  * @SuppressWarnings(PHPMD.ShortVariableName)
@@ -11,55 +14,89 @@ interface MapperInterface
     /**
      * Browse entities
      *
-     * @return array
+     * @param  array        $criteria
+     * @param  array        $orderBy
+     * @param  null|integer $limit
+     * @param  null|integer $offset
+     * @return EntityInterface[]
      */
-    public function browse();
+    public function browse(array $criteria = [], array $orderBy = [], $limit = null, $offset = null);
 
     /**
      * Read entity
      *
      * @param  integer $id
-     * @return object
+     * @return EntityInterface
      */
     public function read($id);
 
     /**
+     * Read an entity by criteria
+     *
+     * @param array $criteria
+     * @return EntityInterface
+     */
+    public function readBy(array $criteria);
+
+    /**
      * Add entity
      *
-     * @param  object $entity
-     * @return boolean|object
+     * @param  EntityInterface $entity
+     * @return boolean|EntityInterface
      */
-    public function add($entity);
+    public function add(EntityInterface $entity);
+    
+    /**
+     * Add many entities
+     *
+     * @param EntityInterface[] $entities
+     * @return boolean|EntityInterface[]
+     */
+    public function addMany(Traversable $entities);
 
     /**
      * Edit entity
      *
-     * @param  object $entity
-     * @return boolean|object
+     * @param  EntityInterface $entity
+     * @return boolean|EntityInterface
      */
-    public function edit($entity);
+    public function edit(EntityInterface $entity);
+    
+    /**
+     * Edit many entities
+     *
+     * @param EntityInterface[] $entities
+     * @return boolean|EntityInterface[]
+     */
+    public function editMany(Traversable $entities);
 
     /**
      * Delete entity
      *
-     * @param  object $entity
-     * @return boolean
+     * @param  EntityInterface $entity
+     * @return boolean|EntityInterface
      */
-    public function delete($entity);
-
+    public function delete(EntityInterface $entity);
+    
     /**
-     * Disable entity
+     * Delete many entities
      *
-     * @param  object $entity
-     * @return boolean
+     * @param Traversable $entities
      */
-    public function disable($entity);
-
+    public function deleteMany(Traversable $entities);
+    
     /**
-     * Enable entity
-     *
-     * @param  object $entity
-     * @return boolean
+     * Begin transaction
      */
-    public function enable($entity);
+    public function beginTransaction();
+    
+    /**
+     * Commit transaction
+     */
+    public function commit();
+    
+    /**
+     * Rollback transaction
+     */
+    public function rollback();
 }

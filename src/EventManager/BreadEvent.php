@@ -84,7 +84,7 @@ class BreadEvent extends Event
     
     /**
      * Get the list of available bread actions
-     * 
+     *
      * @return string[]
      */
     public static function getAvailableActions()
@@ -94,7 +94,7 @@ class BreadEvent extends Event
     
     /**
      * Get the list of available forms
-     * 
+     *
      * @return string[]
      */
     public static function getAvailableForms()
@@ -104,7 +104,7 @@ class BreadEvent extends Event
     
     /**
      * Set the action
-     * 
+     *
      * @param string $action
      * @return self
      */
@@ -116,7 +116,7 @@ class BreadEvent extends Event
     
     /**
      * Get the action
-     * 
+     *
      * @return string
      */
     public function getAction()
@@ -126,7 +126,7 @@ class BreadEvent extends Event
     
     /**
      * Set the entity
-     * 
+     *
      * @param EntityInterface $entity
      * @return self
      */
@@ -138,7 +138,7 @@ class BreadEvent extends Event
     
     /**
      * Get the entity
-     * 
+     *
      * @return EntityInterface
      */
     public function getEntity()
@@ -148,7 +148,7 @@ class BreadEvent extends Event
     
     /**
      * Set the form
-     * 
+     *
      * @param string|FormInterface $form
      * @return self
      */
@@ -160,7 +160,7 @@ class BreadEvent extends Event
     
     /**
      * Get the form
-     * 
+     *
      * @return string|FormInterface
      */
     public function getForm()
@@ -170,7 +170,7 @@ class BreadEvent extends Event
     
     /**
      * Set the PRG data
-     * 
+     *
      * @param boolean|array $data
      * @return self
      */
@@ -182,7 +182,7 @@ class BreadEvent extends Event
     
     /**
      * Get the PRG data
-     * 
+     *
      * @return boolean|array
      */
     public function getPrgData()
@@ -192,7 +192,7 @@ class BreadEvent extends Event
     
     /**
      * Set the view model
-     * 
+     *
      * @param ViewModel $viewModel
      * @return self
      */
@@ -204,7 +204,7 @@ class BreadEvent extends Event
     
     /**
      * Get the view model
-     * 
+     *
      * @return ViewModel
      */
     public function getViewModel()

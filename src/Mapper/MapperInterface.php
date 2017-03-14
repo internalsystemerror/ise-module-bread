@@ -48,7 +48,7 @@ interface MapperInterface
     
     /**
      * Add many entities
-     * 
+     *
      * @param EntityInterface[] $entities
      * @return boolean|EntityInterface[]
      */
@@ -64,7 +64,7 @@ interface MapperInterface
     
     /**
      * Edit many entities
-     * 
+     *
      * @param EntityInterface[] $entities
      * @return boolean|EntityInterface[]
      */
@@ -80,7 +80,7 @@ interface MapperInterface
     
     /**
      * Delete many entities
-     * 
+     *
      * @param Traversable $entities
      */
     public function deleteMany(Traversable $entities);

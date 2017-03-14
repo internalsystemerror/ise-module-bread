@@ -36,7 +36,7 @@ class BreadActionControllerFactory implements FactoryInterface
     
     /**
      * Create controller factory method
-     * 
+     *
      * @param ContainerInterface $container
      * @param string $requestedName
      * @param BreadEventManager $breadEventManager
@@ -55,7 +55,7 @@ class BreadActionControllerFactory implements FactoryInterface
     
     /**
      * Create controller instance
-     * 
+     *
      * @param BreadEventManager $breadEventManager
      * @param string $requestedName
      * @param string $controllerClass

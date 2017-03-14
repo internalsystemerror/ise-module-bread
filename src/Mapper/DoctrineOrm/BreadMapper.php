@@ -26,7 +26,7 @@ class BreadMapper implements MapperInterface
     protected $entityRepository;
     
     /**
-     * @var Connection 
+     * @var Connection
      */
     protected $connection;
     
@@ -158,7 +158,7 @@ class BreadMapper implements MapperInterface
 
     /**
      * Persist entity
-     * 
+     *
      * @param EntityInterface $entity
      * @return EntityInterface|boolean
      * @throws Exception
@@ -179,7 +179,7 @@ class BreadMapper implements MapperInterface
     
     /**
      * Persist many entities
-     * 
+     *
      * @param EntityInterface[] $entities
      * @return EntityInterface[]|boolean
      */

@@ -191,7 +191,7 @@ class BreadManager
     
     /**
      * Get mapper from entity class
-     * 
+     *
      * @param string $entityClass
      * @return MapperInterface
      */
@@ -213,7 +213,7 @@ class BreadManager
     
     /**
      * Get mapper class from entity class
-     * 
+     *
      * @param string $entityClass
      * @return string
      */
@@ -257,7 +257,7 @@ class BreadManager
     
     /**
      * Get entity class from service class
-     * 
+     *
      * @param string $serviceClass
      * @return string
      */

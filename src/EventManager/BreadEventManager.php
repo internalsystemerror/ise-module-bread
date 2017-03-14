@@ -11,5 +11,4 @@ class BreadEventManager extends EventManager
      * @var string
      */
     protected $eventClass = BreadEvent::class;
-
 }

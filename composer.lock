@@ -2632,12 +2632,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/internalsystemerror/php-metapackage-development.git",
-                "reference": "c2f8901c4a6c9dac7851543c70e06b0312fce983"
+                "reference": "db40594a4021afa45170e8ae04e46ed678d86ae6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/internalsystemerror/php-metapackage-development/zipball/c2f8901c4a6c9dac7851543c70e06b0312fce983",
-                "reference": "c2f8901c4a6c9dac7851543c70e06b0312fce983",
+                "url": "https://api.github.com/repos/internalsystemerror/php-metapackage-development/zipball/db40594a4021afa45170e8ae04e46ed678d86ae6",
+                "reference": "db40594a4021afa45170e8ae04e46ed678d86ae6",
                 "shasum": ""
             },
             "require": {

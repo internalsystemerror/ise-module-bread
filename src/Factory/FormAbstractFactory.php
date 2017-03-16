@@ -28,10 +28,13 @@ class FormAbstractFactory implements AbstractFactoryInterface
         $entity      = new $entityClass;
 
         // Create builder
-        $entityManager   = $container->get('Doctrine\ORM\EntityManager');
-        $builder         = $container->get('doctrine.formannotationbuilder.orm_default');
+        $entityManager      = $container->get('Doctrine\ORM\EntityManager');
+        $builder            = $container->get('doctrine.formannotationbuilder.orm_default');
+        $formElementManager = $container->get('FormElementManager');
+        $formFactory        = $builder->getFormFactory();
         $elementListener = new ElementAnnotationsListener($entityManager, $formType);
         $elementListener->attach($builder->getEventManager());
+        $formFactory->setFormElementManager($formElementManager);
 
         // Choose value for submit button
         switch ($formType) {

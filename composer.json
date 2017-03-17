@@ -5,15 +5,18 @@
     "homepage": "https://github.com/internalsystemerror/ise-module-bread",
     "require": {
         "php": "^5.6 || ^7.0",
-        "ise/ise-module-bootstrap": "dev-develop",
-        "doctrine/doctrine-orm-module": "^1.0",
-        "zendframework/zend-http": "^2.5 || ^3.0",
-        "zendframework/zend-servicemanager": "^2.5 || ^3.0",
-        "zendframework/zend-stdlib": "^2.5 || ^3.0",
+        "zendframework/zend-form": "^2.5 || ^3.0",
+        "zendframework/zend-mvc": "^2.5 || ^3.0",
         "zendframework/zend-validator": "^2.5 || ^3.0"
     },
     "require-dev": {
+        "ise/ise-module-bootstrap": "^1.0",
+        "doctrine/doctrine-orm-module": "^1.0",
         "ise/php-metapackage-development": "^1.0"
+    },
+    "suggest": {
+        "ise/ise-module-bootstrap": "For use in MVC applications",
+        "doctrine/doctrine-orm-module": "To use the DoctrineORM adapter"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,

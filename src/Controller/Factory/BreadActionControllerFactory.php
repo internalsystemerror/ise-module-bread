@@ -20,7 +20,7 @@ class BreadActionControllerFactory implements FactoryInterface
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        return $this->createController($container, $requestedName, new BreadEventManager($container->get(SharedEventManager::class)));
+        return $this->createControllerFactory($container, $requestedName, new BreadEventManager($container->get(SharedEventManager::class)));
     }
 
     /**

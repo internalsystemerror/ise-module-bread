@@ -1,7 +1,7 @@
 # BREAD module for Zend Framework 2+
 
 ## Introduction
-This module intends to offer BREAD (Browse, Read, Edit, Add, Delete) functionality for entities, as dubbed "ORM over HTTP" (thanks [alextech](https://github.com/alextech).
+This module intends to offer BREAD (Browse, Read, Edit, Add, Delete) functionality for entities, as dubbed "ORM over HTTP" (thanks [alextech](https://github.com/alextech)).
 
 ## Requirements
 
@@ -40,3 +40,4 @@ TODO
 
 #### Mappers
 
+TODO

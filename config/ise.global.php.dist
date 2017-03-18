@@ -1,0 +1,298 @@
+<?php
+namespace My\Module;
+
+return [
+    'ise'             => [
+        'bread' => [
+            'entity_defaults' => [
+                /**
+                 * Set the default controller configuration for entities.
+                 * 
+                 * To prevent a controller from being created automatically,
+                 * you can set this to false.
+                 */
+                'controller' => [
+                    /**
+                     * The bread action controller class to use
+                     * 
+                     * Default: BreadActionController::class
+                     */
+                    'baseClass'      => Controller\MyController::class,
+                    
+                    /**
+                     * The alias to use for the controller
+                     * 
+                     * IF REQUIRED IT IS REOMMENDED TO SET THIS EXPLICITLY IN
+                     * EACH CONTROLLER AND NOT HERE.
+                     * 
+                     * Default: '' (if empty, will be based on the entity class
+                     * name)
+                     */
+                    'alias'          => __NAMESPACE__ . '\Controller\MyEntity',
+                    
+                    /**
+                     * To set the class name to use for the controller.
+                     * 
+                     * IF REQUIRED IT IS REOMMENDED TO SET THIS EXPLICITLY IN
+                     * EACH CONTROLLER AND NOT HERE.
+                     * 
+                     * Default: (same as baseClass)
+                     */
+                    'class'          => Controller\MyController::class,
+                    
+                    /**
+                     * The factory to use to create the bread action controller
+                     * 
+                     * Default: BreadActionControllerFactory::class
+                     */
+                    'factory'        => Controller\MyControllerFactory::class,
+                    
+                    /**
+                     * The entity to use for this controller
+                     * 
+                     * Default: '' (this is set to the key name if included via
+                     * the entities key, and is REQUIRED is included via the
+                     * controllers key)
+                     */
+                    'entityClass'    => Entity\MyEntity::class,
+                    
+                    /**
+                     * The base route to the controller for forms to redirect
+                     * to.
+                     * 
+                     * IT IS RECOMMENDED TO SET THIS EXPLICITLY IN EACH ENTITY
+                     * AND NOT HERE.
+                     * 
+                     * Default: '' [REQUIRED]
+                     */
+                    'indexRoute'     => 'module/entity',
+                    
+                    /**
+                     * The entity title to use in views
+                     * 
+                     * IT IS RECOMMENDED TO SET THIS EXPLICITLY IN EACH ENTITY
+                     * AND NOT HERE.
+                     * 
+                     * Default: '' (if empty, will be set based on the entity
+                     * class name)
+                     */
+                    'entityTitle'    => 'My Custom Entity',
+                    
+                    /**
+                     * To override any of the view templates used in the
+                     * controller.
+                     * 
+                     * Note: This uses BreadEvent events, in which delete,
+                     * enable and disable are classed as dialogs. The service
+                     * method called will be the BreadEvent action.
+                     * 
+                     * Default: [
+                     *     'browse' => 'ise/bread/bread/browse',
+                     *     'read'   => 'ise/bread/bread/read',
+                     *     'add'    => 'ise/bread/bread/add',
+                     *     'edit'   => 'ise/bread/bread/edit',
+                     *     'dialog' => 'ise/bread/bread/dialog',
+                     * ]
+                     */
+                    'templates'      => [
+                        'browse' => 'my/module/controller/browse',
+                        'read'   => 'my/module/controller/read',
+                        'add'    => 'my/module/controller/add',
+                        'edit'   => 'my/module/controller/edit',
+                        'dialog' => 'my/module/controller/dialog',
+                    ],
+                ],
+                
+                /**
+                 * Set the default service configuration to use for entities
+                 */
+                'service' => [
+                    /**
+                     * The bread service class to use
+                     * 
+                     * Default: BreadService::class
+                     */
+                    'baseClass' => Service\MyService::class,
+                    
+                    /**
+                     * The factory to use to create the bread service
+                     * 
+                     * Default: BreadServiceFactory::class
+                     */
+                    'factory'   => Factory\MyServiceFactory::class,
+                    
+                    /**
+                     * The forms to use for validation
+                     * 
+                     * Note: If no forms are specified, the abstract factory
+                     * registered in the [ise][bread][form_manager] config will
+                     * be used to create one from the entity using annotations.
+                     * 
+                     * Default: [
+                     *     'add' => 'My\Module\Form\Entity\Create',
+                     * ]
+                     */
+                    'forms' => [
+                        'add'    => Form\MyAddForm::class,
+                        'edit'   => Form\MyEditForm::class,
+                        'delete' => Form\MyDialogForm::class,
+                    ],
+                ],
+                
+                /**
+                 * Set the default mapper configuration to use for entities
+                 */
+                'mapper'  => [
+                    /**
+                     * The bread service class to use
+                     * 
+                     * Default: BreadMapper::class
+                     */
+                    'baseClass' => Mapper\MyMapper::class,
+                    
+                    /**
+                     * The factory to use to create the bread service
+                     * 
+                     * Default: BreadMapperFactory::class
+                     */
+                    'factory'   => Factory\MyMapperFactory::class,
+                ],
+            ],
+            'entities'        => [
+                /**
+                 * In order to use all entity defaults, you can add the entity
+                 * using just the class name.
+                 */
+                Entity\MyEntity::class,
+                
+                /**
+                 * Or to override any of the entity defaults for a specific
+                 * entity, you can supply configuration.
+                 */
+                Entity\MyEntity::class       => [
+                    /**
+                     * Specify the same configuration as expected in the entity
+                     * defaults.
+                     */
+                ],
+            ],
+            'controllers' => [
+                /**
+                 * Controllers are registered either automatically via entity
+                 * defaults, or through setting the entity option in route
+                 * config.
+                 * 
+                 * The default controller aliases generated are translated from
+                 * the entity FQCN name as follows:
+                 * 
+                 * My\Module\Entity\Name => My\Module\Controller\Name
+                 * 
+                 * If you have disabled controllers for an entity, you can
+                 * still include BREAD functionality in your own controllers
+                 * by adding them here.
+                 */
+                Controller\MyCustomController::class,
+                
+                /**
+                 * Or to override any of the entity defaults for a specific
+                 * controller, you can supply configuration.
+                 */
+                Controller\MyCustomController::class => [
+                    /**
+                     * Specify the same configuration as expected in the entity
+                     * controller defaults.
+                     */
+                ],
+            ],
+            'services' => [
+                /**
+                 * To override any of the entity defaults for a specific
+                 * service, you can supply configuration.
+                 */
+                Service\MyService::class => [
+                    /**
+                     * Specify the same configuration as expected in the entity
+                     * service defaults.
+                     */
+                ],
+            ],
+            'mappers' => [
+                /**
+                 * To override any of the entity defaults for a specific
+                 * mapper, you can supply configuration.
+                 */
+                Service\MyService::class => [
+                    /**
+                     * Specify the same configuration as expected in the entity
+                     * service defaults.
+                     */
+                ],
+            ],
+            'service_manager' => [
+                /**
+                 * Factories to provide to the ServicePluginManager
+                 * 
+                 * Defaults: ['factories' => [BreadService::class => BreadServiceFactory::class]]
+                 */
+            ],
+            'mapper_manager' => [
+                /**
+                 * Factories to provide to the MapperPluginManager
+                 * 
+                 * Defaults: ['factories' => [BreadMapper::class => BreadDoctrineOrmMapperFactory::class]]
+                 */
+            ],
+            'form_manager' => [
+                /**
+                 * Factories to provide to the FormPluginManager
+                 * 
+                 * Defaults: ['abstract_factories' => FormAbstractFactory::class]
+                 */
+            ],
+        ],
+    ],
+    'router' => [
+        'routes' => [
+            /**
+             * Example of a fairly standard module route setup.
+             */
+            'module' => [
+                'type'          => 'literal',
+                'options'       => [
+                    'route'    => '/module',
+                    'defaults' => [
+                        'controller' => __NAMESPACE__ . '\Controller\Index',
+                        'action'     => 'index',
+                    ],
+                ],
+                'may_terminate' => true,
+                'child_routes'  => [
+                    /**
+                     * This will automatically register the following routes:
+                     * 
+                     * module/entity/browse
+                     * module/entity/read
+                     * module/entity/add
+                     * module/entity/edit
+                     * module/entity/delete
+                     * module/entity/enable
+                     * module/entity/disable
+                     */
+                    'entity' => [
+                        'type'    => 'bread',
+                        'options' => [
+                            'route'  => '/entity',
+                            'entity' => Entity\MyEntity::class,
+                        ],
+                        /**
+                         * You can add in further actions as you normally
+                         * would. In this instance, it is usually preferable
+                         * to use your own Controller which extends the default
+                         * Ise\Bread\Controller\BreadController class.
+                         */
+                    ],
+                ],
+            ],
+        ],
+    ],
+];

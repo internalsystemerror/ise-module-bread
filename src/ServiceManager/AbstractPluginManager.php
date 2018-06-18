@@ -1,4 +1,8 @@
 <?php
+/**
+ * @copyright 2018 Internalsystemerror Limited
+ */
+declare(strict_types=1);
 
 namespace Ise\Bread\ServiceManager;
 
@@ -7,12 +11,12 @@ use Zend\ServiceManager\Exception\InvalidServiceException;
 
 abstract class AbstractPluginManager extends ZendAbstractPluginManager
 {
-    
+
     /**
      * @var string
      */
     protected $instanceOf;
-    
+
     /**
      * {@inheritDoc}
      */

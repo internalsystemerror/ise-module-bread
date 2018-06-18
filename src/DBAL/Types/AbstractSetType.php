@@ -1,4 +1,8 @@
 <?php
+/**
+ * @copyright 2018 Internalsystemerror Limited
+ */
+declare(strict_types=1);
 
 namespace Ise\Bread\DBAL\Types;
 
@@ -8,7 +12,7 @@ use InvalidArgumentException;
 
 abstract class AbstractSetType extends AbstractEnumType
 {
-    
+
     /**
      * {@inheritDoc}
      */
@@ -17,11 +21,11 @@ abstract class AbstractSetType extends AbstractEnumType
         if (!$platform instanceof MySqlPlatform) {
             return $platform->getClobTypeDeclarationSQL($fieldDeclaration);
         }
-        
+
         $values = implode(', ', array_map([$this, 'mapValue'], $this->getValues()));
         return sprintf('SET(%s)', $values);
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -30,9 +34,9 @@ abstract class AbstractSetType extends AbstractEnumType
         if (!is_array($value) || count($value) <= 0) {
             return null;
         }
-        
+
         $invalidValues = array_diff($value, $this->getValues());
-        
+
         if (count($invalidValues) > 0) {
             throw new InvalidArgumentException(
                 sprintf(
@@ -42,10 +46,10 @@ abstract class AbstractSetType extends AbstractEnumType
                 )
             );
         }
-        
+
         return implode(',', $value);
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -54,11 +58,11 @@ abstract class AbstractSetType extends AbstractEnumType
         if ($value === null || $value === '') {
             return [];
         }
-        
+
         if (strpos($value, ',') === false) {
             return [$value];
         }
-        
+
         return explode(',', $value);
     }
 }

@@ -1,4 +1,8 @@
 <?php
+/**
+ * @copyright 2018 Internalsystemerror Limited
+ */
+declare(strict_types=1);
 
 namespace Ise\Bread\Controller;
 
@@ -8,9 +12,8 @@ use Ise\Bread\EventManager\BreadEventManager;
 use Ise\Bread\Options\ControllerOptions;
 use Ise\Bread\Service\ServiceInterface;
 use Zend\Filter\Word\CamelCaseToSeparator;
-use Zend\Mvc\Controller\AbstractActionController as ZendAbstractActionController;
 use Zend\Http\Request;
-use Zend\Stdlib\RequestInterface;
+use Zend\Mvc\Controller\AbstractActionController as ZendAbstractActionController;
 use Zend\Stdlib\ResponseInterface;
 use Zend\View\Model\ViewModel;
 
@@ -55,8 +58,11 @@ class BreadActionController extends ZendAbstractActionController implements Acti
      *
      * @param ServiceInterface $service
      */
-    public function __construct(BreadEventManager $breadEventManager, ServiceInterface $service, ControllerOptions $options)
-    {
+    public function __construct(
+        BreadEventManager $breadEventManager,
+        ServiceInterface $service,
+        ControllerOptions $options
+    ) {
         $this->breadEventManager = $breadEventManager;
         $this->service           = $service;
         $this->entityClass       = $options->getEntityClass();
@@ -181,6 +187,7 @@ class BreadActionController extends ZendAbstractActionController implements Acti
      * Perform dialog action
      *
      * @param BreadEvent $bread
+     *
      * @return ResponseInterface|ViewModel
      */
     public function onActionDialog(BreadEvent $event)
@@ -199,6 +206,7 @@ class BreadActionController extends ZendAbstractActionController implements Acti
      * Load PRG
      *
      * @param BreadEvent $event
+     *
      * @return null|ResponseInterface
      */
     public function loadPrg(BreadEvent $event)
@@ -215,6 +223,7 @@ class BreadActionController extends ZendAbstractActionController implements Acti
      * Load entity
      *
      * @param BreadEvent $event
+     *
      * @return type
      */
     public function loadEntity(BreadEvent $event)
@@ -312,6 +321,7 @@ class BreadActionController extends ZendAbstractActionController implements Acti
      * Check if dialog is not allowed
      *
      * @param BreadEvent $event
+     *
      * @return null|ReponseInterface
      */
     public function checkDialogNotAllowed(BreadEvent $event)
@@ -364,6 +374,7 @@ class BreadActionController extends ZendAbstractActionController implements Acti
      * Wrap dialog view model
      *
      * @param BreadEvent $event
+     *
      * @return ViewModel
      */
     public function wrapDialogViewModel(BreadEvent $event)
@@ -464,9 +475,10 @@ class BreadActionController extends ZendAbstractActionController implements Acti
     /**
      * Trigger a bread action event
      *
-     * @param string $name
+     * @param string      $name
      * @param null|string $action
      * @param null|string $form
+     *
      * @return ViewModel|ReponseInterface
      */
     protected function triggerActionEvent($name, $action = null, $form = null)
@@ -513,7 +525,7 @@ class BreadActionController extends ZendAbstractActionController implements Acti
     protected function getEntity()
     {
         // Get entity id
-        $id = (string) $this->params(BreadEvent::IDENTIFIER, '');
+        $id = (string)$this->params(BreadEvent::IDENTIFIER, '');
         if (!$id) {
             return false;
         }

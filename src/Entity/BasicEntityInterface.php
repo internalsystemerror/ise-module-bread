@@ -1,4 +1,8 @@
 <?php
+/**
+ * @copyright 2018 Internalsystemerror Limited
+ */
+declare(strict_types=1);
 
 namespace Ise\Bread\Entity;
 
@@ -9,6 +13,7 @@ interface BasicEntityInterface extends EntityInterface
      * Set name
      *
      * @param string $name
+     *
      * @return Permission
      */
     public function setName($name);
@@ -24,6 +29,7 @@ interface BasicEntityInterface extends EntityInterface
      * Set description
      *
      * @param string $description
+     *
      * @return Permission
      */
     public function setDescription($description);

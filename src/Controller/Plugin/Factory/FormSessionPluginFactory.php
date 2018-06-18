@@ -1,28 +1,23 @@
 <?php
+/**
+ * @copyright 2018 Internalsystemerror Limited
+ */
+declare(strict_types=1);
 
 namespace Ise\Bread\Controller\Plugin\Factory;
 
-use Ise\Bread\Service\FormSessionService;
 use Interop\Container\ContainerInterface;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Ise\Bread\Service\FormSessionService;
+use Zend\ServiceManager\Factory\FactoryInterface;
 
 class FormSessionPluginFactory implements FactoryInterface
 {
-    
+
     /**
      * {@inheritDoc}
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         return new $requestedName($container->get(FormSessionService::class));
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
-    {
-        return $this($serviceLocator->getServiceLocator(), $requestedName);
     }
 }

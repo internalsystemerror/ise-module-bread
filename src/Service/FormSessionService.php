@@ -1,4 +1,8 @@
 <?php
+/**
+ * @copyright 2018 Internalsystemerror Limited
+ */
+declare(strict_types=1);
 
 namespace Ise\Bread\Service;
 
@@ -47,8 +51,8 @@ class FormSessionService
         if (!isset($this->sessionContainer[$name])) {
             $this->sessionContainer[$name] = [];
         }
-        $this->sessionContainer[$name][self::KEY_MESSAGES] = (array) $form->getMessages();
-        $this->sessionContainer[$name][self::KEY_DATA]     = (array) $form->getInputFilter()->getRawValues();
+        $this->sessionContainer[$name][self::KEY_MESSAGES] = (array)$form->getMessages();
+        $this->sessionContainer[$name][self::KEY_DATA]     = (array)$form->getInputFilter()->getRawValues();
     }
 
     /**

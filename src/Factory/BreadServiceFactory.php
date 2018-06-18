@@ -1,15 +1,18 @@
 <?php
+/**
+ * @copyright 2018 Internalsystemerror Limited
+ */
+declare(strict_types=1);
 
 namespace Ise\Bread\Factory;
 
 use Interop\Container\ContainerInterface;
 use Ise\Bread\ServiceManager\BreadManager;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Zend\ServiceManager\Factory\FactoryInterface;
 
 class BreadServiceFactory implements FactoryInterface
 {
-    
+
     /**
      * {@inheritDoc}
      */
@@ -17,19 +20,11 @@ class BreadServiceFactory implements FactoryInterface
     {
         $breadManager = $container->get(BreadManager::class);
         $serviceClass = $breadManager->getServiceBaseClass($requestedName);
-        
+
         return new $serviceClass(
             $breadManager,
             $breadManager->getMapper($breadManager->getMapperClassFromServiceClass($requestedName)),
             $breadManager->getFormsFromServiceClass($requestedName)
         );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
-    {
-        return $this($serviceLocator->getServiceLocator(), $requestedName);
     }
 }

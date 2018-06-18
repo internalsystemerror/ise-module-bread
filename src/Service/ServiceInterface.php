@@ -1,4 +1,8 @@
 <?php
+/**
+ * @copyright 2018 Internalsystemerror Limited
+ */
+declare(strict_types=1);
 
 namespace Ise\Bread\Service;
 
@@ -13,8 +17,8 @@ interface ServiceInterface
     /**
      * Browse entities
      *
-     * @param array $criteria
-     * @param array $orderBy
+     * @param array        $criteria
+     * @param array        $orderBy
      * @param null|integer $limit
      * @param null|integer $offset
      */
@@ -24,14 +28,16 @@ interface ServiceInterface
      * Read an entity
      *
      * @param  integer $id Entity id
+     *
      * @return EntityInterface
      */
     public function read($id);
-    
+
     /**
      * Read an entity by criteria
      *
      * @param array $criteria
+     *
      * @return EntityInterface
      */
     public function readBy(array $criteria);
@@ -40,6 +46,7 @@ interface ServiceInterface
      * Add entity
      *
      * @param  array $data Entity data
+     *
      * @return boolean|EntityInterface
      */
     public function add(array $data);
@@ -48,6 +55,7 @@ interface ServiceInterface
      * Edit entity
      *
      * @param  array $data Entity data
+     *
      * @return boolean|EntityInterface
      */
     public function edit(array $data);
@@ -56,6 +64,7 @@ interface ServiceInterface
      * Delete entity
      *
      * @param  array $data Entity data
+     *
      * @return boolean|EntityInterface
      */
     public function delete(array $data);
@@ -64,6 +73,7 @@ interface ServiceInterface
      * Disable entity
      *
      * @param  array $data Entity data
+     *
      * @return boolean|EntityInterface
      */
     public function disable(array $data);
@@ -72,6 +82,7 @@ interface ServiceInterface
      * Enable entity
      *
      * @param  array $data Entity data
+     *
      * @return boolean|EntityInterface
      */
     public function enable(array $data);

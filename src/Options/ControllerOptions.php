@@ -1,42 +1,46 @@
 <?php
+/**
+ * @copyright 2018 Internalsystemerror Limited
+ */
+declare(strict_types=1);
 
 namespace Ise\Bread\Options;
 
-use Ise\Bread\Controller\Factory\BreadActionControllerFactory;
 use Ise\Bread\Controller\BreadActionController;
 use Ise\Bread\Controller\ControllerInterface;
+use Ise\Bread\Controller\Factory\BreadActionControllerFactory;
 use Ise\Bread\Entity\EntityInterface;
 use Ise\Bread\EventManager\BreadEvent;
 use Zend\Stdlib\ArrayUtils;
 
 class ControllerOptions extends AbstractFactoryClassOptions
 {
-    
+
     /**
      * @var string
      */
     protected $baseClass = BreadActionController::class;
-    
+
     /**
      * @var string
      */
     protected $factory = BreadActionControllerFactory::class;
-    
+
     /**
      * @var string
      */
     protected $entityClass = '';
-    
+
     /**
      * @var string
      */
     protected $entityTitle = '';
-    
+
     /**
      * @var string
      */
     protected $indexRoute = '';
-    
+
     /**
      * @var string
      */
@@ -50,9 +54,9 @@ class ControllerOptions extends AbstractFactoryClassOptions
         BreadEvent::EVENT_CREATE => 'ise/bread/bread/add',
         BreadEvent::EVENT_READ   => 'ise/bread/bread/read',
         BreadEvent::EVENT_UPDATE => 'ise/bread/bread/edit',
-        BreadEvent::EVENT_DIALOG   => 'ise/bread/bread/dialog',
+        BreadEvent::EVENT_DIALOG => 'ise/bread/bread/dialog',
     ];
-    
+
     /**
      * {@inheritDoc}
      */
@@ -63,19 +67,6 @@ class ControllerOptions extends AbstractFactoryClassOptions
     }
 
     /**
-     * Set entity class
-     *
-     * @param string $entityClass
-     * @return self
-     */
-    public function setEntityClass($entityClass)
-    {
-        $this->classImplementsInterface($entityClass, EntityInterface::class);
-        $this->entityClass = (string) $entityClass;
-        return $this;
-    }
-    
-    /**
      * Get entity class
      *
      * @return string
@@ -84,19 +75,21 @@ class ControllerOptions extends AbstractFactoryClassOptions
     {
         return $this->entityClass;
     }
-    
+
     /**
-     * Set entity title
+     * Set entity class
      *
-     * @param string $entityTitle
+     * @param string $entityClass
+     *
      * @return self
      */
-    public function setEntityTitle($entityTitle)
+    public function setEntityClass($entityClass)
     {
-        $this->entityTitle = (string) $entityTitle;
+        $this->classImplementsInterface($entityClass, EntityInterface::class);
+        $this->entityClass = (string)$entityClass;
         return $this;
     }
-    
+
     /**
      * Get entity title
      *
@@ -106,19 +99,20 @@ class ControllerOptions extends AbstractFactoryClassOptions
     {
         return $this->entityTitle;
     }
-    
+
     /**
-     * Set index route
+     * Set entity title
      *
-     * @param string $indexRoute
+     * @param string $entityTitle
+     *
      * @return self
      */
-    public function setIndexRoute($indexRoute)
+    public function setEntityTitle($entityTitle)
     {
-        $this->indexRoute = (string) $indexRoute;
+        $this->entityTitle = (string)$entityTitle;
         return $this;
     }
-    
+
     /**
      * Get index route
      *
@@ -128,19 +122,20 @@ class ControllerOptions extends AbstractFactoryClassOptions
     {
         return $this->indexRoute;
     }
-    
+
     /**
-     * Set base permission
+     * Set index route
      *
-     * @params string $permission
+     * @param string $indexRoute
+     *
      * @return self
      */
-    public function setBasePermission($permission)
+    public function setIndexRoute($indexRoute)
     {
-        $this->basePermission = (string) $permission;
+        $this->indexRoute = (string)$indexRoute;
         return $this;
     }
-    
+
     /**
      * Get base permission
      *
@@ -152,16 +147,15 @@ class ControllerOptions extends AbstractFactoryClassOptions
     }
 
     /**
-     * Set templates
+     * Set base permission
      *
-     * An array of template names, indexed by the action name.
+     * @params string $permission
      *
-     * @param string[] $templates
      * @return self
      */
-    public function setTemplates(array $templates)
+    public function setBasePermission($permission)
     {
-        $this->templates = ArrayUtils::merge($this->templates, $templates);
+        $this->basePermission = (string)$permission;
         return $this;
     }
 
@@ -173,5 +167,20 @@ class ControllerOptions extends AbstractFactoryClassOptions
     public function getTemplates()
     {
         return $this->templates;
+    }
+
+    /**
+     * Set templates
+     *
+     * An array of template names, indexed by the action name.
+     *
+     * @param string[] $templates
+     *
+     * @return self
+     */
+    public function setTemplates(array $templates)
+    {
+        $this->templates = ArrayUtils::merge($this->templates, $templates);
+        return $this;
     }
 }

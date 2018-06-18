@@ -1,25 +1,35 @@
 {
     "name": "ise/ise-module-bread",
     "description": "BREAD module for Zend Framework 2 used by Internalsystemerror Limited",
+    "type": "library",
     "license": "BSD-3-Clause",
     "homepage": "https://github.com/internalsystemerror/ise-module-bread",
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "config": {
+        "classmap-authoritative": false,
+        "discard-changes": true,
+        "optimize-autoloader": true,
+        "prepend-autoloader": true,
+        "process-timeout": 5000,
+        "sort-packages": true
+    },
     "require": {
-        "php": "^5.6 || ^7.0",
-        "zendframework/zend-form": "^2.5 || ^3.0",
-        "zendframework/zend-mvc": "^2.5 || ^3.0",
-        "zendframework/zend-validator": "^2.5 || ^3.0"
+        "php": "^7.1",
+        "zendframework/zend-form": "^2.12.0",
+        "zendframework/zend-mvc": "^3.1.1",
+        "zendframework/zend-session": "^2.8.5",
+        "zendframework/zend-validator": "^2.10.2"
     },
     "require-dev": {
-        "ise/ise-module-bootstrap": "^1.0",
-        "doctrine/doctrine-orm-module": "^1.0",
-        "ise/php-metapackage-development": "^1.0"
+        "doctrine/doctrine-orm-module": "^2.1.2",
+        "ise/php-metapackage-development": "^2.0.2",
+        "ise/ise-module-bootstrap": "^1.0.0"
     },
     "suggest": {
         "ise/ise-module-bootstrap": "For use in MVC applications",
         "doctrine/doctrine-orm-module": "To use the DoctrineORM adapter"
     },
-    "minimum-stability": "dev",
-    "prefer-stable": true,
     "autoload": {
         "psr-4": {
             "Ise\\Bread\\": "src"
@@ -30,19 +40,14 @@
             "IseTest\\Test\\": "test"
         }
     },
-    "extra": {
-        "branch-alias": {
-            "dev-master": "1.0.x-dev",
-            "dev-develop": "1.1.x-dev"
-        }
-    },
     "scripts": {
-        "test": "phpunit -c ./phpunit.xml.dist",
-        "cs-fix": "phpcbf",
+        "analyse": "phpstan analyse -l 7 -c phpstan.neon config src",
         "cs-check": [
             "phpcs",
             "phpmd ./config,./src,./test,./view html --reportfile ./build/logs/phpmd.html --suffixes php,phtml ./phpmd.xml.dist",
             "phpcpd . --exclude=build --exclude=vendor"
-        ]
+        ],
+        "cs-fix": "phpcbf",
+        "test": "phpunit"
     }
 }

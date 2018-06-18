@@ -1,4 +1,8 @@
 <?php
+/**
+ * @copyright 2018 Internalsystemerror Limited
+ */
+declare(strict_types=1);
 
 namespace Ise\Bread\Listener;
 
@@ -62,17 +66,17 @@ class ConfigListener implements ListenerAggregateInterface
         foreach ($this->breadConfig->getEntities() as $entity) {
             $this->addEntityConfig($entity);
         }
-        
+
         // Loop through controllers
         foreach ($this->breadConfig->getControllers() as $controller) {
             $this->addControllerConfig($controller);
         }
-        
+
         // Loop through services
         foreach ($this->breadConfig->getServices() as $service) {
             $this->addServiceConfig($service);
         }
-        
+
         // Loop through mappers
         foreach ($this->breadConfig->getMappers() as $mapper) {
             $this->addMapperConfig($mapper);
@@ -87,9 +91,51 @@ class ConfigListener implements ListenerAggregateInterface
     }
 
     /**
+     * Setup service configuration for entity
+     *
+     * @param EntityOptions $options
+     * @param string        $namespace
+     * @param string        $entityName
+     */
+    public function setupService(EntityOptions $options, $namespace, $entityName)
+    {
+        // Get mapper options
+        $service = $options->getService();
+        if (is_string($service)) {
+            $service = ['class' => $service];
+        }
+
+        // Create alias
+        if (!isset($service['alias']) || !$service['alias']) {
+            if (!isset($service['class']) || !$service['class']) {
+                $service['alias'] = $namespace . '\Service\\' . $entityName;
+            } else {
+                $service['alias'] = preg_replace('/Service$/', '', $service['class']);
+            }
+        }
+
+        // Create class
+        if (!isset($service['class']) || !$service['class']) {
+            $service['class'] = $service['alias'] . 'Service';
+        }
+
+        // Save
+        $options->setService($service['class']);
+        $this->breadConfig->setService($service['class'], $service);
+
+        // Setup forms
+        $this->setupForms(
+            $this->breadConfig->getService($service['class']),
+            $namespace,
+            $entityName
+        );
+    }
+
+    /**
      * Add entity configuration
      *
      * @param EntityOptions $options
+     *
      * @throws InvalidArgumentException
      */
     protected function addEntityConfig(EntityOptions $options)
@@ -98,28 +144,29 @@ class ConfigListener implements ListenerAggregateInterface
         if (!$options->getClass()) {
             throw new InvalidArgumentException('EntityOptions must have the entity class set.');
         }
-        
+
         // Get entity details
         $reflection = new ReflectionClass($options->getClass());
         $namespace  = $reflection->getNamespaceName();
         $baseName   = substr($namespace, 0, strrpos($namespace, '\\'));
         $entityName = $reflection->getShortName();
-        
+
         // Check alias
         if (!$options->getAlias()) {
             $options->setAlias($entityName);
         }
-        
+
         // Setup config
         $this->setupController($options, $baseName, $entityName);
         $this->setupService($options, $baseName, $entityName);
         $this->setupMapper($options, $baseName, $entityName);
     }
-    
+
     /**
      * Add controller configuration
      *
      * @param ControllerOptions $options
+     *
      * @throws InvalidArgumentException
      */
     protected function addControllerConfig(ControllerOptions $options)
@@ -128,19 +175,19 @@ class ConfigListener implements ListenerAggregateInterface
         if (!$options->getClass()) {
             throw new InvalidArgumentException('ControllerOptions must have the controller class set.');
         }
-        
+
         // Check alias
         if (!$options->getAlias()) {
             $options->setAlias(preg_replace('/Controller$/', '', $options->getClass()));
         }
-        
+
         // Save entity title
         $entityName = $this->breadConfig->getEntity($options->getEntityClass())->getAlias();
         if (!$options->getEntityTitle()) {
-            $camelFilter            = new CamelCaseToSeparator;
+            $camelFilter = new CamelCaseToSeparator;
             $options->setEntityTitle(strtolower($camelFilter->filter($entityName)));
         }
-        
+
         // Add controllers
         if (!isset($this->config['controllers']['aliases'][$options->getAlias()])) {
             $this->config['controllers']['aliases'][$options->getAlias()] = $options->getClass();
@@ -149,7 +196,7 @@ class ConfigListener implements ListenerAggregateInterface
             $this->config['controllers']['factories'][$options->getClass()] = $options->getFactory();
         }
     }
-    
+
     protected function addServiceConfig(ServiceOptions $options)
     {
         // Setup manager
@@ -160,7 +207,7 @@ class ConfigListener implements ListenerAggregateInterface
             )
         );
     }
-    
+
     protected function addMapperConfig(MapperOptions $options)
     {
         // Setup manager
@@ -171,13 +218,13 @@ class ConfigListener implements ListenerAggregateInterface
             )
         );
     }
-    
+
     /**
      * Setup controller configuration for entity
      *
      * @param EntityOptions $options
-     * @param type $namespace
-     * @param type $entityName
+     * @param type          $namespace
+     * @param type          $entityName
      */
     protected function setupController(EntityOptions $options, $namespace, $entityName)
     {
@@ -189,7 +236,7 @@ class ConfigListener implements ListenerAggregateInterface
         if (!$controller) {
             return;
         }
-                
+
         // Create alias
         if (!isset($controller['alias']) || !$controller['alias']) {
             if (!isset($controller['class']) || !$controller['class']) {
@@ -198,69 +245,28 @@ class ConfigListener implements ListenerAggregateInterface
                 $controller['alias'] = preg_replace('/Controller$/', '', $controller['class']);
             }
         }
-        
+
         // Create class
         if (!isset($controller['class']) || !$controller['class']) {
             $controller['class'] = $controller['alias'] . 'Controller';
         }
-        
+
         // Add entity class
         if (!isset($controller['entityClass'])) {
             $controller['entityClass'] = $options->getClass();
         }
-        
+
         // Save
         $options->setController($controller['class']);
         $this->breadConfig->setController($controller['class'], $controller);
     }
 
     /**
-     * Setup service configuration for entity
-     *
-     * @param EntityOptions $options
-     * @param string $namespace
-     * @param string $entityName
-     */
-    public function setupService(EntityOptions $options, $namespace, $entityName)
-    {
-        // Get mapper options
-        $service = $options->getService();
-        if (is_string($service)) {
-            $service = ['class' => $service];
-        }
-        
-        // Create alias
-        if (!isset($service['alias']) || !$service['alias']) {
-            if (!isset($service['class']) || !$service['class']) {
-                $service['alias'] = $namespace . '\Service\\' . $entityName;
-            } else {
-                $service['alias'] = preg_replace('/Service$/', '', $service['class']);
-            }
-        }
-        
-        // Create class
-        if (!isset($service['class']) || !$service['class']) {
-            $service['class'] = $service['alias'] . 'Service';
-        }
-        
-        // Save
-        $options->setService($service['class']);
-        $this->breadConfig->setService($service['class'], $service);
-        
-        // Setup forms
-        $this->setupForms(
-            $this->breadConfig->getService($service['class']),
-            $namespace,
-            $entityName
-        );
-    }
-
-    /**
      * Setup mapper configuration for entity
      *
      * @param EntityOptions $options
-     * @param string $namespace
-     * @param string $entityName
+     * @param string        $namespace
+     * @param string        $entityName
      */
     protected function setupMapper(EntityOptions $options, $namespace, $entityName)
     {
@@ -269,7 +275,7 @@ class ConfigListener implements ListenerAggregateInterface
         if (is_string($mapper)) {
             $mapper = ['class' => $mapper];
         }
-        
+
         // Create alias
         if (!isset($mapper['alias']) || !$mapper['alias']) {
             if (!isset($mapper['class']) || !$mapper['class']) {
@@ -279,21 +285,21 @@ class ConfigListener implements ListenerAggregateInterface
             }
             $mapper['alias'] = $namespace . '\Mapper\\' . $entityName;
         }
-        
+
         // Create class
         if (!isset($mapper['class']) || !$mapper['class']) {
             $mapper['class'] = $mapper['alias'] . 'Mapper';
         }
-        
+
         // Save
         $options->setMapper($mapper['class']);
         $this->breadConfig->setMapper($mapper['class'], $mapper);
     }
-    
+
     /**
      * Set manager options from options
      *
-     * @param array $manager
+     * @param array                $manager
      * @param AbstractClassOptions $options
      */
     protected function setManagerOptions(array $manager, AbstractClassOptions $options)
@@ -302,12 +308,12 @@ class ConfigListener implements ListenerAggregateInterface
         if (!isset($manager['aliases'][$options->getAlias()])) {
             $manager['aliases'][$options->getAlias()] = $options->getClass();
         }
-        
+
         // Add factory
         if (!isset($manager['factories'][$options->getClass()])) {
             $manager['factories'][$options->getClass()] = $options->getFactory();
         }
-        
+
         return $manager;
     }
 
@@ -315,22 +321,22 @@ class ConfigListener implements ListenerAggregateInterface
      * Setup forms configuration
      *
      * @param ServiceOptions $options
-     * @param string $namespace
-     * @param string $entityName
+     * @param string         $namespace
+     * @param string         $entityName
      */
     protected function setupForms(ServiceOptions $options, $namespace, $entityName)
     {
         // Get forms and namespace
         $forms         = $options->getForms();
         $formNamespace = $namespace . '\Form\\' . $entityName . '\\';
-        
+
         // Loop through Bread available forms
         foreach (BreadEvent::getAvailableForms() as $action) {
             if (!isset($forms[$action]) || !$forms[$action]) {
                 $forms[$action] = $formNamespace . ucfirst($action);
             }
         }
-        
+
         $options->setForms($forms);
     }
 
@@ -338,6 +344,7 @@ class ConfigListener implements ListenerAggregateInterface
      * Check routes for bread type
      *
      * @param  array $routes Routes to parse
+     *
      * @return array
      */
     protected function parseRoutes(array $routes)
@@ -363,7 +370,8 @@ class ConfigListener implements ListenerAggregateInterface
     /**
      * Parse bread routes
      *
-     * @param  array $route  Route to add bread routes to
+     * @param  array $route Route to add bread routes to
+     *
      * @return array
      */
     protected function parseBreadRoutes($route)
@@ -397,7 +405,7 @@ class ConfigListener implements ListenerAggregateInterface
             }
             unset($route['options']['entity']);
         }
-        
+
         $options = ArrayUtils::merge($defaults, $route);
         if (!isset($options['may_terminate'])) {
             $options['may_terminate'] = true;
@@ -437,6 +445,7 @@ class ConfigListener implements ListenerAggregateInterface
      *
      * @param  string $action    Action this is for
      * @param  string $uuidRegex UUID regex
+     *
      * @return array
      */
     protected function defaultConstrainedAction($action, $uuidRegex)
@@ -466,7 +475,7 @@ class ConfigListener implements ListenerAggregateInterface
                 'route'    => '/' . BreadEvent::ACTION_CREATE,
                 'defaults' => [
                     'action' => BreadEvent::ACTION_CREATE,
-                ]
+                ],
             ],
         ];
     }

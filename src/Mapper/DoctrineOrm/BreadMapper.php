@@ -1,4 +1,8 @@
 <?php
+/**
+ * @copyright 2018 Internalsystemerror Limited
+ */
+declare(strict_types=1);
 
 namespace Ise\Bread\Mapper\DoctrineOrm;
 
@@ -14,22 +18,22 @@ use Traversable;
  */
 class BreadMapper implements MapperInterface
 {
-    
+
     /**
      * @var EntityManager
      */
     protected $entityManager;
-    
+
     /**
      * @var EntityRepository
      */
     protected $entityRepository;
-    
+
     /**
      * @var Connection
      */
     protected $connection;
-    
+
     /**
      * {@inheritDoc}
      */
@@ -55,7 +59,7 @@ class BreadMapper implements MapperInterface
     {
         return $this->entityRepository->find($id);
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -95,7 +99,7 @@ class BreadMapper implements MapperInterface
     {
         return $this->persistMany($entities);
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -160,6 +164,7 @@ class BreadMapper implements MapperInterface
      * Persist entity
      *
      * @param EntityInterface $entity
+     *
      * @return EntityInterface|boolean
      * @throws Exception
      */
@@ -176,11 +181,12 @@ class BreadMapper implements MapperInterface
             return false;
         }
     }
-    
+
     /**
      * Persist many entities
      *
      * @param EntityInterface[] $entities
+     *
      * @return EntityInterface[]|boolean
      */
     protected function persistMany(Traversable $entities)

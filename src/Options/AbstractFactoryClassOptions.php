@@ -1,4 +1,8 @@
 <?php
+/**
+ * @copyright 2018 Internalsystemerror Limited
+ */
+declare(strict_types=1);
 
 namespace Ise\Bread\Options;
 
@@ -14,11 +18,12 @@ abstract class AbstractFactoryClassOptions extends AbstractClassOptions
      * @var string
      */
     protected $factory = '';
-    
+
     /**
      * Set class
      *
      * @param string $class
+     *
      * @return self
      */
     public function setClass($class)
@@ -27,18 +32,6 @@ abstract class AbstractFactoryClassOptions extends AbstractClassOptions
         if (class_exists($this->class)) {
             $this->setBaseClass($this->class);
         }
-        return $this;
-    }
-    
-    /**
-     * Set base class
-     *
-     * @param string $class
-     * @return self
-     */
-    public function setBaseClass($class)
-    {
-        $this->baseClass = (string) $class;
         return $this;
     }
 
@@ -53,14 +46,15 @@ abstract class AbstractFactoryClassOptions extends AbstractClassOptions
     }
 
     /**
-     * Set factory
+     * Set base class
      *
-     * @param string $factory
+     * @param string $class
+     *
      * @return self
      */
-    public function setFactory($factory)
+    public function setBaseClass($class)
     {
-        $this->factory = (string) $factory;
+        $this->baseClass = (string)$class;
         return $this;
     }
 
@@ -72,5 +66,18 @@ abstract class AbstractFactoryClassOptions extends AbstractClassOptions
     public function getFactory()
     {
         return $this->factory;
+    }
+
+    /**
+     * Set factory
+     *
+     * @param string $factory
+     *
+     * @return self
+     */
+    public function setFactory($factory)
+    {
+        $this->factory = (string)$factory;
+        return $this;
     }
 }

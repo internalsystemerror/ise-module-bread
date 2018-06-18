@@ -1,4 +1,8 @@
 <?php
+/**
+ * @copyright 2018 Internalsystemerror Limited
+ */
+declare(strict_types=1);
 
 namespace Ise\Bread\Form\Annotation;
 
@@ -53,6 +57,7 @@ class ElementAnnotationsListener extends AbstractListenerAggregate
      * Handle identifier fields
      *
      * @param EventInterface $event
+     *
      * @return void
      */
     public function handleIdentifierFields(EventInterface $event)
@@ -68,9 +73,9 @@ class ElementAnnotationsListener extends AbstractListenerAggregate
         }
 
         // Hide element
-        $elementSpec = $this->getEventElementSpec($event);
+        $elementSpec                 = $this->getEventElementSpec($event);
         $elementSpec['spec']['type'] = 'hidden';
-        
+
         // Add validation
         $inputSpec = $this->getEventInputSpec($event);
         switch ($metadata->getTypeOfField($name)) {
@@ -104,11 +109,12 @@ class ElementAnnotationsListener extends AbstractListenerAggregate
                 return $this->addUniqueObjectValidator($event, $metadata, $mapping);
         }
     }
-    
+
     /**
      * Get event element spec
      *
      * @param EventInterface $event
+     *
      * @return array
      */
     protected function getEventElementSpec(EventInterface $event)
@@ -123,11 +129,12 @@ class ElementAnnotationsListener extends AbstractListenerAggregate
         }
         return $elementSpec;
     }
-    
+
     /**
      * Get event input spec
      *
      * @param EventInterface $event
+     *
      * @return array
      */
     protected function getEventInputSpec(EventInterface $event)
@@ -147,12 +154,12 @@ class ElementAnnotationsListener extends AbstractListenerAggregate
      * Add NoObjectExists validation
      *
      * @param EventInterface $event
-     * @param ClassMetadata $metadata
-     * @param array $mapping
+     * @param ClassMetadata  $metadata
+     * @param array          $mapping
      */
     protected function addNoObjectExistsValidator(EventInterface $event, ClassMetadata $metadata, array $mapping)
     {
-        $inputSpec = $this->getEventInputSpec($event);
+        $inputSpec                 = $this->getEventInputSpec($event);
         $inputSpec['validators'][] = [
             'name'    => NoObjectExists::class,
             'options' => [
@@ -169,12 +176,12 @@ class ElementAnnotationsListener extends AbstractListenerAggregate
      * Add UniqueObject validation
      *
      * @param EventInterface $event
-     * @param ClassMetadata $metadata
-     * @param array $mapping
+     * @param ClassMetadata  $metadata
+     * @param array          $mapping
      */
     protected function addUniqueObjectValidator(EventInterface $event, ClassMetadata $metadata, array $mapping)
     {
-        $inputSpec = $this->getEventInputSpec($event);
+        $inputSpec                 = $this->getEventInputSpec($event);
         $inputSpec['validators'][] = [
             'name'    => UniqueObject::class,
             'options' => [

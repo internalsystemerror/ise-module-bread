@@ -1,4 +1,8 @@
 <?php
+/**
+ * @copyright 2018 Internalsystemerror Limited
+ */
+declare(strict_types=1);
 
 namespace Ise\Bread\Entity;
 
@@ -59,15 +63,6 @@ abstract class AbstractEntity implements EntityInterface
     /**
      * {@inheritDoc}
      */
-    public function setDisabled($disabled)
-    {
-        $this->disabled = (boolean) $disabled;
-        return $this;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public function isDisabled()
     {
         return $this->disabled;
@@ -76,9 +71,9 @@ abstract class AbstractEntity implements EntityInterface
     /**
      * {@inheritDoc}
      */
-    public function setLastModified(DateTime $lastModifed)
+    public function setDisabled($disabled)
     {
-        $this->lastModified = $lastModifed;
+        $this->disabled = (boolean)$disabled;
         return $this;
     }
 
@@ -93,9 +88,9 @@ abstract class AbstractEntity implements EntityInterface
     /**
      * {@inheritDoc}
      */
-    public function setCreated(DateTime $created)
+    public function setLastModified(DateTime $lastModifed)
     {
-        $this->created = $created;
+        $this->lastModified = $lastModifed;
         return $this;
     }
 
@@ -105,5 +100,14 @@ abstract class AbstractEntity implements EntityInterface
     public function getCreated()
     {
         return $this->created;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setCreated(DateTime $created)
+    {
+        $this->created = $created;
+        return $this;
     }
 }

@@ -1,12 +1,16 @@
 <?php
+/**
+ * @copyright 2018 Internalsystemerror Limited
+ */
+declare(strict_types=1);
 
 namespace Ise\Bread\Service;
 
 use DateTime;
 use Ise\Bread\Entity\EntityInterface;
+use Ise\Bread\EventManager\BreadEvent;
 use Ise\Bread\Exception\InvalidArgumentException;
 use Ise\Bread\Mapper\MapperInterface;
-use Ise\Bread\EventManager\BreadEvent;
 use Ise\Bread\ServiceManager\BreadManager;
 use Zend\Form\FormInterface;
 
@@ -31,8 +35,8 @@ class BreadService implements ServiceInterface
     /**
      * Constructor
      *
-     * @param BreadManager $breadManager
-     * @param MapperInterface $mapper
+     * @param BreadManager             $breadManager
+     * @param MapperInterface          $mapper
      * @param string[]|FormInterface[] $forms
      */
     public function __construct(BreadManager $breadManager, MapperInterface $mapper, array $forms)
@@ -151,6 +155,7 @@ class BreadService implements ServiceInterface
      * Get a form by name
      *
      * @param type $action
+     *
      * @return type
      * @throws InvalidArgumentException
      */
@@ -173,6 +178,7 @@ class BreadService implements ServiceInterface
      *
      * @param  string $action Action to perform
      * @param  array  $data   Data to act upon
+     *
      * @return boolean|EntityInterface
      */
     protected function validateForm($action, array $data)

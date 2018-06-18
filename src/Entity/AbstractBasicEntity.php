@@ -1,4 +1,8 @@
 <?php
+/**
+ * @copyright 2018 Internalsystemerror Limited
+ */
+declare(strict_types=1);
 
 namespace Ise\Bread\Entity;
 
@@ -40,18 +44,6 @@ abstract class AbstractBasicEntity extends AbstractEntity implements BasicEntity
     }
 
     /**
-     * Set name
-     *
-     * @param string $name
-     * @return self
-     */
-    public function setName($name)
-    {
-        $this->name = (string) $name;
-        return $this;
-    }
-
-    /**
      * Get name
      *
      * @return string
@@ -62,14 +54,15 @@ abstract class AbstractBasicEntity extends AbstractEntity implements BasicEntity
     }
 
     /**
-     * Set description
+     * Set name
      *
-     * @param string $description
+     * @param string $name
+     *
      * @return self
      */
-    public function setDescription($description)
+    public function setName($name)
     {
-        $this->description = (string) $description;
+        $this->name = (string)$name;
         return $this;
     }
 
@@ -81,5 +74,18 @@ abstract class AbstractBasicEntity extends AbstractEntity implements BasicEntity
     public function getDescription()
     {
         return $this->description;
+    }
+
+    /**
+     * Set description
+     *
+     * @param string $description
+     *
+     * @return self
+     */
+    public function setDescription($description)
+    {
+        $this->description = (string)$description;
+        return $this;
     }
 }

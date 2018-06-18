@@ -1,14 +1,17 @@
 <?php
+/**
+ * @copyright 2018 Internalsystemerror Limited
+ */
+declare(strict_types=1);
 
 namespace Ise\Bread\Factory;
 
 use Interop\Container\ContainerInterface;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Zend\ServiceManager\Factory\FactoryInterface;
 
 class ServicePluginManagerFactory implements FactoryInterface
 {
-    
+
     /**
      * {@inheritDoc}
      */
@@ -19,13 +22,5 @@ class ServicePluginManagerFactory implements FactoryInterface
             $container,
             $config['ise']['bread']['service_manager']
         );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
-    {
-        return $this($serviceLocator, $requestedName);
     }
 }

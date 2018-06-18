@@ -1,16 +1,19 @@
 <?php
+/**
+ * @copyright 2018 Internalsystemerror Limited
+ */
+declare(strict_types=1);
 
 namespace Ise\Bread\Factory;
 
-use Ise\Bread\Service\FormSessionService;
 use Interop\Container\ContainerInterface;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Ise\Bread\Service\FormSessionService;
+use Zend\ServiceManager\Factory\FactoryInterface;
 use Zend\Session\Container;
 
 class FormSessionServiceFactory implements FactoryInterface
 {
-    
+
     /**
      * {@inheritDoc}
      */
@@ -19,13 +22,5 @@ class FormSessionServiceFactory implements FactoryInterface
         $sessionContainer = new Container(FormSessionService::class);
         $sessionContainer->setExpirationHops(1);
         return new $requestedName($sessionContainer);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
-    {
-        return $this($serviceLocator, $requestedName);
     }
 }

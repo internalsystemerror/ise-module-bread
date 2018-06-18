@@ -1,4 +1,8 @@
 <?php
+/**
+ * @copyright 2018 Internalsystemerror Limited
+ */
+declare(strict_types=1);
 
 namespace Ise\Bread\Options;
 
@@ -40,6 +44,16 @@ class ServiceOptions extends AbstractFactoryClassOptions
     }
 
     /**
+     * Get forms
+     *
+     * @return string[]
+     */
+    public function getForms()
+    {
+        return $this->forms;
+    }
+
+    /**
      * Set forms
      *
      * An array of forms: [
@@ -49,21 +63,12 @@ class ServiceOptions extends AbstractFactoryClassOptions
      * ];
      *
      * @param string[] $forms
+     *
      * @return self
      */
     public function setForms(array $forms)
     {
         $this->forms = ArrayUtils::merge($this->forms, $forms);
         return $this;
-    }
-
-    /**
-     * Get forms
-     *
-     * @return string[]
-     */
-    public function getForms()
-    {
-        return $this->forms;
     }
 }

@@ -1,4 +1,8 @@
 <?php
+/**
+ * @copyright 2018 Internalsystemerror Limited
+ */
+declare(strict_types=1);
 
 namespace Ise\Bread\Controller\Plugin;
 
@@ -7,12 +11,12 @@ use Zend\Mvc\Controller\Plugin\AbstractPlugin;
 
 class FormSessionPlugin extends AbstractPlugin
 {
-    
+
     /**
      * @var FormSessionService
      */
     protected $formSessionService;
-    
+
     /**
      * Constructor
      *
@@ -22,7 +26,7 @@ class FormSessionPlugin extends AbstractPlugin
     {
         $this->formSessionService = $formSessionService;
     }
-    
+
     /**
      * Invoke
      *

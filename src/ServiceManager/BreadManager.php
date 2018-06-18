@@ -1,8 +1,16 @@
 <?php
+/**
+ * @copyright 2018 Internalsystemerror Limited
+ */
+declare(strict_types=1);
 
 namespace Ise\Bread\ServiceManager;
 
+use Ise\Bread\Mapper\MapperInterface;
 use Ise\Bread\Options\BreadOptions;
+use Ise\Bread\Options\ControllerOptions;
+use Ise\Bread\Service\ServiceInterface;
+use Zend\Form\FormInterface;
 
 class BreadManager
 {
@@ -35,13 +43,18 @@ class BreadManager
     /**
      * @var string[]
      */
+    protected $entityToMapper;
+
+    /**
+     * @var string[]
+     */
     protected $mapperToEntity;
 
     /**
      * @var string[]
      */
     protected $serviceToMapper;
-    
+
     /**
      * @var string[]
      */
@@ -58,7 +71,7 @@ class BreadManager
     protected $controllerToService;
 
     /**
-     * @var string[]
+     * @var ControllerOptions[]
      */
     protected $controllerToOptions;
 
@@ -66,12 +79,16 @@ class BreadManager
      * Constructor
      *
      * @param ServicePluginManager $serviceManager
-     * @param MapperPluginManager $mapperManager
-     * @param FormPluginManager $formManager
-     * @param BreadOptions $options
+     * @param MapperPluginManager  $mapperManager
+     * @param FormPluginManager    $formManager
+     * @param BreadOptions         $options
      */
-    public function __construct(ServicePluginManager $serviceManager, MapperPluginManager $mapperManager, FormPluginManager $formManager, BreadOptions $options)
-    {
+    public function __construct(
+        ServicePluginManager $serviceManager,
+        MapperPluginManager $mapperManager,
+        FormPluginManager $formManager,
+        BreadOptions $options
+    ) {
         // Set properties
         $this->serviceManager = $serviceManager;
         $this->mapperManager  = $mapperManager;
@@ -80,13 +97,13 @@ class BreadManager
 
         // Create entity map
         foreach ($this->options->getEntities() as $entity) {
-            $this->entityToService[$entity->getClass()]   = $entity->getService();
-            $this->entityToMapper[$entity->getClass()]    = $entity->getMapper();
-            
+            $this->entityToService[$entity->getClass()] = $entity->getService();
+            $this->entityToMapper[$entity->getClass()]  = $entity->getMapper();
+
             $this->serviceToEntity[$entity->getService()] = $entity->getClass();
             $this->serviceToMapper[$entity->getService()] = $entity->getMapper();
-            
-            $this->mapperToEntity[$entity->getMapper()]   = $entity->getClass();
+
+            $this->mapperToEntity[$entity->getMapper()] = $entity->getClass();
         }
 
         // Create controller map
@@ -94,50 +111,54 @@ class BreadManager
             $this->controllerToService[$controller->getClass()] = $this->entityToService[$controller->getEntityClass()];
             $this->controllerToOptions[$controller->getClass()] = $controller;
         }
-        
+
         // Create service map
         foreach ($this->options->getServices() as $service) {
-            $this->serviceToForms[$service->getClass()]  = $service->getForms();
+            $this->serviceToForms[$service->getClass()] = $service->getForms();
         }
     }
-    
+
     /**
      * Get entity
      *
      * @param string $entityClass
+     *
      * @return array[]
      */
     public function getEntityOptions($entityClass)
     {
         return $this->options->getEntity($entityClass);
     }
-    
+
     /**
      * Get controller base class
      *
      * @param string $requestedName
+     *
      * @return string
      */
     public function getControllerBaseClass($requestedName)
     {
         return $this->options->getController($requestedName)->getBaseClass();
     }
-    
+
     /**
      * Get service base class
      *
      * @param string $requestedName
+     *
      * @return string
      */
     public function getServiceBaseClass($requestedName)
     {
         return $this->options->getService($requestedName)->getBaseClass();
     }
-    
+
     /**
      * Get mapper base class
      *
      * @param string $requestedName
+     *
      * @return string
      */
     public function getMapperBaseClass($requestedName)
@@ -149,6 +170,7 @@ class BreadManager
      * Get service
      *
      * @param string $serviceClass
+     *
      * @return ServiceInterface
      */
     public function getService($serviceClass)
@@ -160,6 +182,7 @@ class BreadManager
      * Get mapper
      *
      * @param string $mapperClass
+     *
      * @return MapperInterface
      */
     public function getMapper($mapperClass)
@@ -171,6 +194,7 @@ class BreadManager
      * Get form
      *
      * @param string $formClass
+     *
      * @return FormInterface
      */
     public function getForm($formClass)
@@ -182,17 +206,19 @@ class BreadManager
      * Get service from entity class
      *
      * @param string $entityClass
+     *
      * @return ServiceInterface
      */
     public function getServiceFromEntityClass($entityClass)
     {
         return $this->serviceManager->get($this->getServiceClassFromEntityClass($entityClass));
     }
-    
+
     /**
      * Get mapper from entity class
      *
      * @param string $entityClass
+     *
      * @return MapperInterface
      */
     public function getMapperFromEntityClass($entityClass)
@@ -204,17 +230,19 @@ class BreadManager
      * Get service class from entity class
      *
      * @param string $entityClass
+     *
      * @return string
      */
     public function getServiceClassFromEntityClass($entityClass)
     {
         return $this->entityToService[$entityClass];
     }
-    
+
     /**
      * Get mapper class from entity class
      *
      * @param string $entityClass
+     *
      * @return string
      */
     public function getMapperClassFromEntityClass($entityClass)
@@ -226,6 +254,7 @@ class BreadManager
      * Get service class from controller class
      *
      * @param string $controllerClass
+     *
      * @return string
      */
     public function getServiceClassFromControllerClass($controllerClass)
@@ -237,7 +266,8 @@ class BreadManager
      * Get controller options from controller class
      *
      * @param string $controllerClass
-     * @return string
+     *
+     * @return ControllerOptions
      */
     public function getControllerOptionsFromControllerClass($controllerClass)
     {
@@ -248,17 +278,19 @@ class BreadManager
      * Get entity class from mapper class
      *
      * @param string $mapperClass
+     *
      * @return string
      */
     public function getEntityClassFromMapperClass($mapperClass)
     {
         return $this->mapperToEntity[$mapperClass];
     }
-    
+
     /**
      * Get entity class from service class
      *
      * @param string $serviceClass
+     *
      * @return string
      */
     public function getEntityClassFromServiceClass($serviceClass)
@@ -270,6 +302,7 @@ class BreadManager
      * Get mapper class from service class
      *
      * @param string $serviceClass
+     *
      * @return string
      */
     public function getMapperClassFromServiceClass($serviceClass)
@@ -281,6 +314,7 @@ class BreadManager
      * Get forms from service class
      *
      * @param string $serviceClass
+     *
      * @return string
      */
     public function getFormsFromServiceClass($serviceClass)

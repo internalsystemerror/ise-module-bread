@@ -1,4 +1,8 @@
 <?php
+/**
+ * @copyright 2018 Internalsystemerror Limited
+ */
+declare(strict_types=1);
 
 namespace Ise\Bread\Options;
 
@@ -20,17 +24,6 @@ abstract class AbstractClassOptions extends AbstractOptions
     protected $class = '';
 
     /**
-     * Set alias
-     *
-     * @param string $alias
-     */
-    public function setAlias($alias)
-    {
-        $this->alias = (string) $alias;
-        return $this;
-    }
-
-    /**
      * Get alias
      *
      * @return string
@@ -41,14 +34,13 @@ abstract class AbstractClassOptions extends AbstractOptions
     }
 
     /**
-     * Set class
+     * Set alias
      *
-     * @param string $class
-     * @return self
+     * @param string $alias
      */
-    public function setClass($class)
+    public function setAlias($alias)
     {
-        $this->class = (string) $class;
+        $this->alias = (string)$alias;
         return $this;
     }
 
@@ -63,16 +55,30 @@ abstract class AbstractClassOptions extends AbstractOptions
     }
 
     /**
+     * Set class
+     *
+     * @param string $class
+     *
+     * @return self
+     */
+    public function setClass($class)
+    {
+        $this->class = (string)$class;
+        return $this;
+    }
+
+    /**
      * Check that class implements interface
      *
      * @param string $class
      * @param string $interface
+     *
      * @throws InvalidArgumentException
      */
     protected function classImplementsInterface($class, $interface)
     {
         // Check class exists
-        $classString = (string) $class;
+        $classString = (string)$class;
         if (!class_exists($classString)) {
             throw new InvalidArgumentException(sprintf(
                 'Class "%s" does not exist.',
@@ -82,7 +88,7 @@ abstract class AbstractClassOptions extends AbstractOptions
 
         // Check class implements interface
         $reflection      = new ReflectionClass($classString);
-        $interfaceString = (string) $interface;
+        $interfaceString = (string)$interface;
         if (!$reflection->implementsInterface($interfaceString)) {
             throw new InvalidArgumentException(sprintf(
                 'Class "%s" does not implement the interface "%s".',

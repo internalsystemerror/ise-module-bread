@@ -1,18 +1,22 @@
 <?php
+/**
+ * @copyright 2018 Internalsystemerror Limited
+ */
+declare(strict_types=1);
 
 namespace Ise\Bread\Factory;
 
 use Doctrine\ORM\EntityManager;
+use DoctrineModule\Stdlib\Hydrator\DoctrineObject;
 use DoctrineORMModule\Form\Element\EntityMultiCheckbox;
 use DoctrineORMModule\Form\Element\EntityRadio;
 use DoctrineORMModule\Form\Element\EntitySelect;
-use DoctrineORMModule\Stdlib\Hydrator\DoctrineEntity;
-use Ise\Bread\Form\Annotation\ElementAnnotationsListener;
-use Ise\Bread\EventManager\BreadEvent;
 use Interop\Container\ContainerInterface;
+use Ise\Bread\EventManager\BreadEvent;
+use Ise\Bread\Form\Annotation\AnnotationBuilder;
+use Ise\Bread\Form\Annotation\ElementAnnotationsListener;
 use Zend\Form\Form;
-use Zend\ServiceManager\AbstractFactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Zend\ServiceManager\Factory\AbstractFactoryInterface;
 
 class FormAbstractFactory implements AbstractFactoryInterface
 {
@@ -28,11 +32,12 @@ class FormAbstractFactory implements AbstractFactoryInterface
         $entity      = new $entityClass;
 
         // Create builder
-        $entityManager      = $container->get('Doctrine\ORM\EntityManager');
+        /** @var AnnotationBuilder $builder */
         $builder            = $container->get('doctrine.formannotationbuilder.orm_default');
         $formElementManager = $container->get('FormElementManager');
+        $entityManager      = $container->get(EntityManager::class);
         $formFactory        = $builder->getFormFactory();
-        $elementListener = new ElementAnnotationsListener($entityManager, $formType);
+        $elementListener    = new ElementAnnotationsListener($entityManager, $formType);
         $elementListener->attach($builder->getEventManager());
         $formFactory->setFormElementManager($formElementManager);
 
@@ -53,12 +58,12 @@ class FormAbstractFactory implements AbstractFactoryInterface
             case BreadEvent::FORM_DIALOG:
             default:
                 $submit = 'Confirm';
-                $form   = new Form();
+                $form   = new Form;
                 break;
         }
 
         // Assign hydrator
-        $hydrator = new DoctrineEntity($entityManager);
+        $hydrator = new DoctrineObject($entityManager);
         $form->setHydrator($hydrator);
         $form->bind($entity);
 
@@ -74,23 +79,7 @@ class FormAbstractFactory implements AbstractFactoryInterface
     public function canCreate(ContainerInterface $container, $requestedName)
     {
         // Does entity class exist
-        return (bool) $this->translateFormToEntity($requestedName);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function canCreateServiceWithName(ServiceLocatorInterface $serviceLocator, $name, $requestedName)
-    {
-        return $this->canCreate($serviceLocator->getServiceLocator(), $requestedName);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function createServiceWithName(ServiceLocatorInterface $serviceLocator, $name, $requestedName)
-    {
-        return $this($serviceLocator->getServiceLocator(), $requestedName);
+        return (bool)$this->translateFormToEntity($requestedName);
     }
 
     /**
@@ -112,7 +101,7 @@ class FormAbstractFactory implements AbstractFactoryInterface
                 $this->specElementCancel(),
                 $this->specElementSubmit($submitText),
             ],
-            ], ['priority' => -100]);
+        ], ['priority' => -100]);
     }
 
     /**
@@ -162,7 +151,7 @@ class FormAbstractFactory implements AbstractFactoryInterface
                 'type'       => 'button',
                 'name'       => 'cancel',
                 'options'    => [
-                    'icon' => 'remove'
+                    'icon' => 'remove',
                 ],
                 'attributes' => [
                     'class' => 'btn-cancel',
@@ -176,6 +165,7 @@ class FormAbstractFactory implements AbstractFactoryInterface
      * Submit element spec
      *
      * @param  string $submitText
+     *
      * @return array
      */
     protected function specElementSubmit($submitText)
@@ -200,6 +190,7 @@ class FormAbstractFactory implements AbstractFactoryInterface
      * Translate form name to entity class
      *
      * @param  string $formName
+     *
      * @return boolean
      */
     protected function translateFormToEntity($formName)
@@ -216,6 +207,7 @@ class FormAbstractFactory implements AbstractFactoryInterface
      * Translate form name to form type
      *
      * @param  string $formName
+     *
      * @return string
      */
     protected function translateFormToType($formName)

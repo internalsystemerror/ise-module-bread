@@ -1,4 +1,8 @@
 <?php
+/**
+ * @copyright 2018 Internalsystemerror Limited
+ */
+declare(strict_types=1);
 
 namespace Ise\Bread\Entity;
 
@@ -30,6 +34,7 @@ interface EntityInterface
      * Set disabled
      *
      * @param boolean $disabled
+     *
      * @return self
      */
     public function setDisabled($disabled);
@@ -45,6 +50,7 @@ interface EntityInterface
      * Set last modified
      *
      * @param DateTime $lastModifed Last modified date
+     *
      * @return self
      */
     public function setLastModified(DateTime $lastModifed);
@@ -60,6 +66,7 @@ interface EntityInterface
      * Set created
      *
      * @param DateTime $created Created date
+     *
      * @return self
      */
     public function setCreated(DateTime $created);

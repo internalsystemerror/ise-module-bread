@@ -1,4 +1,8 @@
 <?php
+/**
+ * @copyright 2018 Internalsystemerror Limited
+ */
+declare(strict_types=1);
 
 namespace Ise\Bread\Factory;
 
@@ -7,12 +11,11 @@ use Ise\Bread\Options\BreadOptions;
 use Ise\Bread\ServiceManager\FormPluginManager;
 use Ise\Bread\ServiceManager\MapperPluginManager;
 use Ise\Bread\ServiceManager\ServicePluginManager;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Zend\ServiceManager\Factory\FactoryInterface;
 
 class BreadManagerFactory implements FactoryInterface
 {
-    
+
     /**
      * {@inheritDoc}
      */
@@ -25,13 +28,5 @@ class BreadManagerFactory implements FactoryInterface
             $container->get(FormPluginManager::class),
             new BreadOptions($config['ise']['bread'])
         );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
-    {
-        return $this($serviceLocator, $requestedName);
     }
 }

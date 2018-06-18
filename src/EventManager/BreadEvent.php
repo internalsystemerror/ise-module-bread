@@ -1,4 +1,8 @@
 <?php
+/**
+ * @copyright 2018 Internalsystemerror Limited
+ */
+declare(strict_types=1);
 
 namespace Ise\Bread\EventManager;
 
@@ -8,12 +12,12 @@ use Zend\View\Model\ViewModel;
 
 class BreadEvent extends Event
 {
-    
+
     /**
      * The identifier key
      */
-    const IDENTIFIER     = 'id';
-    
+    const IDENTIFIER = 'id';
+
     /**
      * Available bread actions
      */
@@ -24,14 +28,14 @@ class BreadEvent extends Event
     const ACTION_DELETE  = 'delete';
     const ACTION_ENABLE  = 'enable';
     const ACTION_DISABLE = 'disable';
-    
+
     /**
      * Available bread forms
      */
     const FORM_CREATE = self::ACTION_CREATE;
     const FORM_UPDATE = self::ACTION_UPDATE;
     const FORM_DIALOG = 'dialog';
-    
+
     /**
      * Bread events triggered by event manager
      */
@@ -40,7 +44,7 @@ class BreadEvent extends Event
     const EVENT_CREATE = self::FORM_CREATE;
     const EVENT_UPDATE = self::FORM_UPDATE;
     const EVENT_DIALOG = self::FORM_DIALOG;
-    
+
     /**
      * @var string[]
      */
@@ -52,7 +56,7 @@ class BreadEvent extends Event
         self::ACTION_ENABLE,
         self::ACTION_DISABLE,
     ];
-    
+
     /**
      * @var string[]
      */
@@ -61,27 +65,27 @@ class BreadEvent extends Event
         self::FORM_UPDATE,
         self::FORM_DIALOG,
     ];
-    
+
     /**
      * @var string
      */
     protected $action;
-    
+
     /**
      * @var EntityInterface
      */
     protected $entity;
-    
+
     /**
      * @var string|FormInterface
      */
     protected $form;
-    
+
     /**
      * @var boolean|array
      */
     protected $prgData;
-    
+
     /**
      * Get the list of available bread actions
      *
@@ -91,7 +95,7 @@ class BreadEvent extends Event
     {
         return static::$availableActions;
     }
-    
+
     /**
      * Get the list of available forms
      *
@@ -101,19 +105,7 @@ class BreadEvent extends Event
     {
         return static::$availableForms;
     }
-    
-    /**
-     * Set the action
-     *
-     * @param string $action
-     * @return self
-     */
-    public function setAction($action)
-    {
-        $this->action = (string) $action;
-        return $this;
-    }
-    
+
     /**
      * Get the action
      *
@@ -123,19 +115,20 @@ class BreadEvent extends Event
     {
         return $this->action;
     }
-    
+
     /**
-     * Set the entity
+     * Set the action
      *
-     * @param EntityInterface $entity
+     * @param string $action
+     *
      * @return self
      */
-    public function setEntity(EntityInterface $entity)
+    public function setAction($action)
     {
-        $this->entity = $entity;
+        $this->action = (string)$action;
         return $this;
     }
-    
+
     /**
      * Get the entity
      *
@@ -145,19 +138,20 @@ class BreadEvent extends Event
     {
         return $this->entity;
     }
-    
+
     /**
-     * Set the form
+     * Set the entity
      *
-     * @param string|FormInterface $form
+     * @param EntityInterface $entity
+     *
      * @return self
      */
-    public function setForm($form)
+    public function setEntity(EntityInterface $entity)
     {
-        $this->form = $form;
+        $this->entity = $entity;
         return $this;
     }
-    
+
     /**
      * Get the form
      *
@@ -167,19 +161,20 @@ class BreadEvent extends Event
     {
         return $this->form;
     }
-    
+
     /**
-     * Set the PRG data
+     * Set the form
      *
-     * @param boolean|array $data
+     * @param string|FormInterface $form
+     *
      * @return self
      */
-    public function setPrgData($data)
+    public function setForm($form)
     {
-        $this->prgData = $data;
+        $this->form = $form;
         return $this;
     }
-    
+
     /**
      * Get the PRG data
      *
@@ -189,11 +184,25 @@ class BreadEvent extends Event
     {
         return $this->prgData;
     }
-    
+
+    /**
+     * Set the PRG data
+     *
+     * @param boolean|array $data
+     *
+     * @return self
+     */
+    public function setPrgData($data)
+    {
+        $this->prgData = $data;
+        return $this;
+    }
+
     /**
      * Set the view model
      *
      * @param ViewModel $viewModel
+     *
      * @return self
      */
     public function setViewModel(ViewModel $viewModel)
@@ -201,7 +210,7 @@ class BreadEvent extends Event
         $this->viewModel = $viewModel;
         return $this;
     }
-    
+
     /**
      * Get the view model
      *

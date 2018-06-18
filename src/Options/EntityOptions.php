@@ -1,4 +1,8 @@
 <?php
+/**
+ * @copyright 2018 Internalsystemerror Limited
+ */
+declare(strict_types=1);
 
 namespace Ise\Bread\Options;
 
@@ -12,7 +16,7 @@ class EntityOptions extends AbstractClassOptions
      * @var string
      */
     protected $hydrator = DoctrineEntity::class;
-    
+
     /**
      * @var string
      */
@@ -27,29 +31,18 @@ class EntityOptions extends AbstractClassOptions
      * @var string
      */
     protected $service;
-    
+
     /**
      * Set class
      *
      * @param string $class
+     *
      * @return self
      */
     public function setClass($class)
     {
         $this->classImplementsInterface($class, EntityInterface::class);
         return parent::setClass($class);
-    }
-    
-    /**
-     * Set hydrator class
-     *
-     * @param string $hydrator
-     * @return self
-     */
-    public function setHydrator($hydrator)
-    {
-        $this->hydrator = (string) $hydrator;
-        return $this;
     }
 
     /**
@@ -61,18 +54,20 @@ class EntityOptions extends AbstractClassOptions
     {
         return $this->hydrator;
     }
-    
+
     /**
-     * Set controller
+     * Set hydrator class
      *
-     * @param string|array $controller
+     * @param string $hydrator
+     *
+     * @return self
      */
-    public function setController($controller)
+    public function setHydrator($hydrator)
     {
-        $this->controller = $controller;
+        $this->hydrator = (string)$hydrator;
         return $this;
     }
-    
+
     /**
      * Get mapper
      *
@@ -84,14 +79,13 @@ class EntityOptions extends AbstractClassOptions
     }
 
     /**
-     * Set mapper
+     * Set controller
      *
-     * @param string|array $mapper
-     * @return self
+     * @param string|array $controller
      */
-    public function setMapper($mapper)
+    public function setController($controller)
     {
-        $this->mapper = $mapper;
+        $this->controller = $controller;
         return $this;
     }
 
@@ -106,17 +100,18 @@ class EntityOptions extends AbstractClassOptions
     }
 
     /**
-     * Set service
+     * Set mapper
      *
-     * @param string|array $service
+     * @param string|array $mapper
+     *
      * @return self
      */
-    public function setService($service)
+    public function setMapper($mapper)
     {
-        $this->service = $service;
+        $this->mapper = $mapper;
         return $this;
     }
-    
+
     /**
      * Get service
      *
@@ -125,5 +120,18 @@ class EntityOptions extends AbstractClassOptions
     public function getService()
     {
         return $this->service;
+    }
+
+    /**
+     * Set service
+     *
+     * @param string|array $service
+     *
+     * @return self
+     */
+    public function setService($service)
+    {
+        $this->service = $service;
+        return $this;
     }
 }

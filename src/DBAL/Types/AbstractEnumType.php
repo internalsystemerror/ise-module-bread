@@ -1,4 +1,8 @@
 <?php
+/**
+ * @copyright 2018 Internalsystemerror Limited
+ */
+declare(strict_types=1);
 
 namespace Ise\Bread\DBAL\Types;
 
@@ -11,16 +15,15 @@ use ReflectionClass;
 abstract class AbstractEnumType extends Type
 {
     /**
-     * @var string
-     */
-    protected $name = '';
-    
-    /**
      * @static
      * @var array
      */
     protected static $validValues = [];
-    
+    /**
+     * @var string
+     */
+    protected $name = '';
+
     /**
      * Get choices (labels) for this type
      *
@@ -30,7 +33,7 @@ abstract class AbstractEnumType extends Type
     {
         return static::$validValues;
     }
-    
+
     /**
      * Get values (keys) for this type
      *
@@ -40,7 +43,7 @@ abstract class AbstractEnumType extends Type
     {
         return array_keys(static::getChoices());
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -48,7 +51,7 @@ abstract class AbstractEnumType extends Type
     {
         return $this->name ?: (new ReflectionClass(get_class($this)))->getShortName();
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -57,11 +60,11 @@ abstract class AbstractEnumType extends Type
         if (!$platform instanceof MySqlPlatform) {
             return $platform->getVarcharTypeDeclarationSQL($fieldDeclaration);
         }
-        
+
         $values = implode(', ', array_map([$this, 'mapValue'], $this->getValues()));
         return sprintf('ENUM(%s)', $values);
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -76,16 +79,16 @@ abstract class AbstractEnumType extends Type
                 )
             );
         }
-        
+
         return $value;
     }
-    
+
     /**
      * {@inheritDoc}
      */
     public function convertToPHPValue($value, AbstractPlatform $platform)
     {
-        return (string) $value;
+        return (string)$value;
     }
 
     /**
@@ -95,11 +98,12 @@ abstract class AbstractEnumType extends Type
     {
         return true;
     }
-    
+
     /**
      * Map value to string
      *
      * @param string $value
+     *
      * @return string
      */
     protected function mapValue($value)

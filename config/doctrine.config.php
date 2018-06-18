@@ -1,4 +1,8 @@
 <?php
+/**
+ * @copyright 2018 Internalsystemerror Limited
+ */
+declare(strict_types=1);
 
 namespace Ise\Bread;
 
@@ -26,7 +30,7 @@ return [
             'class' => AnnotationDriver::class,
             'cache' => 'array',
             'paths' => [
-                __DIR__ . '/../src/Entity'
+                __DIR__ . '/../src/Entity',
             ],
         ],
         'orm_default'             => [

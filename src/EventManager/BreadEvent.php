@@ -176,7 +176,7 @@ class BreadEvent extends Event
      */
     public function setForm($form): void
     {
-        if (!is_string($form) || !$form instanceof FormInterface) {
+        if (!is_string($form) && !$form instanceof FormInterface) {
             throw new InvalidArgumentException(sprintf(
                 'String or instance of %s expected. %s given.',
                 FormInterface::class,
@@ -231,7 +231,7 @@ class BreadEvent extends Event
      *
      * @param ViewModel $viewModel
      *
-     * @return self
+     * @return void
      */
     public function setViewModel(ViewModel $viewModel): void
     {

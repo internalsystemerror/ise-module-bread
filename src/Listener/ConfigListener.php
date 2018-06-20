@@ -55,31 +55,35 @@ class ConfigListener implements ListenerAggregateInterface
      * @param ModuleEvent $event
      *
      * @return void
+     * @throws \ReflectionException
      */
     public function onMergeConfig(ModuleEvent $event): void
     {
         // Get current config
-        $configListener    = $event->getConfigListener();
+        $configListener = $event->getConfigListener();
+        if (!$configListener) {
+            throw new \UnexpectedValueException('Config listener not loaded');
+        }
         $this->config      = $configListener->getMergedConfig(false);
         $this->breadConfig = new BreadOptions($this->config['ise']['bread']);
 
         // Loop through entities
-        foreach ($this->breadConfig->getEntities() as $entity) {
+        foreach ($this->breadConfig->getAllEntityOptions() as $entity) {
             $this->addEntityConfig($entity);
         }
 
         // Loop through controllers
-        foreach ($this->breadConfig->getControllers() as $controller) {
+        foreach ($this->breadConfig->getAllControllerOptions() as $controller) {
             $this->addControllerConfig($controller);
         }
 
         // Loop through services
-        foreach ($this->breadConfig->getServices() as $service) {
+        foreach ($this->breadConfig->getAllServiceOptions() as $service) {
             $this->addServiceConfig($service);
         }
 
         // Loop through mappers
-        foreach ($this->breadConfig->getMappers() as $mapper) {
+        foreach ($this->breadConfig->getAllMapperOptions() as $mapper) {
             $this->addMapperConfig($mapper);
         }
 
@@ -109,8 +113,8 @@ class ConfigListener implements ListenerAggregateInterface
         }
 
         // Create alias
-        if (!isset($service['alias']) || !$service['alias']) {
-            if (!isset($service['class']) || !$service['class']) {
+        if (!$service['alias'] || !$service['alias']) {
+            if (!$service['class'] || !$service['class']) {
                 $service['alias'] = $namespace . '\Service\\' . $entityName;
             } else {
                 $service['alias'] = preg_replace('/Service$/', '', $service['class']);
@@ -118,17 +122,22 @@ class ConfigListener implements ListenerAggregateInterface
         }
 
         // Create class
-        if (!isset($service['class']) || !$service['class']) {
+        if (!$service['class'] || !$service['class']) {
             $service['class'] = $service['alias'] . 'Service';
         }
 
         // Save
         $options->setService($service['class']);
-        $this->breadConfig->setService($service['class'], $service);
+        $this->breadConfig->setServiceOptions($service['class'], $service);
 
         // Setup forms
+        $serviceOptions = $this->breadConfig->getServiceOptions($service['class']);
+        if (!$serviceOptions) {
+            throw new \UnexpectedValueException('Unable to find service options for ' . $service['class']);
+        }
+
         $this->setupForms(
-            $this->breadConfig->getService($service['class']),
+            $serviceOptions,
             $namespace,
             $entityName
         );
@@ -189,7 +198,11 @@ class ConfigListener implements ListenerAggregateInterface
         }
 
         // Save entity title
-        $entityName = $this->breadConfig->getEntity($options->getEntityClass())->getAlias();
+        $entityOptions = $this->breadConfig->getEntityOptions($options->getEntityClass());
+        if (!$entityOptions) {
+            throw new \UnexpectedValueException('Unable to find entity options for ' . $options->getEntityClass());
+        }
+        $entityName = $entityOptions->getAlias();
         if (!$options->getEntityTitle()) {
             $camelFilter = new CamelCaseToSeparator;
             $options->setEntityTitle(strtolower($camelFilter->filter($entityName)));
@@ -214,9 +227,9 @@ class ConfigListener implements ListenerAggregateInterface
     protected function addServiceConfig(ServiceOptions $options): void
     {
         // Setup manager
-        $this->breadConfig->setServiceManager(
+        $this->breadConfig->setServiceManagerOptions(
             $this->setManagerOptions(
-                $this->breadConfig->getServiceManager(),
+                $this->breadConfig->getServiceManagerOptions(),
                 $options
             )
         );
@@ -232,9 +245,9 @@ class ConfigListener implements ListenerAggregateInterface
     protected function addMapperConfig(MapperOptions $options): void
     {
         // Setup manager
-        $this->breadConfig->setMapperManager(
+        $this->breadConfig->setMapperManagerOptions(
             $this->setManagerOptions(
-                $this->breadConfig->getMapperManager(),
+                $this->breadConfig->getMapperManagerOptions(),
                 $options
             )
         );
@@ -281,7 +294,7 @@ class ConfigListener implements ListenerAggregateInterface
 
         // Save
         $options->setController($controller['class']);
-        $this->breadConfig->setController($controller['class'], $controller);
+        $this->breadConfig->setControllerOptions($controller['class'], $controller);
     }
 
     /**
@@ -318,7 +331,7 @@ class ConfigListener implements ListenerAggregateInterface
 
         // Save
         $options->setMapper($mapper['class']);
-        $this->breadConfig->setMapper($mapper['class'], $mapper);
+        $this->breadConfig->setMapperOptions($mapper['class'], $mapper);
     }
 
     /**
@@ -415,7 +428,7 @@ class ConfigListener implements ListenerAggregateInterface
             'child_routes' => $this->createChildRoutes(),
         ];
         if ($route['options']['entity']) {
-            $entityOptions = $this->breadConfig->getEntity($route['options']['entity']);
+            $entityOptions = $this->breadConfig->getEntityOptions($route['options']['entity']);
             if (!$entityOptions) {
                 throw new InvalidArgumentException(sprintf(
                     'Unable to find the entity: %s',
@@ -423,7 +436,7 @@ class ConfigListener implements ListenerAggregateInterface
                 ));
             }
             if (!$route['options']['defaults']['controller']) {
-                $controllerOptions = $this->breadConfig->getController($entityOptions->getController());
+                $controllerOptions = $this->breadConfig->getControllerOptions($entityOptions->getController());
                 if (!$controllerOptions) {
                     throw new InvalidArgumentException(sprintf(
                         'Unable to find a controller for the entity: %s',

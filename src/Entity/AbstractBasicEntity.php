@@ -29,7 +29,7 @@ abstract class AbstractBasicEntity extends AbstractEntity implements BasicEntity
      * @ORM\Column(type="string", length=255, nullable=true)
      * @ZF\Flags({"priority": 10})
      * @ZF\Options({"label": "Description"})
-     * @var string
+     * @var string|null
      */
     protected $description;
 
@@ -68,9 +68,9 @@ abstract class AbstractBasicEntity extends AbstractEntity implements BasicEntity
     /**
      * Get description
      *
-     * @return string
+     * @return string|null
      */
-    public function getDescription(): string
+    public function getDescription(): ?string
     {
         return $this->description;
     }

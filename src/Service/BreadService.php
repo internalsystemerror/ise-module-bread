@@ -27,7 +27,7 @@ class BreadService implements ServiceInterface
     protected $mapper;
 
     /**
-     * @var string[]|FormInterface[]
+     * @var FormInterface[]|string[]
      */
     protected $forms;
 
@@ -176,10 +176,13 @@ class BreadService implements ServiceInterface
                 $action
             ));
         }
-        if (!$this->forms[$action] instanceof FormInterface) {
-            $this->forms[$action] = $this->breadManager->getForm($this->forms[$action]);
+        if ($this->forms[$action] instanceof FormInterface) {
+            return $this->forms[$action];
         }
-        return $this->forms[$action];
+
+        $form                 = $this->breadManager->getForm($this->forms[$action]);
+        $this->forms[$action] = $form;
+        return $form;
     }
 
     /**

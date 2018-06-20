@@ -32,7 +32,7 @@ class BreadManager
     protected $formManager;
 
     /**
-     * @var array
+     * @var BreadOptions
      */
     protected $options;
 

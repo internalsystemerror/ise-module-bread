@@ -52,7 +52,11 @@ class FormSessionService
             $this->sessionContainer[$name] = [];
         }
         $this->sessionContainer[$name][self::KEY_MESSAGES] = $form->getMessages();
-        $this->sessionContainer[$name][self::KEY_DATA]     = $form->getInputFilter()->getRawValues();
+
+        $inputFilter = $form->getInputFilter();
+        if ($inputFilter) {
+            $this->sessionContainer[$name][self::KEY_DATA] = $inputFilter->getRawValues();
+        }
     }
 
     /**

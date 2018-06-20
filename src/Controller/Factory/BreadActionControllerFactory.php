@@ -65,7 +65,7 @@ class BreadActionControllerFactory implements FactoryInterface
      * @param BreadEventManager $breadEventManager
      * @param BreadManager      $breadManager
      * @param string            $requestedName
-     * @param string            $controllerClass
+     * @param string|null       $controllerClass
      * @param ControllerOptions $controllerOptions
      *
      * @return ControllerInterface
@@ -74,7 +74,7 @@ class BreadActionControllerFactory implements FactoryInterface
         BreadEventManager $breadEventManager,
         BreadManager $breadManager,
         string $requestedName,
-        string $controllerClass,
+        ?string $controllerClass,
         ControllerOptions $controllerOptions
     ): ControllerInterface {
         return new $controllerClass(

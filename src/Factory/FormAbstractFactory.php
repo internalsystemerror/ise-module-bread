@@ -12,7 +12,6 @@ use DoctrineORMModule\Form\Element\EntityMultiCheckbox;
 use DoctrineORMModule\Form\Element\EntityRadio;
 use DoctrineORMModule\Form\Element\EntitySelect;
 use Interop\Container\ContainerInterface;
-use Ise\Bread\Entity\EntityInterface;
 use Ise\Bread\EventManager\BreadEvent;
 use Ise\Bread\Form\Annotation\AnnotationBuilder;
 use Ise\Bread\Form\Annotation\ElementAnnotationsListener;
@@ -49,7 +48,10 @@ class FormAbstractFactory implements AbstractFactoryInterface
                 $form   = $builder->createForm($entity);
                 $this->injectEntityManagerIntoElements($form, $entityManager);
                 $form->remove(BreadEvent::IDENTIFIER);
-                $form->getInputFilter()->remove(BreadEvent::IDENTIFIER);
+                $inputFilter = $form->getInputFilter();
+                if ($inputFilter) {
+                    $inputFilter->remove(BreadEvent::IDENTIFIER);
+                }
                 break;
             case BreadEvent::FORM_UPDATE:
                 $submit = 'Save';
@@ -196,9 +198,9 @@ class FormAbstractFactory implements AbstractFactoryInterface
      *
      * @param  string $formName
      *
-     * @return EntityInterface
+     * @return string|null
      */
-    protected function translateFormToEntity(string $formName): ?EntityInterface
+    protected function translateFormToEntity(string $formName): ?string
     {
         $entityClass = trim(str_replace('Form', 'Entity', substr($formName, 0, strrpos($formName, '\\'))), '\\');
         if (!$entityClass) {

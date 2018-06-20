@@ -170,7 +170,7 @@ class BreadOptions extends AbstractOptions
      *
      * @return ControllerOptions
      */
-    public function getControllerOptionsForEntity(string $entityClass): ControllerOptions
+    public function getControllerOptionsForEntity(string $entityClass): ?ControllerOptions
     {
         foreach ($this->controllerOptions as $controller) {
             if ($controller->getEntityClass() === $entityClass) {

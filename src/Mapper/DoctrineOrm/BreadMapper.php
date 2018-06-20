@@ -57,7 +57,19 @@ class BreadMapper implements MapperInterface
      */
     public function read(string $id): ?EntityInterface
     {
-        return $this->validateEntity($this->entityRepository->find($id));
+        $entity = $this->entityRepository->find($id);
+        if (!$entity) {
+            return null;
+        }
+        if (!$entity instanceof EntityInterface) {
+            throw new \UnexpectedValueException(sprintf(
+                '%s must implement %s',
+                is_object($entity) ? get_class($entity) : gettype($entity),
+                EntityInterface::class
+            ));
+        }
+
+        return $entity;
     }
 
     /**
@@ -65,7 +77,19 @@ class BreadMapper implements MapperInterface
      */
     public function readBy(array $criteria): ?EntityInterface
     {
-        return $this->validateEntity($this->entityRepository->findOneBy($criteria));
+        $entity = $this->entityRepository->findOneBy($criteria);
+        if (!$entity) {
+            return null;
+        }
+        if (!$entity instanceof EntityInterface) {
+            throw new \UnexpectedValueException(sprintf(
+                '%s must implement %s',
+                is_object($entity) ? get_class($entity) : gettype($entity),
+                EntityInterface::class
+            ));
+        }
+
+        return $entity;
     }
 
     /**
@@ -141,9 +165,9 @@ class BreadMapper implements MapperInterface
      * @inheritdoc
      * @throws ConnectionException
      */
-    public function rollback(): void
+    public function rollBack(): void
     {
-        $this->connection->rollback();
+        $this->connection->rollBack();
     }
 
     /**
@@ -174,17 +198,5 @@ class BreadMapper implements MapperInterface
             $this->entityManager->persist($entity);
         }
         $this->entityManager->flush();
-    }
-
-    /**
-     * Validate entity
-     *
-     * @param EntityInterface|null $entity
-     *
-     * @return EntityInterface|null
-     */
-    private function validateEntity(EntityInterface $entity = null)
-    {
-        return $entity;
     }
 }

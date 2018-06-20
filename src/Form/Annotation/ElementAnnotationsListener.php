@@ -110,12 +110,12 @@ class ElementAnnotationsListener extends AbstractListenerAggregate
             return;
         }
 
-        switch ($this->actionType) {
-            case BreadEvent::ACTION_CREATE:
-                return $this->addNoObjectExistsValidator($event, $metadata, $mapping);
-            default:
-                return $this->addUniqueObjectValidator($event, $metadata, $mapping);
+        if ($this->actionType === BreadEvent::ACTION_CREATE) {
+            $this->addNoObjectExistsValidator($event, $metadata, $mapping);
+            return;
         }
+
+        $this->addUniqueObjectValidator($event, $metadata, $mapping);
     }
 
     /**

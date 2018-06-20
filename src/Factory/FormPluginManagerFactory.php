@@ -7,15 +7,16 @@ declare(strict_types=1);
 namespace Ise\Bread\Factory;
 
 use Interop\Container\ContainerInterface;
+use Ise\Bread\ServiceManager\FormPluginManager;
 use Zend\ServiceManager\Factory\FactoryInterface;
 
 class FormPluginManagerFactory implements FactoryInterface
 {
 
     /**
-     * {@inheritDoc}
+     * @inheritdoc
      */
-    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null): FormPluginManager
     {
         $config = $container->get('Config');
         return new $requestedName(

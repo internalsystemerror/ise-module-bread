@@ -7,6 +7,7 @@ declare(strict_types=1);
 namespace Ise\Bread\Factory;
 
 use Interop\Container\ContainerInterface;
+use Ise\Bread\Service\BreadService;
 use Ise\Bread\ServiceManager\BreadManager;
 use Zend\ServiceManager\Factory\FactoryInterface;
 
@@ -14,9 +15,9 @@ class BreadServiceFactory implements FactoryInterface
 {
 
     /**
-     * {@inheritDoc}
+     * @inheritdoc
      */
-    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null): BreadService
     {
         $breadManager = $container->get(BreadManager::class);
         $serviceClass = $breadManager->getServiceBaseClass($requestedName);

@@ -35,12 +35,13 @@ class ServiceOptions extends AbstractFactoryClassOptions
     ];
 
     /**
-     * {@inheritDoc}
+     * @inheritdoc
+     * @throws \ReflectionException
      */
-    public function setBaseClass($class)
+    public function setBaseClass(string $class): void
     {
         $this->classImplementsInterface($class, ServiceInterface::class);
-        return parent::setBaseClass($class);
+        parent::setBaseClass($class);
     }
 
     /**
@@ -48,7 +49,7 @@ class ServiceOptions extends AbstractFactoryClassOptions
      *
      * @return string[]
      */
-    public function getForms()
+    public function getForms(): array
     {
         return $this->forms;
     }
@@ -64,11 +65,10 @@ class ServiceOptions extends AbstractFactoryClassOptions
      *
      * @param string[] $forms
      *
-     * @return self
+     * @return void
      */
-    public function setForms(array $forms)
+    public function setForms(array $forms): void
     {
         $this->forms = ArrayUtils::merge($this->forms, $forms);
-        return $this;
     }
 }

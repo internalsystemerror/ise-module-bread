@@ -8,13 +8,12 @@ namespace Ise\Bread\Listener;
 
 use Ise\Bread\EventManager\BreadEvent;
 use Ise\Bread\Exception\InvalidArgumentException;
-use Ise\Bread\Options\AbstractClassOptions;
+use Ise\Bread\Options\AbstractFactoryClassOptions;
 use Ise\Bread\Options\BreadOptions;
 use Ise\Bread\Options\ControllerOptions;
 use Ise\Bread\Options\EntityOptions;
 use Ise\Bread\Options\MapperOptions;
 use Ise\Bread\Options\ServiceOptions;
-use ReflectionClass;
 use Zend\EventManager\EventManagerInterface;
 use Zend\EventManager\ListenerAggregateInterface;
 use Zend\EventManager\ListenerAggregateTrait;
@@ -34,14 +33,14 @@ class ConfigListener implements ListenerAggregateInterface
     protected $config;
 
     /**
-     * @var array
+     * @var BreadOptions
      */
     protected $breadConfig;
 
     /**
-     * {@inheritDoc}
+     * @inheritdoc
      */
-    public function attach(EventManagerInterface $events, $priority = 1)
+    public function attach(EventManagerInterface $events, $priority = 1): void
     {
         $this->listeners[] = $events->attach(
             ModuleEvent::EVENT_MERGE_CONFIG,
@@ -54,8 +53,10 @@ class ConfigListener implements ListenerAggregateInterface
      * On merge configuration event
      *
      * @param ModuleEvent $event
+     *
+     * @return void
      */
-    public function onMergeConfig(ModuleEvent $event)
+    public function onMergeConfig(ModuleEvent $event): void
     {
         // Get current config
         $configListener    = $event->getConfigListener();
@@ -96,8 +97,10 @@ class ConfigListener implements ListenerAggregateInterface
      * @param EntityOptions $options
      * @param string        $namespace
      * @param string        $entityName
+     *
+     * @return void
      */
-    public function setupService(EntityOptions $options, $namespace, $entityName)
+    public function setupService(EntityOptions $options, string $namespace, string $entityName): void
     {
         // Get mapper options
         $service = $options->getService();
@@ -137,8 +140,11 @@ class ConfigListener implements ListenerAggregateInterface
      * @param EntityOptions $options
      *
      * @throws InvalidArgumentException
+     * @throws \ReflectionException
+     *
+     * @return void
      */
-    protected function addEntityConfig(EntityOptions $options)
+    protected function addEntityConfig(EntityOptions $options): void
     {
         // Check class
         if (!$options->getClass()) {
@@ -146,7 +152,7 @@ class ConfigListener implements ListenerAggregateInterface
         }
 
         // Get entity details
-        $reflection = new ReflectionClass($options->getClass());
+        $reflection = new \ReflectionClass($options->getClass());
         $namespace  = $reflection->getNamespaceName();
         $baseName   = substr($namespace, 0, strrpos($namespace, '\\'));
         $entityName = $reflection->getShortName();
@@ -167,9 +173,10 @@ class ConfigListener implements ListenerAggregateInterface
      *
      * @param ControllerOptions $options
      *
+     * @return void
      * @throws InvalidArgumentException
      */
-    protected function addControllerConfig(ControllerOptions $options)
+    protected function addControllerConfig(ControllerOptions $options): void
     {
         // Check class
         if (!$options->getClass()) {
@@ -189,15 +196,22 @@ class ConfigListener implements ListenerAggregateInterface
         }
 
         // Add controllers
-        if (!isset($this->config['controllers']['aliases'][$options->getAlias()])) {
+        if (!$this->config['controllers']['aliases'][$options->getAlias()]) {
             $this->config['controllers']['aliases'][$options->getAlias()] = $options->getClass();
         }
-        if (!isset($this->config['controllers']['factories'][$options->getClass()])) {
+        if (!$this->config['controllers']['factories'][$options->getClass()]) {
             $this->config['controllers']['factories'][$options->getClass()] = $options->getFactory();
         }
     }
 
-    protected function addServiceConfig(ServiceOptions $options)
+    /**
+     * Add service config
+     *
+     * @param ServiceOptions $options
+     *
+     * @return void
+     */
+    protected function addServiceConfig(ServiceOptions $options): void
     {
         // Setup manager
         $this->breadConfig->setServiceManager(
@@ -208,7 +222,14 @@ class ConfigListener implements ListenerAggregateInterface
         );
     }
 
-    protected function addMapperConfig(MapperOptions $options)
+    /**
+     * Add mapper config
+     *
+     * @param MapperOptions $options
+     *
+     * @return void
+     */
+    protected function addMapperConfig(MapperOptions $options): void
     {
         // Setup manager
         $this->breadConfig->setMapperManager(
@@ -223,10 +244,12 @@ class ConfigListener implements ListenerAggregateInterface
      * Setup controller configuration for entity
      *
      * @param EntityOptions $options
-     * @param type          $namespace
-     * @param type          $entityName
+     * @param string        $namespace
+     * @param string        $entityName
+     *
+     * @return void
      */
-    protected function setupController(EntityOptions $options, $namespace, $entityName)
+    protected function setupController(EntityOptions $options, string $namespace, string $entityName): void
     {
         // Get controller options, return if null/false
         $controller = $options->getController();
@@ -238,8 +261,8 @@ class ConfigListener implements ListenerAggregateInterface
         }
 
         // Create alias
-        if (!isset($controller['alias']) || !$controller['alias']) {
-            if (!isset($controller['class']) || !$controller['class']) {
+        if (!$controller['alias'] || !$controller['alias']) {
+            if (!$controller['class'] || !$controller['class']) {
                 $controller['alias'] = $namespace . '\Controller\\' . $entityName;
             } else {
                 $controller['alias'] = preg_replace('/Controller$/', '', $controller['class']);
@@ -247,12 +270,12 @@ class ConfigListener implements ListenerAggregateInterface
         }
 
         // Create class
-        if (!isset($controller['class']) || !$controller['class']) {
+        if (!$controller['class'] || !$controller['class']) {
             $controller['class'] = $controller['alias'] . 'Controller';
         }
 
         // Add entity class
-        if (!isset($controller['entityClass'])) {
+        if (!$controller['entityClass']) {
             $controller['entityClass'] = $options->getClass();
         }
 
@@ -267,8 +290,10 @@ class ConfigListener implements ListenerAggregateInterface
      * @param EntityOptions $options
      * @param string        $namespace
      * @param string        $entityName
+     *
+     * @return void
      */
-    protected function setupMapper(EntityOptions $options, $namespace, $entityName)
+    protected function setupMapper(EntityOptions $options, $namespace, $entityName): void
     {
         // Get mapper options
         $mapper = $options->getMapper();
@@ -277,8 +302,8 @@ class ConfigListener implements ListenerAggregateInterface
         }
 
         // Create alias
-        if (!isset($mapper['alias']) || !$mapper['alias']) {
-            if (!isset($mapper['class']) || !$mapper['class']) {
+        if (!$mapper['alias'] || !$mapper['alias']) {
+            if (!$mapper['class'] || !$mapper['class']) {
                 $mapper['alias'] = $namespace . '\Mapper\\' . $entityName;
             } else {
                 $mapper['alias'] = preg_replace('/Mapper/', '', $mapper['class']);
@@ -287,7 +312,7 @@ class ConfigListener implements ListenerAggregateInterface
         }
 
         // Create class
-        if (!isset($mapper['class']) || !$mapper['class']) {
+        if (!$mapper['class'] || !$mapper['class']) {
             $mapper['class'] = $mapper['alias'] . 'Mapper';
         }
 
@@ -299,18 +324,20 @@ class ConfigListener implements ListenerAggregateInterface
     /**
      * Set manager options from options
      *
-     * @param array                $manager
-     * @param AbstractClassOptions $options
+     * @param array                       $manager
+     * @param AbstractFactoryClassOptions $options
+     *
+     * @return array
      */
-    protected function setManagerOptions(array $manager, AbstractClassOptions $options)
+    protected function setManagerOptions(array $manager, AbstractFactoryClassOptions $options): array
     {
         // Add alias
-        if (!isset($manager['aliases'][$options->getAlias()])) {
+        if (!$manager['aliases'][$options->getAlias()]) {
             $manager['aliases'][$options->getAlias()] = $options->getClass();
         }
 
         // Add factory
-        if (!isset($manager['factories'][$options->getClass()])) {
+        if (!$manager['factories'][$options->getClass()]) {
             $manager['factories'][$options->getClass()] = $options->getFactory();
         }
 
@@ -323,8 +350,10 @@ class ConfigListener implements ListenerAggregateInterface
      * @param ServiceOptions $options
      * @param string         $namespace
      * @param string         $entityName
+     *
+     * @return void
      */
-    protected function setupForms(ServiceOptions $options, $namespace, $entityName)
+    protected function setupForms(ServiceOptions $options, string $namespace, string $entityName): void
     {
         // Get forms and namespace
         $forms         = $options->getForms();
@@ -332,7 +361,7 @@ class ConfigListener implements ListenerAggregateInterface
 
         // Loop through Bread available forms
         foreach (BreadEvent::getAvailableForms() as $action) {
-            if (!isset($forms[$action]) || !$forms[$action]) {
+            if (!$forms[$action] || !$forms[$action]) {
                 $forms[$action] = $formNamespace . ucfirst($action);
             }
         }
@@ -347,7 +376,7 @@ class ConfigListener implements ListenerAggregateInterface
      *
      * @return array
      */
-    protected function parseRoutes(array $routes)
+    protected function parseRoutes(array $routes): array
     {
         // Begin parsed routes
         $parsedRoutes = [];
@@ -357,10 +386,10 @@ class ConfigListener implements ListenerAggregateInterface
 
             // Check for child routes
             $childRoutes = [];
-            if (isset($route['child_routes'])) {
+            if ($route['child_routes']) {
                 $childRoutes = $this->parseRoutes($route['child_routes']);
             }
-            if (isset($parsedRoutes[$key]['child_routes'])) {
+            if ($parsedRoutes[$key]['child_routes']) {
                 $parsedRoutes[$key]['child_routes'] = array_merge($parsedRoutes[$key]['child_routes'], $childRoutes);
             }
         }
@@ -374,9 +403,9 @@ class ConfigListener implements ListenerAggregateInterface
      *
      * @return array
      */
-    protected function parseBreadRoutes($route)
+    protected function parseBreadRoutes($route): array
     {
-        if (!isset($route['type']) || $route['type'] !== 'bread') {
+        if (!$route['type'] || $route['type'] !== 'bread') {
             return $route;
         }
 
@@ -385,7 +414,7 @@ class ConfigListener implements ListenerAggregateInterface
             'options'      => ['defaults' => ['action' => BreadEvent::ACTION_INDEX]],
             'child_routes' => $this->createChildRoutes(),
         ];
-        if (isset($route['options']['entity'])) {
+        if ($route['options']['entity']) {
             $entityOptions = $this->breadConfig->getEntity($route['options']['entity']);
             if (!$entityOptions) {
                 throw new InvalidArgumentException(sprintf(
@@ -393,7 +422,7 @@ class ConfigListener implements ListenerAggregateInterface
                     $route['options']['entity']
                 ));
             }
-            if (!isset($route['options']['defaults']['controller'])) {
+            if (!$route['options']['defaults']['controller']) {
                 $controllerOptions = $this->breadConfig->getController($entityOptions->getController());
                 if (!$controllerOptions) {
                     throw new InvalidArgumentException(sprintf(
@@ -407,7 +436,7 @@ class ConfigListener implements ListenerAggregateInterface
         }
 
         $options = ArrayUtils::merge($defaults, $route);
-        if (!isset($options['may_terminate'])) {
+        if (!$options['may_terminate']) {
             $options['may_terminate'] = true;
         }
         $options['type'] = 'literal';
@@ -420,7 +449,7 @@ class ConfigListener implements ListenerAggregateInterface
      *
      * @return array
      */
-    protected function createChildRoutes()
+    protected function createChildRoutes(): array
     {
         // Loop through actions
         $uuidRegex   = trim(Uuid::REGEX_UUID, '/^$');
@@ -448,7 +477,7 @@ class ConfigListener implements ListenerAggregateInterface
      *
      * @return array
      */
-    protected function defaultConstrainedAction($action, $uuidRegex)
+    protected function defaultConstrainedAction(string $action, string $uuidRegex): array
     {
         return [
             'type'    => 'segment',
@@ -467,7 +496,7 @@ class ConfigListener implements ListenerAggregateInterface
      *
      * @return array
      */
-    protected function defaultCreateAction()
+    protected function defaultCreateAction(): array
     {
         return [
             'type'    => 'literal',

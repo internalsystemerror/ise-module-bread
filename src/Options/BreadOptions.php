@@ -6,10 +6,11 @@ declare(strict_types=1);
 
 namespace Ise\Bread\Options;
 
+use Ise\Bread\Exception\InvalidArgumentException;
 use Ise\Bread\Factory\BreadDoctrineOrmMapperFactory;
 use Ise\Bread\Factory\BreadServiceFactory;
 use Ise\Bread\Factory\FormAbstractFactory;
-use Ise\Bread\Mapper\BreadMapper;
+use Ise\Bread\Mapper\DoctrineOrm\BreadMapper;
 use Ise\Bread\Service\BreadService;
 use Zend\Stdlib\AbstractOptions;
 use Zend\Stdlib\ArrayUtils;
@@ -20,29 +21,17 @@ class BreadOptions extends AbstractOptions
     /**
      * @var array[]
      */
-    protected $serviceManager = [
-        'factories' => [
-            BreadService::class => BreadServiceFactory::class,
-        ],
-    ];
+    protected $serviceManagerOptions = ['factories' => [BreadService::class => BreadServiceFactory::class,],];
 
     /**
      * @var array[]
      */
-    protected $mapperManager = [
-        'factories' => [
-            BreadMapper::class => BreadDoctrineOrmMapperFactory::class,
-        ],
-    ];
+    protected $mapperManagerOptions = ['factories' => [BreadMapper::class => BreadDoctrineOrmMapperFactory::class,],];
 
     /**
      * @var array[]
      */
-    protected $formManager = [
-        'abstract_factories' => [
-            FormAbstractFactory::class,
-        ],
-    ];
+    protected $formManagerOptions = ['abstract_factories' => [FormAbstractFactory::class,],];
 
     /**
      * @var array
@@ -52,32 +41,33 @@ class BreadOptions extends AbstractOptions
     /**
      * @var ControllerOptions[]
      */
-    protected $controllers = [];
+    protected $controllerOptions = [];
 
     /**
      * @var ServiceOptions[]
      */
-    protected $services = [];
+    protected $serviceOptions = [];
 
     /**
      * @var MapperOptions[]
      */
-    protected $mappers = [];
+    protected $mapperOptions = [];
 
     /**
      * @var EntityOptions[]
      */
-    protected $entities = [];
+    protected $entityOptions = [];
 
     /**
-     * {@inheritDoc}
+     * @inheritdoc
      */
-    public function toArray()
+    public function toArray(): array
     {
         $array      = parent::toArray();
-        $properties = ['controllers', 'services', 'mappers', 'entities'];
+        $properties = ['controllerOptions', 'serviceOptions', 'mapperOptions', 'entityOptions'];
         foreach ($properties as $property) {
             foreach ($array[$property] as $key => $value) {
+                /** @var AbstractFactoryClassOptions $value */
                 $array[$property][$key] = $value->toArray();
             }
         }
@@ -90,22 +80,21 @@ class BreadOptions extends AbstractOptions
      *
      * @return array[]
      */
-    public function getServiceManager()
+    public function getServiceManagerOptions(): array
     {
-        return $this->serviceManager;
+        return $this->serviceManagerOptions;
     }
 
     /**
      * Set service manager options
      *
-     * @param array[] $serviceManager
+     * @param array[] $serviceManagerOptions
      *
-     * @return self
+     * @return void
      */
-    public function setServiceManager(array $serviceManager)
+    public function setServiceManagerOptions(array $serviceManagerOptions): void
     {
-        $this->serviceManager = ArrayUtils::merge($this->serviceManager, $serviceManager);
-        return $this;
+        $this->serviceManagerOptions = ArrayUtils::merge($this->serviceManagerOptions, $serviceManagerOptions);
     }
 
     /**
@@ -113,22 +102,21 @@ class BreadOptions extends AbstractOptions
      *
      * @return array[]
      */
-    public function getMapperManager()
+    public function getMapperManagerOptions(): array
     {
-        return $this->mapperManager;
+        return $this->mapperManagerOptions;
     }
 
     /**
      * Set mapper manager options
      *
-     * @param array[] $mapperManager
+     * @param array[] $mapperManagerOptions
      *
-     * @return self
+     * @return void
      */
-    public function setMapperManager(array $mapperManager)
+    public function setMapperManagerOptions(array $mapperManagerOptions): void
     {
-        $this->mapperManager = ArrayUtils::merge($this->mapperManager, $mapperManager);
-        return $this;
+        $this->mapperManagerOptions = ArrayUtils::merge($this->mapperManagerOptions, $mapperManagerOptions);
     }
 
     /**
@@ -136,22 +124,21 @@ class BreadOptions extends AbstractOptions
      *
      * @return array[]
      */
-    public function getFormManager()
+    public function getFormManagerOptions(): array
     {
-        return $this->formManager;
+        return $this->formManagerOptions;
     }
 
     /**
      * Set form manager options
      *
-     * @param array[] $formManager
+     * @param array[] $formManagerOptions
      *
-     * @return self
+     * @return void
      */
-    public function setFormManager(array $formManager)
+    public function setFormManagerOptions(array $formManagerOptions): void
     {
-        $this->formManager = ArrayUtils::merge($this->formManager, $formManager);
-        return $this;
+        $this->formManagerOptions = ArrayUtils::merge($this->formManagerOptions, $formManagerOptions);
     }
 
     /**
@@ -159,7 +146,7 @@ class BreadOptions extends AbstractOptions
      *
      * @return array
      */
-    public function getEntityDefaults()
+    public function getEntityDefaults(): array
     {
         return $this->entityDefaults;
     }
@@ -169,41 +156,11 @@ class BreadOptions extends AbstractOptions
      *
      * @param array $defaults
      *
-     * @return self
+     * @return void
      */
-    public function setEntityDefaults(array $defaults)
+    public function setEntityDefaults(array $defaults): void
     {
         $this->entityDefaults = $defaults;
-        return $this;
-    }
-
-    /**
-     * Set controller options
-     *
-     * @param string $class
-     * @param array  $options
-     *
-     * @return self
-     */
-    public function setController($class, array $options)
-    {
-        // Check options is an array
-        if (is_string($options)) {
-            $class   = $options;
-            $options = [];
-        }
-
-        // Create controller options
-        if (!isset($this->controllers[$class])) {
-            $this->controllers[$class] = new ControllerOptions;
-        }
-
-        // Set new controller options
-        if (!isset($options['class'])) {
-            $options['class'] = $class;
-        }
-        $this->controllers[$class]->setFromArray($options);
-        return $this;
     }
 
     /**
@@ -213,13 +170,15 @@ class BreadOptions extends AbstractOptions
      *
      * @return ControllerOptions
      */
-    public function getControllerForEntity($entityClass)
+    public function getControllerOptionsForEntity(string $entityClass): ControllerOptions
     {
-        foreach ($this->controllers as $controller) {
+        foreach ($this->controllerOptions as $controller) {
             if ($controller->getEntityClass() === $entityClass) {
                 return $controller;
             }
         }
+
+        return null;
     }
 
     /**
@@ -227,14 +186,29 @@ class BreadOptions extends AbstractOptions
      *
      * @param string $class
      *
-     * @return ControllerOptions
+     * @return ControllerOptions|null
      */
-    public function getController($class)
+    public function getControllerOptions(string $class): ?ControllerOptions
     {
-        if (!isset($this->controllers[$class])) {
-            return;
+        if (!$this->controllerOptions[$class]) {
+            return null;
         }
-        return $this->controllers[$class];
+
+        return $this->controllerOptions[$class];
+    }
+
+    /**
+     * Set controller options
+     *
+     * @param string       $class
+     * @param array|string $options
+     *
+     * @return void
+     */
+    public function setControllerOptions(string $class, $options): void
+    {
+        $this->parseClassOptions($class, $options);
+        $this->setPropertyOptions($this->controllerOptions, ControllerOptions::class, $class, $options);
     }
 
     /**
@@ -242,24 +216,39 @@ class BreadOptions extends AbstractOptions
      *
      * @return ControllerOptions[]
      */
-    public function getControllers()
+    public function getAllControllerOptions(): array
     {
-        return $this->controllers;
+        return $this->controllerOptions;
     }
 
     /**
      * Set multiple controller options
      *
-     * @param array[] $controllers
+     * @param iterable $controllerOptions
      *
-     * @return self
+     * @return void
      */
-    public function setControllers(array $controllers)
+    public function setManyControllerOptions(iterable $controllerOptions): void
     {
-        foreach ($controllers as $class => $options) {
-            $this->setController($class, $options);
+        foreach ($controllerOptions as $class => $options) {
+            $this->setControllerOptions($class, $options);
         }
-        return $this;
+    }
+
+    /**
+     * Get service options
+     *
+     * @param string $class
+     *
+     * @return ServiceOptions|null
+     */
+    public function getServiceOptions(string $class): ?ServiceOptions
+    {
+        if (!$this->serviceOptions[$class]) {
+            return null;
+        }
+
+        return $this->serviceOptions[$class];
     }
 
     /**
@@ -268,39 +257,12 @@ class BreadOptions extends AbstractOptions
      * @param string       $class
      * @param string|array $options
      *
-     * @return self
+     * @return void
      */
-    public function setService($class, array $options)
+    public function setServiceOptions(string $class, $options): void
     {
-        // Check options is an array
-        if (is_string($options)) {
-            $class   = $options;
-            $options = [];
-        }
-
-        // Create service options
-        if (!isset($this->services[$class])) {
-            $this->services[$class] = new ServiceOptions;
-        }
-
-        // Set new service options
-        $this->services[$class]->setFromArray($options);
-        return $this;
-    }
-
-    /**
-     * Get service options
-     *
-     * @param string $class
-     *
-     * @return ServiceOptions
-     */
-    public function getService($class)
-    {
-        if (!isset($this->services[$class])) {
-            return;
-        }
-        return $this->services[$class];
+        $this->parseClassOptions($class, $options);
+        $this->setPropertyOptions($this->serviceOptions, ServiceOptions::class, $class, $options);
     }
 
     /**
@@ -308,24 +270,39 @@ class BreadOptions extends AbstractOptions
      *
      * @return ServiceOptions[]
      */
-    public function getServices()
+    public function getAllServiceOptions(): array
     {
-        return $this->services;
+        return $this->serviceOptions;
     }
 
     /**
      * Set multiple service options
      *
-     * @param array[] $services
+     * @param iterable $serviceOptions
      *
-     * @return self
+     * @return void
      */
-    public function setServices(array $services)
+    public function setManyServiceOptions(iterable $serviceOptions): void
     {
-        foreach ($services as $class => $options) {
-            $this->setService($class, $options);
+        foreach ($serviceOptions as $class => $options) {
+            $this->setServiceOptions($class, $options);
         }
-        return $this;
+    }
+
+    /**
+     * Get mapper options
+     *
+     * @param string $class
+     *
+     * @return MapperOptions|null
+     */
+    public function getMapperOptions(string $class): ?MapperOptions
+    {
+        if (!$this->mapperOptions[$class]) {
+            return null;
+        }
+
+        return $this->mapperOptions[$class];
     }
 
     /**
@@ -334,39 +311,12 @@ class BreadOptions extends AbstractOptions
      * @param string       $class
      * @param string|array $options
      *
-     * @return self
+     * @return void
      */
-    public function setMapper($class, $options)
+    public function setMapperOptions(string $class, $options): void
     {
-        // Check options is an array
-        if (is_string($options)) {
-            $class   = $options;
-            $options = [];
-        }
-
-        // Create mapper options
-        if (!isset($this->mappers[$class])) {
-            $this->mappers[$class] = new MapperOptions;
-        }
-
-        // Set new mapper options
-        $this->mappers[$class]->setFromArray($options);
-        return $this;
-    }
-
-    /**
-     * Get mapper options
-     *
-     * @param string $class
-     *
-     * @return MapperOptions
-     */
-    public function getMapper($class)
-    {
-        if (!isset($this->mappers[$class])) {
-            return;
-        }
-        return $this->mappers[$class];
+        $this->parseClassOptions($class, $options);
+        $this->setPropertyOptions($this->mapperOptions, MapperOptions::class, $class, $options);
     }
 
     /**
@@ -374,24 +324,39 @@ class BreadOptions extends AbstractOptions
      *
      * @return MapperOptions[]
      */
-    public function getMappers()
+    public function getAllMapperOptions(): array
     {
-        return $this->mappers;
+        return $this->mapperOptions;
     }
 
     /**
      * Set multiple mapper options
      *
-     * @param array[] $mappers
+     * @param iterable $mapperOptions
      *
-     * @return self
+     * @return void
      */
-    public function setMappers(array $mappers)
+    public function setManyMapperOptions(iterable $mapperOptions): void
     {
-        foreach ($mappers as $class => $options) {
-            $this->setMapper($class, $options);
+        foreach ($mapperOptions as $class => $options) {
+            $this->setMapperOptions($class, $options);
         }
-        return $this;
+    }
+
+    /**
+     * Get entity options
+     *
+     * @param string $class
+     *
+     * @return EntityOptions|null
+     */
+    public function getEntityOptions(string $class): ?EntityOptions
+    {
+        if (!$this->entityOptions[$class]) {
+            return null;
+        }
+
+        return $this->entityOptions[$class];
     }
 
     /**
@@ -400,41 +365,13 @@ class BreadOptions extends AbstractOptions
      * @param string       $class
      * @param string|array $options
      *
-     * @return self
+     * @return void
      */
-    public function setEntity($class, $options)
+    public function setEntityOptions(string $class, $options): void
     {
-        // Check options is an array
-        if (is_string($options)) {
-            $class   = $options;
-            $options = $this->getEntityDefaults();
-        } else {
-            $options = ArrayUtils::merge($this->getEntityDefaults(), $options);
-        }
-
-        // Create entity options
-        if (!isset($this->entities[$class])) {
-            $this->entities[$class] = new EntityOptions;
-        }
-
-        // Set new entity options
-        if (!isset($options['class'])) {
-            $options['class'] = $class;
-        }
-        $this->entities[$class]->setFromArray($options);
-        return $this;
-    }
-
-    /**
-     * Get entity options
-     *
-     * @param string $class
-     *
-     * @return EntityOptions
-     */
-    public function getEntity($class)
-    {
-        return $this->entities[$class];
+        $this->parseClassOptions($class, $options);
+        $options = ArrayUtils::merge($this->getEntityDefaults(), $options);
+        $this->setPropertyOptions($this->entityOptions, EntityOptions::class, $class, $options);
     }
 
     /**
@@ -442,23 +379,69 @@ class BreadOptions extends AbstractOptions
      *
      * @return EntityOptions[]
      */
-    public function getEntities()
+    public function getAllEntityOptions(): array
     {
-        return $this->entities;
+        return $this->entityOptions;
     }
 
     /**
      * Set multiple entity options
      *
-     * @param array[] $entities
+     * @param iterable $entities
      *
-     * @return self
+     * @return void
      */
-    public function setEntities(array $entities)
+    public function setManyEntityOptions(iterable $entities): void
     {
         foreach ($entities as $class => $options) {
-            $this->setEntity($class, $options);
+            $this->setEntityOptions($class, $options);
         }
-        return $this;
+    }
+
+    /**
+     * Parse class options
+     *
+     * @param string       $class
+     * @param string|array $options
+     *
+     * @return void
+     */
+    private function parseClassOptions(string &$class, &$options): void
+    {
+        // Check options is an array
+        if (is_string($options)) {
+            $class   = $options;
+            $options = [];
+        }
+        if (!is_array($options)) {
+            throw new InvalidArgumentException(sprintf(
+                'Options must be either a string or array, %s given.',
+                is_object($options) ? get_class($options) : gettype($options)
+            ));
+        }
+    }
+
+    /**
+     * Set class options for a class property
+     *
+     * @param array  $property
+     * @param string $optionsClass
+     * @param string $class
+     * @param array  $options
+     *
+     * @return void
+     */
+    private function setPropertyOptions(array &$property, string $optionsClass, string $class, array $options): void
+    {
+        // Create entity options
+        if (!$property[$class]) {
+            $property[$class] = new $optionsClass;
+        }
+
+        // Set new entity options
+        if (!$options['class']) {
+            $options['class'] = $class;
+        }
+        $property[$class]->setFromArray($options);
     }
 }

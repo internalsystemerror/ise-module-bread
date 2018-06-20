@@ -18,13 +18,15 @@
         "php": "^7.1",
         "zendframework/zend-form": "^2.12.0",
         "zendframework/zend-mvc": "^3.1.1",
+        "zendframework/zend-mvc-plugin-flashmessenger": "^1.1.0",
+        "zendframework/zend-mvc-plugin-prg": "^1.1.0",
         "zendframework/zend-session": "^2.8.5",
         "zendframework/zend-validator": "^2.10.2"
     },
     "require-dev": {
         "doctrine/doctrine-orm-module": "^2.1.2",
-        "ise/php-metapackage-development": "^2.0.2",
-        "ise/ise-module-bootstrap": "^1.0.0"
+        "ise/ise-module-bootstrap": "^1.0.0",
+        "ise/php-metapackage-development": "^2.0.2"
     },
     "suggest": {
         "ise/ise-module-bootstrap": "For use in MVC applications",

@@ -18,7 +18,7 @@ class BreadActionControllerFactory implements FactoryInterface
 {
 
     /**
-     * {@inheritDoc}
+     * @inheritdoc
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
@@ -40,9 +40,9 @@ class BreadActionControllerFactory implements FactoryInterface
      */
     protected function createControllerFactory(
         ContainerInterface $container,
-        $requestedName,
+        string $requestedName,
         BreadEventManager $breadEventManager
-    ) {
+    ): ControllerInterface {
         /** @var BreadManager $breadManager */
         $breadManager      = $container->get(BreadManager::class);
         $controllerClass   = $breadManager->getControllerBaseClass($requestedName);
@@ -73,10 +73,10 @@ class BreadActionControllerFactory implements FactoryInterface
     protected function createController(
         BreadEventManager $breadEventManager,
         BreadManager $breadManager,
-        $requestedName,
-        $controllerClass,
+        string $requestedName,
+        string $controllerClass,
         ControllerOptions $controllerOptions
-    ) {
+    ): ControllerInterface {
         return new $controllerClass(
             $breadEventManager,
             $breadManager->getService($breadManager->getServiceClassFromControllerClass($requestedName)),

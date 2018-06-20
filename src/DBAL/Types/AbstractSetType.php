@@ -8,15 +8,18 @@ namespace Ise\Bread\DBAL\Types;
 
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
+use Doctrine\DBAL\Types\Type;
 use InvalidArgumentException;
 
-abstract class AbstractSetType extends AbstractEnumType
+abstract class AbstractSetType extends Type
 {
 
+    use EnumTrait;
+
     /**
-     * {@inheritDoc}
+     * @inheritdoc
      */
-    public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
+    public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform): string
     {
         if (!$platform instanceof MySqlPlatform) {
             return $platform->getClobTypeDeclarationSQL($fieldDeclaration);
@@ -27,9 +30,9 @@ abstract class AbstractSetType extends AbstractEnumType
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritdoc
      */
-    public function convertToDatabaseValue($value, AbstractPlatform $platform)
+    public function convertToDatabaseValue($value, AbstractPlatform $platform): ?string
     {
         if (!is_array($value) || count($value) <= 0) {
             return null;
@@ -51,9 +54,9 @@ abstract class AbstractSetType extends AbstractEnumType
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritdoc
      */
-    public function convertToPHPValue($value, AbstractPlatform $platform)
+    public function convertToPHPValue($value, AbstractPlatform $platform): array
     {
         if ($value === null || $value === '') {
             return [];

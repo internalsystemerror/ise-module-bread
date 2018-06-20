@@ -7,7 +7,6 @@ declare(strict_types=1);
 namespace Ise\Bread\Options;
 
 use Ise\Bread\Exception\InvalidArgumentException;
-use ReflectionClass;
 use Zend\Stdlib\AbstractOptions;
 
 abstract class AbstractClassOptions extends AbstractOptions
@@ -28,7 +27,7 @@ abstract class AbstractClassOptions extends AbstractOptions
      *
      * @return string
      */
-    public function getAlias()
+    public function getAlias(): string
     {
         return $this->alias;
     }
@@ -37,11 +36,12 @@ abstract class AbstractClassOptions extends AbstractOptions
      * Set alias
      *
      * @param string $alias
+     *
+     * @return void
      */
-    public function setAlias($alias)
+    public function setAlias(string $alias): void
     {
-        $this->alias = (string)$alias;
-        return $this;
+        $this->alias = $alias;
     }
 
     /**
@@ -49,7 +49,7 @@ abstract class AbstractClassOptions extends AbstractOptions
      *
      * @return string
      */
-    public function getClass()
+    public function getClass(): string
     {
         return $this->class;
     }
@@ -59,12 +59,11 @@ abstract class AbstractClassOptions extends AbstractOptions
      *
      * @param string $class
      *
-     * @return self
+     * @return void
      */
-    public function setClass($class)
+    public function setClass(string $class): void
     {
-        $this->class = (string)$class;
-        return $this;
+        $this->class = $class;
     }
 
     /**
@@ -74,26 +73,25 @@ abstract class AbstractClassOptions extends AbstractOptions
      * @param string $interface
      *
      * @throws InvalidArgumentException
+     * @throws \ReflectionException
      */
-    protected function classImplementsInterface($class, $interface)
+    protected function classImplementsInterface(string $class, string $interface): void
     {
         // Check class exists
-        $classString = (string)$class;
-        if (!class_exists($classString)) {
+        if (!class_exists($class)) {
             throw new InvalidArgumentException(sprintf(
                 'Class "%s" does not exist.',
-                $classString
+                $class
             ));
         }
 
         // Check class implements interface
-        $reflection      = new ReflectionClass($classString);
-        $interfaceString = (string)$interface;
-        if (!$reflection->implementsInterface($interfaceString)) {
+        $reflection = new \ReflectionClass($class);
+        if (!$reflection->implementsInterface($interface)) {
             throw new InvalidArgumentException(sprintf(
                 'Class "%s" does not implement the interface "%s".',
-                $classString,
-                $interfaceString
+                $class,
+                $interface
             ));
         }
     }

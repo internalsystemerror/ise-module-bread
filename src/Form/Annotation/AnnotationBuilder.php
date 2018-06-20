@@ -12,11 +12,11 @@ class AnnotationBuilder extends DoctrineAnnotationBuilder
 {
 
     /**
-     * {@inheritDoc}
+     * @inheritdoc
      */
-    public function getFormSpecification($entity)
+    public function getFormSpecification($entity): array
     {
-        $formSpec                                        = parent::getFormSpecification($entity);
+        $formSpec                                        = (array)parent::getFormSpecification($entity);
         $formSpec['options']['prefer_form_input_filter'] = false;
         return $formSpec;
     }

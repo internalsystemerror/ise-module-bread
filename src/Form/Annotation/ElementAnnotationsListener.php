@@ -26,20 +26,26 @@ class ElementAnnotationsListener extends AbstractListenerAggregate
     protected $objectManager;
 
     /**
+     * @var string|null
+     */
+    protected $actionType;
+
+    /**
      * Constructor
      *
      * @param ObjectManager $objectManager
+     * @param string|null   $actionType
      */
-    public function __construct(ObjectManager $objectManager, $actionType = null)
+    public function __construct(ObjectManager $objectManager, string $actionType = null)
     {
         $this->objectManager = $objectManager;
         $this->actionType    = $actionType;
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritdoc
      */
-    public function attach(EventManagerInterface $events, $priority = 1)
+    public function attach(EventManagerInterface $events, $priority = 1): void
     {
         $this->listeners[] = $events->attach(
             AnnotationBuilder::EVENT_CONFIGURE_FIELD,
@@ -60,7 +66,7 @@ class ElementAnnotationsListener extends AbstractListenerAggregate
      *
      * @return void
      */
-    public function handleIdentifierFields(EventInterface $event)
+    public function handleIdentifierFields(EventInterface $event): void
     {
         $name     = $event->getParam('name');
         $metadata = $event->getParam('metadata');
@@ -89,8 +95,10 @@ class ElementAnnotationsListener extends AbstractListenerAggregate
      * Handle unique fields
      *
      * @param EventInterface $event
+     *
+     * @return void
      */
-    public function handleUniqueFields(EventInterface $event)
+    public function handleUniqueFields(EventInterface $event): void
     {
         $name     = $event->getParam('name');
         $metadata = $event->getParam('metadata');
@@ -117,7 +125,7 @@ class ElementAnnotationsListener extends AbstractListenerAggregate
      *
      * @return array
      */
-    protected function getEventElementSpec(EventInterface $event)
+    protected function getEventElementSpec(EventInterface $event): array
     {
         $elementSpec = $event->getParam('elementSpec');
         if (!$elementSpec) {
@@ -137,7 +145,7 @@ class ElementAnnotationsListener extends AbstractListenerAggregate
      *
      * @return array
      */
-    protected function getEventInputSpec(EventInterface $event)
+    protected function getEventInputSpec(EventInterface $event): array
     {
         $inputSpec = $event->getParam('inputSpec');
         if (!$inputSpec) {
@@ -156,8 +164,10 @@ class ElementAnnotationsListener extends AbstractListenerAggregate
      * @param EventInterface $event
      * @param ClassMetadata  $metadata
      * @param array          $mapping
+     *
+     * @return void
      */
-    protected function addNoObjectExistsValidator(EventInterface $event, ClassMetadata $metadata, array $mapping)
+    protected function addNoObjectExistsValidator(EventInterface $event, ClassMetadata $metadata, array $mapping): void
     {
         $inputSpec                 = $this->getEventInputSpec($event);
         $inputSpec['validators'][] = [
@@ -178,8 +188,10 @@ class ElementAnnotationsListener extends AbstractListenerAggregate
      * @param EventInterface $event
      * @param ClassMetadata  $metadata
      * @param array          $mapping
+     *
+     * @return void
      */
-    protected function addUniqueObjectValidator(EventInterface $event, ClassMetadata $metadata, array $mapping)
+    protected function addUniqueObjectValidator(EventInterface $event, ClassMetadata $metadata, array $mapping): void
     {
         $inputSpec                 = $this->getEventInputSpec($event);
         $inputSpec['validators'][] = [

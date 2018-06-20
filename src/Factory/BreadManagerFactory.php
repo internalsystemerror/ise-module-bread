@@ -8,6 +8,7 @@ namespace Ise\Bread\Factory;
 
 use Interop\Container\ContainerInterface;
 use Ise\Bread\Options\BreadOptions;
+use Ise\Bread\ServiceManager\BreadManager;
 use Ise\Bread\ServiceManager\FormPluginManager;
 use Ise\Bread\ServiceManager\MapperPluginManager;
 use Ise\Bread\ServiceManager\ServicePluginManager;
@@ -17,16 +18,15 @@ class BreadManagerFactory implements FactoryInterface
 {
 
     /**
-     * {@inheritDoc}
+     * @inheritdoc
      */
-    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null): BreadManager
     {
-        $config = $container->get('Config');
         return new $requestedName(
             $container->get(ServicePluginManager::class),
             $container->get(MapperPluginManager::class),
             $container->get(FormPluginManager::class),
-            new BreadOptions($config['ise']['bread'])
+            new BreadOptions($container->get('Config')['ise']['bread'])
         );
     }
 }

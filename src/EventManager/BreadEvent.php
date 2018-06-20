@@ -7,7 +7,9 @@ declare(strict_types=1);
 namespace Ise\Bread\EventManager;
 
 use Ise\Bread\Entity\EntityInterface;
+use Ise\Bread\Exception\InvalidArgumentException;
 use Zend\EventManager\Event;
+use Zend\Form\FormInterface;
 use Zend\View\Model\ViewModel;
 
 class BreadEvent extends Event
@@ -82,16 +84,21 @@ class BreadEvent extends Event
     protected $form;
 
     /**
-     * @var boolean|array
+     * @var bool|array
      */
     protected $prgData;
+
+    /**
+     * @var ViewModel
+     */
+    protected $viewModel;
 
     /**
      * Get the list of available bread actions
      *
      * @return string[]
      */
-    public static function getAvailableActions()
+    public static function getAvailableActions(): array
     {
         return static::$availableActions;
     }
@@ -101,7 +108,7 @@ class BreadEvent extends Event
      *
      * @return string[]
      */
-    public static function getAvailableForms()
+    public static function getAvailableForms(): array
     {
         return static::$availableForms;
     }
@@ -111,7 +118,7 @@ class BreadEvent extends Event
      *
      * @return string
      */
-    public function getAction()
+    public function getAction(): string
     {
         return $this->action;
     }
@@ -121,12 +128,11 @@ class BreadEvent extends Event
      *
      * @param string $action
      *
-     * @return self
+     * @return void
      */
-    public function setAction($action)
+    public function setAction(string $action): void
     {
-        $this->action = (string)$action;
-        return $this;
+        $this->action = $action;
     }
 
     /**
@@ -134,7 +140,7 @@ class BreadEvent extends Event
      *
      * @return EntityInterface
      */
-    public function getEntity()
+    public function getEntity(): EntityInterface
     {
         return $this->entity;
     }
@@ -144,12 +150,11 @@ class BreadEvent extends Event
      *
      * @param EntityInterface $entity
      *
-     * @return self
+     * @return void
      */
-    public function setEntity(EntityInterface $entity)
+    public function setEntity(EntityInterface $entity): void
     {
         $this->entity = $entity;
-        return $this;
     }
 
     /**
@@ -167,18 +172,25 @@ class BreadEvent extends Event
      *
      * @param string|FormInterface $form
      *
-     * @return self
+     * @return void
      */
-    public function setForm($form)
+    public function setForm($form): void
     {
+        if (!is_string($form) || !$form instanceof FormInterface) {
+            throw new InvalidArgumentException(sprintf(
+                'String or instance of %s expected. %s given.',
+                FormInterface::class,
+                is_object($form) ? get_class($form) : gettype($form)
+            ));
+        }
+
         $this->form = $form;
-        return $this;
     }
 
     /**
      * Get the PRG data
      *
-     * @return boolean|array
+     * @return bool|array
      */
     public function getPrgData()
     {
@@ -188,14 +200,30 @@ class BreadEvent extends Event
     /**
      * Set the PRG data
      *
-     * @param boolean|array $data
+     * @param bool|iterable $data
      *
-     * @return self
+     * @return void
      */
-    public function setPrgData($data)
+    public function setPrgData($data): void
     {
+        if ($data !== false && !is_array($data)) {
+            throw new InvalidArgumentException(sprintf(
+                'String or array expected. %s given.',
+                is_object($data) ? get_class($data) : gettype($data)
+            ));
+        }
+
         $this->prgData = $data;
-        return $this;
+    }
+
+    /**
+     * Get the view model
+     *
+     * @return ViewModel
+     */
+    public function getViewModel(): ViewModel
+    {
+        return $this->viewModel;
     }
 
     /**
@@ -205,19 +233,8 @@ class BreadEvent extends Event
      *
      * @return self
      */
-    public function setViewModel(ViewModel $viewModel)
+    public function setViewModel(ViewModel $viewModel): void
     {
         $this->viewModel = $viewModel;
-        return $this;
-    }
-
-    /**
-     * Get the view model
-     *
-     * @return ViewModel
-     */
-    public function getViewModel()
-    {
-        return $this->viewModel;
     }
 }

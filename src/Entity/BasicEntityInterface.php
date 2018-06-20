@@ -14,30 +14,30 @@ interface BasicEntityInterface extends EntityInterface
      *
      * @param string $name
      *
-     * @return Permission
+     * @return void
      */
-    public function setName($name);
+    public function setName($name): void;
 
     /**
      * Get name
      *
      * @return string
      */
-    public function getName();
+    public function getName(): string;
 
     /**
      * Set description
      *
-     * @param string $description
+     * @param string|null $description
      *
-     * @return Permission
+     * @return void
      */
-    public function setDescription($description);
+    public function setDescription(string $description = null): void;
 
     /**
      * Get description
      *
      * @return string
      */
-    public function getDescription();
+    public function getDescription(): string;
 }

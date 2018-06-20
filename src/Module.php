@@ -14,7 +14,7 @@ class Module implements ConfigProviderInterface, InitProviderInterface
 {
 
     /**
-     * {@inheritDoc}
+     * @inheritdoc
      */
     public function init(ModuleManagerInterface $moduleManager)
     {
@@ -25,7 +25,7 @@ class Module implements ConfigProviderInterface, InitProviderInterface
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritdoc
      */
     public function getConfig()
     {

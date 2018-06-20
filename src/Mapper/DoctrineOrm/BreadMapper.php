@@ -7,11 +7,11 @@ declare(strict_types=1);
 namespace Ise\Bread\Mapper\DoctrineOrm;
 
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\ConnectionException;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
-use Exception;
+use Doctrine\ORM\ORMException;
 use Ise\Bread\Entity\EntityInterface;
-use Traversable;
 
 /**
  * @SuppressWarnings(PHPMD.ShortVariableName)
@@ -35,7 +35,7 @@ class BreadMapper implements MapperInterface
     protected $connection;
 
     /**
-     * {@inheritDoc}
+     * @inheritdoc
      */
     public function __construct(EntityManager $entityManager, EntityRepository $entityRepository)
     {
@@ -45,119 +45,105 @@ class BreadMapper implements MapperInterface
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritdoc
      */
-    public function browse(array $criteria = [], array $orderBy = [], $limit = null, $offset = null)
+    public function browse(array $criteria = [], array $orderBy = [], int $limit = null, int $offset = null): array
     {
         return $this->entityRepository->findBy($criteria, $orderBy, $limit, $offset);
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritdoc
      */
-    public function read($id)
+    public function read(string $id): ?EntityInterface
     {
-        return $this->entityRepository->find($id);
+        return $this->validateEntity($this->entityRepository->find($id));
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritdoc
      */
-    public function readBy(array $criteria)
+    public function readBy(array $criteria): ?EntityInterface
     {
-        return $this->entityRepository->findOneBy($criteria);
+        return $this->validateEntity($this->entityRepository->findOneBy($criteria));
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritdoc
      */
-    public function add(EntityInterface $entity)
+    public function add(EntityInterface $entity): void
     {
-        return $this->persist($entity);
+        $this->persist($entity);
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritdoc
      */
-    public function addMany(Traversable $entities)
+    public function addMany(iterable $entities): void
     {
-        return $this->persistMany($entities);
+        $this->persistMany($entities);
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritdoc
      */
-    public function edit(EntityInterface $entity)
+    public function edit(EntityInterface $entity): void
     {
-        return $this->persist($entity);
+        $this->persist($entity);
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritdoc
      */
-    public function editMany(Traversable $entities)
+    public function editMany(iterable $entities): void
     {
-        return $this->persistMany($entities);
+        $this->persistMany($entities);
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritdoc
      */
-    public function delete(EntityInterface $entity)
+    public function delete(EntityInterface $entity): void
     {
-        try {
+        $this->entityManager->remove($entity);
+        $this->entityManager->flush();
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function deleteMany(iterable $entities): void
+    {
+        foreach ($entities as $entity) {
             $this->entityManager->remove($entity);
-            $this->entityManager->flush();
-            return $entity;
-        } catch (Exception $e) {
-            if (APPLICATION_ENV === 'development') {
-                throw $e;
-            }
-            return false;
         }
+        $this->entityManager->flush();
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritdoc
      */
-    public function deleteMany(Traversable $entities)
+    public function beginTransaction(): void
     {
-        try {
-            foreach ($entities as $entity) {
-                $this->entityManager->remove($entity);
-            }
-            $this->entityManager->flush();
-            return $entities;
-        } catch (Exception $e) {
-            if (APPLICATION_ENV === 'development') {
-                throw $e;
-            }
-            return false;
-        }
+        $this->connection->beginTransaction();
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritdoc
+     * @throws ConnectionException
      */
-    public function beginTransaction()
+    public function commit(): void
     {
-        return $this->connection->beginTransaction();
+        $this->connection->commit();
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritdoc
+     * @throws ConnectionException
      */
-    public function commit()
+    public function rollback(): void
     {
-        return $this->connection->commit();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function rollback()
-    {
-        return $this->connection->rollback();
+        $this->connection->rollback();
     }
 
     /**
@@ -165,43 +151,40 @@ class BreadMapper implements MapperInterface
      *
      * @param EntityInterface $entity
      *
-     * @return EntityInterface|boolean
-     * @throws Exception
+     * @return void
+     * @throws ORMException
      */
-    protected function persist(EntityInterface $entity)
+    protected function persist(EntityInterface $entity): void
     {
-        try {
-            $this->entityManager->persist($entity);
-            $this->entityManager->flush();
-            return $entity;
-        } catch (Exception $e) {
-            if (APPLICATION_ENV === 'development') {
-                throw $e;
-            }
-            return false;
-        }
+        $this->entityManager->persist($entity);
+        $this->entityManager->flush();
     }
 
     /**
      * Persist many entities
      *
-     * @param EntityInterface[] $entities
+     * @param iterable $entities
      *
-     * @return EntityInterface[]|boolean
+     * @return void
+     * @throws ORMException
      */
-    protected function persistMany(Traversable $entities)
+    protected function persistMany(iterable $entities): void
     {
-        try {
-            foreach ($entities as $entity) {
-                $this->entityManager->persist($entity);
-            }
-            $this->entityManager->flush();
-            return $entities;
-        } catch (Exception $e) {
-            if (APPLICATION_ENV === 'development') {
-                throw $e;
-            }
-            return false;
+        foreach ($entities as $entity) {
+            $this->entityManager->persist($entity);
         }
+        $this->entityManager->flush();
+    }
+
+    /**
+     * Validate entity
+     *
+     * @param EntityInterface|null $entity
+     *
+     * @return EntityInterface|null
+     */
+    private function validateEntity(EntityInterface $entity = null)
+    {
+        return $entity;
     }
 }

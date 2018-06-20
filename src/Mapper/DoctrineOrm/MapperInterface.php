@@ -16,7 +16,8 @@ interface MapperInterface extends IseMapperInterface
     /**
      * Constructor
      *
-     * @param EntityManager $entityManager
+     * @param EntityManager    $entityManager
+     * @param EntityRepository $entityRepository
      */
     public function __construct(EntityManager $entityManager, EntityRepository $entityRepository);
 }

@@ -24,15 +24,14 @@ abstract class AbstractFactoryClassOptions extends AbstractClassOptions
      *
      * @param string $class
      *
-     * @return self
+     * @return void
      */
-    public function setClass($class)
+    public function setClass(string $class): void
     {
         parent::setClass($class);
-        if (class_exists($this->class)) {
-            $this->setBaseClass($this->class);
+        if (class_exists($class)) {
+            $this->setBaseClass($class);
         }
-        return $this;
     }
 
     /**
@@ -40,7 +39,7 @@ abstract class AbstractFactoryClassOptions extends AbstractClassOptions
      *
      * @return string
      */
-    public function getBaseClass()
+    public function getBaseClass(): string
     {
         return $this->baseClass;
     }
@@ -50,12 +49,11 @@ abstract class AbstractFactoryClassOptions extends AbstractClassOptions
      *
      * @param string $class
      *
-     * @return self
+     * @return void
      */
-    public function setBaseClass($class)
+    public function setBaseClass(string $class): void
     {
-        $this->baseClass = (string)$class;
-        return $this;
+        $this->baseClass = $class;
     }
 
     /**
@@ -63,7 +61,7 @@ abstract class AbstractFactoryClassOptions extends AbstractClassOptions
      *
      * @return string
      */
-    public function getFactory()
+    public function getFactory(): string
     {
         return $this->factory;
     }
@@ -73,11 +71,10 @@ abstract class AbstractFactoryClassOptions extends AbstractClassOptions
      *
      * @param string $factory
      *
-     * @return self
+     * @return void
      */
-    public function setFactory($factory)
+    public function setFactory(string $factory): void
     {
-        $this->factory = (string)$factory;
-        return $this;
+        $this->factory = $factory;
     }
 }

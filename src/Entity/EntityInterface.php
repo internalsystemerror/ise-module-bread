@@ -6,8 +6,6 @@ declare(strict_types=1);
 
 namespace Ise\Bread\Entity;
 
-use DateTime;
-
 interface EntityInterface
 {
 
@@ -21,60 +19,60 @@ interface EntityInterface
      *
      * @return string
      */
-    public function __toString();
+    public function __toString(): string;
 
     /**
      * Get id
      *
      * @return string
      */
-    public function getId();
+    public function getId(): string;
 
     /**
      * Set disabled
      *
-     * @param boolean $disabled
+     * @param bool $disabled
      *
-     * @return self
+     * @return void
      */
-    public function setDisabled($disabled);
+    public function setDisabled(bool $disabled): void;
 
     /**
      * Is disabled
      *
-     * @return boolean
+     * @return bool
      */
-    public function isDisabled();
+    public function isDisabled(): bool;
 
     /**
      * Set last modified
      *
-     * @param DateTime $lastModifed Last modified date
+     * @param \DateTime $lastModifed Last modified date
      *
-     * @return self
+     * @return void
      */
-    public function setLastModified(DateTime $lastModifed);
+    public function setLastModified(\DateTime $lastModifed): void;
 
     /**
      * Get last modified
      *
-     * @return DateTime
+     * @return \DateTime
      */
-    public function getLastModified();
+    public function getLastModified(): \DateTime;
 
     /**
      * Set created
      *
-     * @param DateTime $created Created date
+     * @param \DateTime $created Created date
      *
-     * @return self
+     * @return void
      */
-    public function setCreated(DateTime $created);
+    public function setCreated(\DateTime $created): void;
 
     /**
      * Get created
      *
-     * @return DateTime
+     * @return \DateTime
      */
     public function getCreated();
 }

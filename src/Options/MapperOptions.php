@@ -24,11 +24,12 @@ class MapperOptions extends AbstractFactoryClassOptions
     protected $factory = BreadDoctrineOrmMapperFactory::class;
 
     /**
-     * {@inheritDoc}
+     * @inheritdoc
+     * @throws \ReflectionException
      */
-    public function setBaseClass($class)
+    public function setBaseClass(string $class): void
     {
         $this->classImplementsInterface($class, MapperInterface::class);
-        return parent::setBaseClass($class);
+        parent::setBaseClass($class);
     }
 }

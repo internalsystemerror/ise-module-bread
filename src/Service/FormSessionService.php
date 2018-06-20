@@ -35,7 +35,7 @@ class FormSessionService
      *
      * @return Container
      */
-    public function __invoke()
+    public function __invoke(): Container
     {
         return $this->sessionContainer;
     }
@@ -45,29 +45,31 @@ class FormSessionService
      *
      * @param Form $form
      */
-    public function saveForm(Form $form)
+    public function saveForm(Form $form): void
     {
         $name = $form->getName();
-        if (!isset($this->sessionContainer[$name])) {
+        if (!$this->sessionContainer[$name]) {
             $this->sessionContainer[$name] = [];
         }
-        $this->sessionContainer[$name][self::KEY_MESSAGES] = (array)$form->getMessages();
-        $this->sessionContainer[$name][self::KEY_DATA]     = (array)$form->getInputFilter()->getRawValues();
+        $this->sessionContainer[$name][self::KEY_MESSAGES] = $form->getMessages();
+        $this->sessionContainer[$name][self::KEY_DATA]     = $form->getInputFilter()->getRawValues();
     }
 
     /**
      * Load form from session
      *
      * @param Form $form
+     *
+     * @return void
      */
-    public function loadForm(Form $form)
+    public function loadForm(Form $form): void
     {
         $name = $form->getName();
-        if (isset($this->sessionContainer[$name][self::KEY_MESSAGES])) {
+        if ($this->sessionContainer[$name][self::KEY_MESSAGES]) {
             $form->setMessages($this->sessionContainer[$name][self::KEY_MESSAGES]);
             unset($this->sessionContainer[$name][self::KEY_MESSAGES]);
         }
-        if (isset($this->sessionContainer[$name][self::KEY_DATA])) {
+        if ($this->sessionContainer[$name][self::KEY_DATA]) {
             $form->setData($this->sessionContainer[$name][self::KEY_DATA]);
             unset($this->sessionContainer[$name][self::KEY_DATA]);
         }

@@ -7,7 +7,6 @@ declare(strict_types=1);
 namespace Ise\Bread\Mapper;
 
 use Ise\Bread\Entity\EntityInterface;
-use Traversable;
 
 /**
  * @SuppressWarnings(PHPMD.ShortVariableName)
@@ -18,97 +17,111 @@ interface MapperInterface
     /**
      * Browse entities
      *
-     * @param  array        $criteria
-     * @param  array        $orderBy
-     * @param  null|integer $limit
-     * @param  null|integer $offset
+     * @param  array    $criteria
+     * @param  array    $orderBy
+     * @param  null|int $limit
+     * @param  null|int $offset
      *
      * @return EntityInterface[]
      */
-    public function browse(array $criteria = [], array $orderBy = [], $limit = null, $offset = null);
+    public function browse(array $criteria = [], array $orderBy = [], int $limit = null, int $offset = null): array;
 
     /**
      * Read entity
      *
-     * @param  integer $id
+     * @param  string $id
      *
-     * @return EntityInterface
+     * @return EntityInterface|null
      */
-    public function read($id);
+    public function read(string $id): ?EntityInterface;
 
     /**
      * Read an entity by criteria
      *
      * @param array $criteria
      *
-     * @return EntityInterface
+     * @return EntityInterface|null
      */
-    public function readBy(array $criteria);
+    public function readBy(array $criteria): ?EntityInterface;
 
     /**
      * Add entity
      *
      * @param  EntityInterface $entity
      *
-     * @return boolean|EntityInterface
+     * @return void
+     * @throws \Exception
      */
-    public function add(EntityInterface $entity);
+    public function add(EntityInterface $entity): void;
 
     /**
      * Add many entities
      *
-     * @param EntityInterface[] $entities
+     * @param iterable $entities
      *
-     * @return boolean|EntityInterface[]
+     * @return void
+     * @throws \Exception
      */
-    public function addMany(Traversable $entities);
+    public function addMany(iterable $entities): void;
 
     /**
      * Edit entity
      *
      * @param  EntityInterface $entity
      *
-     * @return boolean|EntityInterface
+     * @return void
+     * @throws \Exception
      */
-    public function edit(EntityInterface $entity);
+    public function edit(EntityInterface $entity): void;
 
     /**
      * Edit many entities
      *
-     * @param EntityInterface[] $entities
+     * @param iterable $entities
      *
-     * @return boolean|EntityInterface[]
+     * @return void
+     * @throws \Exception
      */
-    public function editMany(Traversable $entities);
+    public function editMany(iterable $entities): void;
 
     /**
      * Delete entity
      *
      * @param  EntityInterface $entity
      *
-     * @return boolean|EntityInterface
+     * @return void
+     * @throws \Exception
      */
-    public function delete(EntityInterface $entity);
+    public function delete(EntityInterface $entity): void;
 
     /**
      * Delete many entities
      *
-     * @param Traversable $entities
+     * @param iterable $entities
+     *
+     * @return void
+     * @throws \Exception
      */
-    public function deleteMany(Traversable $entities);
+    public function deleteMany(iterable $entities): void;
 
     /**
      * Begin transaction
+     *
+     * @return void
      */
-    public function beginTransaction();
+    public function beginTransaction(): void;
 
     /**
      * Commit transaction
+     *
+     * @return void
      */
-    public function commit();
+    public function commit(): void;
 
     /**
      * Rollback transaction
+     *
+     * @return void
      */
-    public function rollback();
+    public function rollback(): void;
 }

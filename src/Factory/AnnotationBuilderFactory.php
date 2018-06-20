@@ -15,13 +15,10 @@ class AnnotationBuilderFactory implements FactoryInterface
 {
 
     /**
-     * {@inheritDoc}
+     * @inheritdoc
      */
-    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null): AnnotationBuilder
     {
-        if (!$requestedName) {
-            $requestedName = AnnotationBuilder::class;
-        }
         return new $requestedName($container->get(EntityManager::class));
     }
 }

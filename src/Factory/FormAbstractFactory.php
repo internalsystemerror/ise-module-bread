@@ -12,6 +12,7 @@ use DoctrineORMModule\Form\Element\EntityMultiCheckbox;
 use DoctrineORMModule\Form\Element\EntityRadio;
 use DoctrineORMModule\Form\Element\EntitySelect;
 use Interop\Container\ContainerInterface;
+use Ise\Bread\Entity\EntityInterface;
 use Ise\Bread\EventManager\BreadEvent;
 use Ise\Bread\Form\Annotation\AnnotationBuilder;
 use Ise\Bread\Form\Annotation\ElementAnnotationsListener;
@@ -22,9 +23,9 @@ class FormAbstractFactory implements AbstractFactoryInterface
 {
 
     /**
-     * {@inheritDoc}
+     * @inheritdoc
      */
-    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null): Form
     {
         // Create entity
         $formType    = $this->translateFormToType($requestedName);
@@ -74,9 +75,9 @@ class FormAbstractFactory implements AbstractFactoryInterface
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritdoc
      */
-    public function canCreate(ContainerInterface $container, $requestedName)
+    public function canCreate(ContainerInterface $container, $requestedName): bool
     {
         // Does entity class exist
         return (bool)$this->translateFormToEntity($requestedName);
@@ -87,8 +88,10 @@ class FormAbstractFactory implements AbstractFactoryInterface
      *
      * @param Form   $form
      * @param string $submitText
+     *
+     * @return void
      */
-    public function addButtonsToForm(Form $form, $submitText)
+    public function addButtonsToForm(Form $form, $submitText): void
     {
         $form->add([
             'type'       => 'fieldset',
@@ -109,8 +112,10 @@ class FormAbstractFactory implements AbstractFactoryInterface
      *
      * @param Form          $form
      * @param EntityManager $entityManager
+     *
+     * @return void
      */
-    protected function injectEntityManagerIntoElements(Form $form, EntityManager $entityManager)
+    protected function injectEntityManagerIntoElements(Form $form, EntityManager $entityManager): void
     {
         foreach ($form->getElements() as $element) {
             switch (true) {
@@ -132,7 +137,7 @@ class FormAbstractFactory implements AbstractFactoryInterface
      *
      * @return array
      */
-    protected function specElementCsrf()
+    protected function specElementCsrf(): array
     {
         return [
             'spec' => ['type' => 'csrf', 'name' => 'security'],
@@ -144,7 +149,7 @@ class FormAbstractFactory implements AbstractFactoryInterface
      *
      * @return array
      */
-    protected function specElementCancel()
+    protected function specElementCancel(): array
     {
         return [
             'spec' => [
@@ -168,7 +173,7 @@ class FormAbstractFactory implements AbstractFactoryInterface
      *
      * @return array
      */
-    protected function specElementSubmit($submitText)
+    protected function specElementSubmit(string $submitText): array
     {
         return [
             'spec' => [
@@ -191,16 +196,16 @@ class FormAbstractFactory implements AbstractFactoryInterface
      *
      * @param  string $formName
      *
-     * @return boolean
+     * @return EntityInterface
      */
-    protected function translateFormToEntity($formName)
+    protected function translateFormToEntity(string $formName): ?EntityInterface
     {
         $entityClass = trim(str_replace('Form', 'Entity', substr($formName, 0, strrpos($formName, '\\'))), '\\');
         if (!$entityClass) {
-            return false;
+            return null;
         }
         $entityClass = '\\' . ucfirst($entityClass);
-        return class_exists($entityClass) ? $entityClass : false;
+        return class_exists($entityClass) ? $entityClass : null;
     }
 
     /**
@@ -210,7 +215,7 @@ class FormAbstractFactory implements AbstractFactoryInterface
      *
      * @return string
      */
-    protected function translateFormToType($formName)
+    protected function translateFormToType(string $formName): string
     {
         return lcfirst(substr($formName, strrpos($formName, '\\') + 1));
     }

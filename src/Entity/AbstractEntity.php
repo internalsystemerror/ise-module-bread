@@ -6,7 +6,6 @@ declare(strict_types=1);
 
 namespace Ise\Bread\Entity;
 
-use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Zend\Form\Annotation as ZF;
 
@@ -23,91 +22,88 @@ abstract class AbstractEntity implements EntityInterface
     protected $id;
 
     /**
-     * @ORM\Column(type="boolean", nullable=false)
+     * @ORM\Column(type="bool", nullable=false)
      * @ZF\Exclude()
-     * @var boolean
+     * @var bool
      */
     protected $disabled = false;
 
     /**
      * @ORM\Column(type="datetime", nullable=false, name="last_modified")
      * @ZF\Exclude()
-     * @var DateTime
+     * @var \DateTime
      */
     protected $lastModified;
 
     /**
      * @ORM\Column(type="datetime", nullable=false)
      * @ZF\Exclude()
-     * @var DateTime
+     * @var \DateTime
      */
     protected $created;
 
     /**
-     * {@inheritDoc}
+     * @inheritdoc
      */
     public function __construct()
     {
-        $this->lastModified = new DateTime;
-        $this->created      = new DateTime;
+        $this->lastModified = new \DateTime;
+        $this->created      = new \DateTime;
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritdoc
      */
-    public function getId()
+    public function getId(): string
     {
         return $this->id;
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritdoc
      */
-    public function isDisabled()
+    public function isDisabled(): bool
     {
         return $this->disabled;
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritdoc
      */
-    public function setDisabled($disabled)
+    public function setDisabled(bool $disabled): void
     {
-        $this->disabled = (boolean)$disabled;
-        return $this;
+        $this->disabled = $disabled;
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritdoc
      */
-    public function getLastModified()
+    public function getLastModified(): \DateTime
     {
         return $this->lastModified;
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritdoc
      */
-    public function setLastModified(DateTime $lastModifed)
+    public function setLastModified(\DateTime $lastModifed): void
     {
         $this->lastModified = $lastModifed;
-        return $this;
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritdoc
      */
-    public function getCreated()
+    public function getCreated(): \DateTime
     {
         return $this->created;
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritdoc
      */
-    public function setCreated(DateTime $created)
+    public function setCreated(\DateTime $created): void
     {
         $this->created = $created;
-        return $this;
     }
 }

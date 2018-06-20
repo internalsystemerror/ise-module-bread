@@ -8,6 +8,7 @@ namespace Ise\Bread\Factory;
 
 use Doctrine\ORM\EntityManager;
 use Interop\Container\ContainerInterface;
+use Ise\Bread\Mapper\DoctrineOrm\MapperInterface;
 use Ise\Bread\ServiceManager\BreadManager;
 use Zend\ServiceManager\Factory\FactoryInterface;
 
@@ -15,15 +16,14 @@ class BreadDoctrineOrmMapperFactory implements FactoryInterface
 {
 
     /**
-     * {@inheritDoc}
+     * @inheritdoc
      */
-    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null): MapperInterface
     {
         $entityManager = $container->get(EntityManager::class);
         $breadManager  = $container->get(BreadManager::class);
-        $mapperClass   = $breadManager->getMapperBaseClass($requestedName);
 
-        return new $mapperClass(
+        return new ($breadManager->getMapperBaseClass($requestedName))(
             $entityManager,
             $entityManager->getRepository($breadManager->getEntityClassFromMapperClass($requestedName))
         );

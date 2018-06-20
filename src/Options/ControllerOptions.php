@@ -58,12 +58,13 @@ class ControllerOptions extends AbstractFactoryClassOptions
     ];
 
     /**
-     * {@inheritDoc}
+     * @inheritdoc
+     * @throws \ReflectionException
      */
-    public function setBaseClass($class)
+    public function setBaseClass(string $class): void
     {
         $this->classImplementsInterface($class, ControllerInterface::class);
-        return parent::setBaseClass($class);
+        parent::setBaseClass($class);
     }
 
     /**
@@ -71,7 +72,7 @@ class ControllerOptions extends AbstractFactoryClassOptions
      *
      * @return string
      */
-    public function getEntityClass()
+    public function getEntityClass(): string
     {
         return $this->entityClass;
     }
@@ -81,13 +82,13 @@ class ControllerOptions extends AbstractFactoryClassOptions
      *
      * @param string $entityClass
      *
-     * @return self
+     * @return void
+     * @throws \ReflectionException
      */
-    public function setEntityClass($entityClass)
+    public function setEntityClass(string $entityClass): void
     {
         $this->classImplementsInterface($entityClass, EntityInterface::class);
-        $this->entityClass = (string)$entityClass;
-        return $this;
+        $this->entityClass = $entityClass;
     }
 
     /**
@@ -95,7 +96,7 @@ class ControllerOptions extends AbstractFactoryClassOptions
      *
      * @return string
      */
-    public function getEntityTitle()
+    public function getEntityTitle(): string
     {
         return $this->entityTitle;
     }
@@ -105,12 +106,11 @@ class ControllerOptions extends AbstractFactoryClassOptions
      *
      * @param string $entityTitle
      *
-     * @return self
+     * @return void
      */
-    public function setEntityTitle($entityTitle)
+    public function setEntityTitle(string $entityTitle): void
     {
-        $this->entityTitle = (string)$entityTitle;
-        return $this;
+        $this->entityTitle = $entityTitle;
     }
 
     /**
@@ -118,7 +118,7 @@ class ControllerOptions extends AbstractFactoryClassOptions
      *
      * @return string
      */
-    public function getIndexRoute()
+    public function getIndexRoute(): string
     {
         return $this->indexRoute;
     }
@@ -128,12 +128,11 @@ class ControllerOptions extends AbstractFactoryClassOptions
      *
      * @param string $indexRoute
      *
-     * @return self
+     * @return void
      */
-    public function setIndexRoute($indexRoute)
+    public function setIndexRoute(string $indexRoute): void
     {
-        $this->indexRoute = (string)$indexRoute;
-        return $this;
+        $this->indexRoute = $indexRoute;
     }
 
     /**
@@ -141,7 +140,7 @@ class ControllerOptions extends AbstractFactoryClassOptions
      *
      * @return string
      */
-    public function getBasePermission()
+    public function getBasePermission(): string
     {
         return $this->basePermission;
     }
@@ -149,14 +148,13 @@ class ControllerOptions extends AbstractFactoryClassOptions
     /**
      * Set base permission
      *
-     * @params string $permission
+     * @param string $permission
      *
-     * @return self
+     * @return void
      */
-    public function setBasePermission($permission)
+    public function setBasePermission(string $permission): void
     {
-        $this->basePermission = (string)$permission;
-        return $this;
+        $this->basePermission = $permission;
     }
 
     /**
@@ -164,7 +162,7 @@ class ControllerOptions extends AbstractFactoryClassOptions
      *
      * @return string[]
      */
-    public function getTemplates()
+    public function getTemplates(): array
     {
         return $this->templates;
     }
@@ -176,11 +174,10 @@ class ControllerOptions extends AbstractFactoryClassOptions
      *
      * @param string[] $templates
      *
-     * @return self
+     * @return void
      */
-    public function setTemplates(array $templates)
+    public function setTemplates(array $templates): void
     {
         $this->templates = ArrayUtils::merge($this->templates, $templates);
-        return $this;
     }
 }

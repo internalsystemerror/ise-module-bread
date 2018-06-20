@@ -16,17 +16,18 @@ class DateIntervalType extends StringType
     const DATE_INTERVAL = 'dateinterval';
 
     /**
-     * {@inheritDoc}
+     * @inheritdoc
      */
-    public function getName()
+    public function getName(): string
     {
         return self::DATE_INTERVAL;
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritdoc
+     * @throws ConversionException
      */
-    public function convertToDatabaseValue($value, AbstractPlatform $platform)
+    public function convertToDatabaseValue($value, AbstractPlatform $platform): ?string
     {
         if (null === $value) {
             return null;
@@ -42,10 +43,11 @@ class DateIntervalType extends StringType
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritdoc
+     * @throws \Exception
      */
-    public function convertToPHPValue($value, AbstractPlatform $platform)
+    public function convertToPHPValue($value, AbstractPlatform $platform): \DateInterval
     {
-        return new DateInterval((string)$value);
+        return new \DateInterval((string)$value);
     }
 }

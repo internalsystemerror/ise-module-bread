@@ -32,7 +32,7 @@ class FormSessionPlugin extends AbstractPlugin
      *
      * @return FormSessionService;
      */
-    public function __invoke()
+    public function __invoke(): FormSessionService
     {
         return $this->formSessionService;
     }

@@ -6,7 +6,7 @@ declare(strict_types=1);
 
 namespace Ise\Bread\Options;
 
-use DoctrineORMModule\Stdlib\Hydrator\DoctrineEntity;
+use DoctrineModule\Stdlib\Hydrator\DoctrineObject;
 use Ise\Bread\Entity\EntityInterface;
 
 class EntityOptions extends AbstractClassOptions
@@ -15,7 +15,7 @@ class EntityOptions extends AbstractClassOptions
     /**
      * @var string
      */
-    protected $hydrator = DoctrineEntity::class;
+    protected $hydrator = DoctrineObject::class;
 
     /**
      * @var string
@@ -37,12 +37,12 @@ class EntityOptions extends AbstractClassOptions
      *
      * @param string $class
      *
-     * @return self
+     * @return void
+     * @throws \ReflectionException
      */
-    public function setClass($class)
+    public function setClass(string $class): void
     {
         $this->classImplementsInterface($class, EntityInterface::class);
-        return parent::setClass($class);
     }
 
     /**
@@ -50,7 +50,7 @@ class EntityOptions extends AbstractClassOptions
      *
      * @return string
      */
-    public function getHydrator()
+    public function getHydrator(): string
     {
         return $this->hydrator;
     }
@@ -60,20 +60,19 @@ class EntityOptions extends AbstractClassOptions
      *
      * @param string $hydrator
      *
-     * @return self
+     * @return void
      */
-    public function setHydrator($hydrator)
+    public function setHydrator(string $hydrator): void
     {
-        $this->hydrator = (string)$hydrator;
-        return $this;
+        $this->hydrator = $hydrator;
     }
 
     /**
      * Get mapper
      *
-     * @return string|array
+     * @return string
      */
-    public function getController()
+    public function getController(): string
     {
         return $this->controller;
     }
@@ -81,20 +80,21 @@ class EntityOptions extends AbstractClassOptions
     /**
      * Set controller
      *
-     * @param string|array $controller
+     * @param string $controller
+     *
+     * @return void
      */
-    public function setController($controller)
+    public function setController(string $controller): void
     {
         $this->controller = $controller;
-        return $this;
     }
 
     /**
      * Get mapper
      *
-     * @return string|array
+     * @return string
      */
-    public function getMapper()
+    public function getMapper(): string
     {
         return $this->mapper;
     }
@@ -102,22 +102,21 @@ class EntityOptions extends AbstractClassOptions
     /**
      * Set mapper
      *
-     * @param string|array $mapper
+     * @param string $mapper
      *
-     * @return self
+     * @return void
      */
-    public function setMapper($mapper)
+    public function setMapper(string $mapper): void
     {
         $this->mapper = $mapper;
-        return $this;
     }
 
     /**
      * Get service
      *
-     * @return string|array
+     * @return string
      */
-    public function getService()
+    public function getService(): string
     {
         return $this->service;
     }
@@ -125,13 +124,12 @@ class EntityOptions extends AbstractClassOptions
     /**
      * Set service
      *
-     * @param string|array $service
+     * @param string $service
      *
-     * @return self
+     * @return void
      */
-    public function setService($service)
+    public function setService(string $service): void
     {
         $this->service = $service;
-        return $this;
     }
 }

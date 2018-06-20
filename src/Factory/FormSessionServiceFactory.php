@@ -15,9 +15,9 @@ class FormSessionServiceFactory implements FactoryInterface
 {
 
     /**
-     * {@inheritDoc}
+     * @inheritdoc
      */
-    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null): FormSessionService
     {
         $sessionContainer = new Container(FormSessionService::class);
         $sessionContainer->setExpirationHops(1);

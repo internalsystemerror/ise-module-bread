@@ -6,58 +6,55 @@ declare(strict_types=1);
 
 namespace Ise\Bread\Controller;
 
-use Zend\Stdlib\ResponseInterface;
-use Zend\View\Model\ViewModel;
-
 interface ControllerInterface
 {
 
     /**
      * Browse action
      *
-     * @return ViewModel|ResponseInterface
+     * @return mixed
      */
     public function browseAction();
 
     /**
      * Read action
      *
-     * @return ViewModel|ResponseInterface
+     * @return mixed
      */
     public function readAction();
 
     /**
      * Add action
      *
-     * @return ViewModel|ResponseInterface
+     * @return mixed
      */
     public function addAction();
 
     /**
      * Edit action
      *
-     * @return ViewModel|ResponseInterface
+     * @return mixed
      */
     public function editAction();
 
     /**
      * Delete action
      *
-     * @return ViewModel|ResponseInterface
+     * @return mixed
      */
     public function deleteAction();
 
     /**
      * Disable action
      *
-     * @return ViewModel|ResponseInterface
+     * @return mixed
      */
     public function disableAction();
 
     /**
      * Enable action
      *
-     * @return ViewModel|ResponseInterface
+     * @return mixed
      */
     public function enableAction();
 }

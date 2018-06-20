@@ -6,7 +6,6 @@ declare(strict_types=1);
 
 namespace Ise\Bread\Service;
 
-use DateTime;
 use Ise\Bread\Entity\EntityInterface;
 use Ise\Bread\EventManager\BreadEvent;
 use Ise\Bread\Exception\InvalidArgumentException;
@@ -47,127 +46,137 @@ class BreadService implements ServiceInterface
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritdoc
      */
-    public function browse(array $criteria = [], array $orderBy = [], $limit = null, $offset = null)
+    public function browse(array $criteria = [], array $orderBy = [], $limit = null, $offset = null): array
     {
         return $this->mapper->browse($criteria, $orderBy, $limit, $offset);
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritdoc
      * @SuppressWarnings(PHPMD.ShortVariable)
      */
-    public function read($id)
+    public function read($id): ?EntityInterface
     {
         return $this->mapper->read($id);
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritdoc
      */
-    public function readBy(array $criteria)
+    public function readBy(array $criteria): ?EntityInterface
     {
         return $this->mapper->readBy($criteria);
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritdoc
+     * @throws \Exception
      */
-    public function add(array $data)
+    public function add(array $data): ?EntityInterface
     {
         // Validate form
         $entity = $this->validateForm(BreadEvent::FORM_CREATE, $data);
         if (!$entity) {
-            return false;
+            return null;
         }
 
         // Save entity
-        return $this->mapper->add($entity);
+        $this->mapper->add($entity);
+        return $entity;
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritdoc
+     * @throws \Exception
      */
-    public function edit(array $data)
+    public function edit(array $data): ?EntityInterface
     {
         // Validate form
         $entity = $this->validateForm(BreadEvent::FORM_UPDATE, $data);
         if (!$entity) {
-            return false;
+            return null;
         }
 
         // Save entity
-        $entity->setLastModified(new DateTime);
-        return $this->mapper->edit($entity);
+        $entity->setLastModified(new \DateTime);
+        $this->mapper->edit($entity);
+        return $entity;
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritdoc
+     * @throws \Exception
      */
-    public function delete(array $data)
+    public function delete(array $data): ?EntityInterface
     {
         // Validate form
         $entity = $this->validateForm(BreadEvent::FORM_DIALOG, $data);
         if (!$entity) {
-            return false;
+            return null;
         }
 
         // Save entity
-        return $this->mapper->delete($entity);
+        $this->mapper->delete($entity);
+        return $entity;
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritdoc
+     * @throws \Exception
      */
-    public function disable(array $data)
+    public function disable(array $data): ?EntityInterface
     {
         // Validate form
         $entity = $this->validateForm(BreadEvent::FORM_DIALOG, $data);
         if (!$entity) {
-            return false;
+            return null;
         }
 
         // Save entity
         $entity->setDisabled(true);
-        $entity->setLastModified(new DateTime);
-        return $this->mapper->edit($entity);
+        $entity->setLastModified(new \DateTime);
+        $this->mapper->edit($entity);
+        return $entity;
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritdoc
+     * @throws \Exception
      */
-    public function enable(array $data)
+    public function enable(array $data): ?EntityInterface
     {
         // Validate form
         $entity = $this->validateForm(BreadEvent::FORM_DIALOG, $data);
         if (!$entity) {
-            return false;
+            return null;
         }
 
         // Save entity
         $entity->setDisabled(false);
-        $entity->setLastModified(new DateTime);
-        return $this->mapper->edit($entity);
+        $entity->setLastModified(new \DateTime);
+        $this->mapper->edit($entity);
+        return $entity;
     }
 
     /**
      * Get a form by name
      *
-     * @param type $action
+     * @param string $action
      *
-     * @return type
+     * @return FormInterface
      * @throws InvalidArgumentException
      */
-    public function getForm($action)
+    public function getForm(string $action): FormInterface
     {
-        if (!isset($this->forms[$action])) {
+        if (!$this->forms[$action]) {
             throw new InvalidArgumentException(sprintf(
                 'Invalid form name given, "%s"',
                 $action
             ));
         }
-        if (is_string($this->forms[$action])) {
+        if (!$this->forms[$action] instanceof FormInterface) {
             $this->forms[$action] = $this->breadManager->getForm($this->forms[$action]);
         }
         return $this->forms[$action];
@@ -179,17 +188,26 @@ class BreadService implements ServiceInterface
      * @param  string $action Action to perform
      * @param  array  $data   Data to act upon
      *
-     * @return boolean|EntityInterface
+     * @return EntityInterface|null
      */
-    protected function validateForm($action, array $data)
+    protected function validateForm(string $action, array $data): ?EntityInterface
     {
         $form = $this->getForm($action);
         $form->setData($data);
         if (!$form->isValid()) {
-            return false;
+            return null;
         }
 
-        return $form->getData();
+        $entity = $form->getData();
+        if (!$entity instanceof EntityInterface) {
+            throw new InvalidArgumentException(sprintf(
+                '%s must implement %s',
+                is_object($entity) ? get_class($entity) : gettype($entity),
+                EntityInterface::class
+            ));
+        }
+
+        return $entity;
     }
 
     /**
@@ -197,8 +215,10 @@ class BreadService implements ServiceInterface
      *
      * @param FormInterface $form
      * @param array         $newMessages
+     *
+     * @return void
      */
-    protected function addFormMessage(FormInterface $form, $newMessages)
+    protected function addFormMessage(FormInterface $form, array $newMessages): void
     {
         $currentMessages = $form->getMessages();
         $form->setMessages(array_merge($currentMessages, $newMessages));

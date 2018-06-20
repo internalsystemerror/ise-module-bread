@@ -38,7 +38,7 @@ abstract class AbstractBasicEntity extends AbstractEntity implements BasicEntity
      *
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->getName();
     }
@@ -48,7 +48,7 @@ abstract class AbstractBasicEntity extends AbstractEntity implements BasicEntity
      *
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -58,12 +58,11 @@ abstract class AbstractBasicEntity extends AbstractEntity implements BasicEntity
      *
      * @param string $name
      *
-     * @return self
+     * @return void
      */
-    public function setName($name)
+    public function setName(string $name): void
     {
-        $this->name = (string)$name;
-        return $this;
+        $this->name = $name;
     }
 
     /**
@@ -71,7 +70,7 @@ abstract class AbstractBasicEntity extends AbstractEntity implements BasicEntity
      *
      * @return string
      */
-    public function getDescription()
+    public function getDescription(): string
     {
         return $this->description;
     }
@@ -79,13 +78,12 @@ abstract class AbstractBasicEntity extends AbstractEntity implements BasicEntity
     /**
      * Set description
      *
-     * @param string $description
+     * @param string|null $description
      *
-     * @return self
+     * @return void
      */
-    public function setDescription($description)
+    public function setDescription(string $description = null): void
     {
-        $this->description = (string)$description;
-        return $this;
+        $this->description = $description;
     }
 }

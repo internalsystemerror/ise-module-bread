@@ -16,7 +16,7 @@ class Module implements ConfigProviderInterface, InitProviderInterface
     /**
      * @inheritdoc
      */
-    public function init(ModuleManagerInterface $moduleManager)
+    public function init(ModuleManagerInterface $moduleManager): void
     {
         $eventManager = $moduleManager->getEventManager();
 
@@ -27,8 +27,8 @@ class Module implements ConfigProviderInterface, InitProviderInterface
     /**
      * @inheritdoc
      */
-    public function getConfig()
+    public function getConfig(): array
     {
-        return include realpath(__DIR__ . '/../config/module.config.php');
+        return require __DIR__ . '/../config/module.config.php';
     }
 }
